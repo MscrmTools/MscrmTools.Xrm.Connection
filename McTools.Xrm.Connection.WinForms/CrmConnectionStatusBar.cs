@@ -330,6 +330,31 @@ namespace McTools.Xrm.Connection.WinForms
                 item.Text = detail.ConnectionName;
                 item.Tag = detail;
 
+                if (detail.UseOnline)
+                {
+                    item.Image =
+                        RessourceManager.GetImage(
+                            "McTools.Xrm.Connection.WinForms.Resources.CRMOnlineLive_16.png");
+                }
+                else if (detail.UseOsdp)
+                {
+                    item.Image =
+                        RessourceManager.GetImage(
+                            "McTools.Xrm.Connection.WinForms.Resources.CRMOnlineLive_16.png");
+                }
+                else if (detail.UseIfd)
+                {
+                    item.Image =
+                        RessourceManager.GetImage(
+                            "McTools.Xrm.Connection.WinForms.Resources.server_key.png");
+                }
+                else
+                {
+                    item.Image =
+                        RessourceManager.GetImage(
+                            "McTools.Xrm.Connection.WinForms.Resources.server.png");
+                }
+
                 BuildActionItems(item);
 
                 ToolStripDropDownButton connexionManager = (ToolStripDropDownButton)this.Items[0];
