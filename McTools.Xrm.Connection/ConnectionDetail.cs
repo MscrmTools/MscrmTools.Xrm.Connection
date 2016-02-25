@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xrm.Sdk.Client;
-using Microsoft.Xrm.Sdk.Discovery;
 using Microsoft.Xrm.Tooling.Connector;
 using System;
 using System.Collections.Generic;
@@ -207,6 +206,11 @@ namespace McTools.Xrm.Connection
                 tasks[1].Wait();
 
                 crmSvc = tasks.FirstOrDefault(t => t.Result.IsReady)?.Result;
+                if (crmSvc == null)
+                {
+                    // None of the attempts above were successful, so get a failed one to be able to display correct error message
+                    crmSvc = tasks.FirstOrDefault(t => t.Result != null).Result;
+                }
 
                 // crmSvc = ConnectOnline(UseOsdp);
 

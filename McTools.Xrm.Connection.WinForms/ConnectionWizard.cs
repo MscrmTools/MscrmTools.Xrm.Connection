@@ -332,6 +332,12 @@ namespace McTools.Xrm.Connection.WinForms
                     lblDescription.Text = Resources.ConnectionWizard_ErrorHeaderDescription;
 
                     lblError.Text = evt.Error.Message;
+
+                    if (updatedDetail.UseOsdp)
+                    {
+                        lblError.Text += "\r\nIf the unique name for your organization is different from the name used in the url you provided, please replace the organization name in the url with the organization unique name";
+                    }
+
                     DisplayPanel(pnlError, null);
 
                     return;
@@ -344,6 +350,7 @@ namespace McTools.Xrm.Connection.WinForms
                     lblDescription.Text = Resources.ConnectionWizard_ErrorHeaderDescription;
 
                     lblError.Text = crmSvc.LastCrmError;
+
                     DisplayPanel(pnlError, null);
 
                     return;
