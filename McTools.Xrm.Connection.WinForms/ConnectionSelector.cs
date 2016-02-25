@@ -16,6 +16,7 @@ namespace McTools.Xrm.Connection.WinForms
 
         private readonly bool allowMultipleSelection;
         private readonly bool isConnectionSelection;
+        private int currentIndex;
         private bool hadCreatedNewConnection;
 
         /// <summary>
@@ -42,29 +43,8 @@ namespace McTools.Xrm.Connection.WinForms
         {
             InitializeComponent();
 
-            tsb_UseMru.Checked = ConnectionManager.Instance.ConnectionsList.UseMruDisplay;
-            tsb_UseMru.CheckedChanged += tsb_UseMru_CheckedChanged;
-
             this.isConnectionSelection = isConnectionSelection;
             this.allowMultipleSelection = allowMultipleSelection;
-            if (isConnectionSelection)
-            {
-                Text = "Select a connection";
-                tsbDeleteConnection.Visible = false;
-                tsbUpdateConnection.Visible = false;
-                bCancel.Text = "Cancel";
-                bValidate.Visible = true;
-            }
-            else
-            {
-                Text = "Connections list";
-                tsbDeleteConnection.Visible = true;
-                tsbUpdateConnection.Visible = true;
-                bCancel.Text = "Close";
-                bValidate.Visible = false;
-            }
-
-            DisplayConnections(allowMultipleSelection);
         }
 
         private void DisplayConnections(bool allowMultipleSelection)
@@ -114,6 +94,33 @@ namespace McTools.Xrm.Connection.WinForms
                 lvConnections.Groups.AddRange(groups);
                 lvConnections.EndUpdate();
             }
+        }
+
+        private void LoadConnectionFile()
+        {
+            tsb_UseMru.Checked = ConnectionManager.Instance.ConnectionsList.UseMruDisplay;
+            tsb_UseMru.CheckedChanged += tsb_UseMru_CheckedChanged;
+
+            if (isConnectionSelection)
+            {
+                Text = "Select a connection";
+                tsbDeleteConnection.Visible = false;
+                tsbUpdateConnection.Visible = false;
+                tsbRemoveConnectionList.Visible = false;
+                bCancel.Text = "Cancel";
+                bValidate.Visible = true;
+            }
+            else
+            {
+                Text = "Connections list";
+                tsbDeleteConnection.Visible = true;
+                tsbUpdateConnection.Visible = true;
+                tsbRemoveConnectionList.Visible = true;
+                bCancel.Text = "Close";
+                bValidate.Visible = false;
+            }
+
+            DisplayConnections(allowMultipleSelection);
         }
 
         private void LoadImages()
@@ -195,6 +202,25 @@ namespace McTools.Xrm.Connection.WinForms
             {
                 tsbDeleteConnection_Click(null, null);
             }
+        }
+
+        private void ConnectionSelector_Load(object sender, EventArgs e)
+        {
+            tscbbConnectionsFile.Items.Add(ConnectionsList.Instance.Files.First(k => k.Name == "Default"));
+            currentIndex = 0;
+
+            foreach (var file in ConnectionsList.Instance.Files.Where(k => k.Name != "Default").OrderBy(k => k.Name))
+            {
+                tscbbConnectionsFile.Items.Add(file);
+            }
+
+            tscbbConnectionsFile.Items.Add("<Create new connection file>");
+            tscbbConnectionsFile.Items.Add("<Add an existing connection file>");
+
+            tscbbConnectionsFile.SelectedIndex = 0;
+
+            // Display connections
+            LoadConnectionFile();
         }
 
         private ListViewGroup GetGroup(AuthenticationProviderType type)
@@ -330,6 +356,15 @@ namespace McTools.Xrm.Connection.WinForms
             }
         }
 
+        private void tsbRemoveConnectionList_Click(object sender, EventArgs e)
+        {
+            var item = (ConnectionFile)tscbbConnectionsFile.SelectedItem;
+            tscbbConnectionsFile.Items.RemoveAt(tscbbConnectionsFile.SelectedIndex);
+            ConnectionsList.Instance.Files.Remove(item);
+            ConnectionsList.Instance.Save();
+            tscbbConnectionsFile.SelectedIndex = tscbbConnectionsFile.Items.Count - 3;
+        }
+
         private void tsbUpdateConnection_Click(object sender, EventArgs e)
         {
             if (lvConnections.SelectedItems.Count == 1)
@@ -372,6 +407,74 @@ namespace McTools.Xrm.Connection.WinForms
 
                     ConnectionManager.Instance.SaveConnectionsFile();
                 }
+            }
+        }
+
+        private void tscbbConnectionsFile_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var cbbValue = tscbbConnectionsFile.SelectedItem;
+            var connection = cbbValue as ConnectionFile;
+            bool loadConnections = true;
+
+            // If null, then we selected an action rather than a connection file
+            if (connection == null)
+            {
+                tscbbConnectionsFile.SelectedIndexChanged -= tscbbConnectionsFile_SelectedIndexChanged;
+                tscbbConnectionsFile.SelectedIndex = currentIndex;
+                tscbbConnectionsFile.SelectedIndexChanged += tscbbConnectionsFile_SelectedIndexChanged;
+
+                // It can be a new file
+                if (cbbValue.ToString() == "<Create new connection file>")
+                {
+                    var nfd = new NewConnectionFileDialog();
+                    if (nfd.ShowDialog(this) == DialogResult.OK)
+                    {
+                        ConnectionManager.ConfigurationFile = nfd.CreatedFilePath;
+
+                        var newIndex = tscbbConnectionsFile.Items.Count - 2;
+
+                        tscbbConnectionsFile.Items.Insert(newIndex,
+                            ConnectionsList.Instance.Files.First(f => f.Path == nfd.CreatedFilePath));
+                        tscbbConnectionsFile.SelectedIndex = newIndex;
+                        tsbRemoveConnectionList.Enabled = true;
+                    }
+                    else
+                    {
+                        loadConnections = false;
+                    }
+                }
+                // Or an existing file
+                else
+                {
+                    var afd = new AddConnectionFileDialog();
+                    if (afd.ShowDialog(this) == DialogResult.OK)
+                    {
+                        var newIndex = tscbbConnectionsFile.Items.Count - 2;
+
+                        tscbbConnectionsFile.Items.Insert(newIndex,
+                            ConnectionsList.Instance.Files.First(f => f.Path == afd.OpenedFilePath));
+                        tscbbConnectionsFile.SelectedIndex = newIndex;
+                        tsbRemoveConnectionList.Enabled = true;
+                    }
+                    else
+                    {
+                        loadConnections = false;
+                    }
+                }
+            }
+            else
+            {
+                currentIndex = tscbbConnectionsFile.SelectedIndex;
+
+                // Or it is a connection file so we load it for the connection manager
+                ConnectionManager.ConfigurationFile = connection.Path;
+
+                tsbRemoveConnectionList.Enabled = ConnectionManager.Instance.ConnectionsList.Name != "Default";
+            }
+
+            if (loadConnections)
+            {
+                LoadConnectionFile();
             }
         }
     }

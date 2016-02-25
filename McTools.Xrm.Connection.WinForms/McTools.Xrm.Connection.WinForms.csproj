@@ -152,6 +152,12 @@
       <DependentUpon>ConnectionWizard.cs</DependentUpon>
     </Compile>
     <Compile Include="ListViewItemComparer.cs" />
+    <Compile Include="AddConnectionFileDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddConnectionFileDialog.designer.cs">
+      <DependentUpon>AddConnectionFileDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="PasswordForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -164,6 +170,12 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="NewConnectionFileDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NewConnectionFileDialog.designer.cs">
+      <DependentUpon>NewConnectionFileDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="ProxySettingsForm.cs">
       <SubType>Form</SubType>
@@ -184,12 +196,18 @@
       <DependentUpon>CrmConnectionStatusBar.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="AddConnectionFileDialog.resx">
+      <DependentUpon>AddConnectionFileDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="PasswordForm.resx">
       <DependentUpon>PasswordForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NewConnectionFileDialog.resx">
+      <DependentUpon>NewConnectionFileDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ProxySettingsForm.resx">
       <DependentUpon>ProxySettingsForm.cs</DependentUpon>

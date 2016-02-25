@@ -279,7 +279,7 @@ namespace McTools.Xrm.Connection
                 }
                 else
                 {
-                    crmConnections = new CrmConnections
+                    crmConnections = new CrmConnections("Default")
                     {
                         Connections = new List<ConnectionDetail>()
                     };

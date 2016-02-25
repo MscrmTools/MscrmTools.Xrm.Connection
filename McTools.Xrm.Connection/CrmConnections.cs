@@ -23,9 +23,10 @@ namespace McTools.Xrm.Connection
 
         #endregion Variables
 
-        public CrmConnections()
+        public CrmConnections(string name)
         {
             Connections = new List<ConnectionDetail>();
+            Name = name;
         }
 
         #region Propriétés
@@ -36,6 +37,8 @@ namespace McTools.Xrm.Connection
         /// Obtient ou définit la liste des connexions
         /// </summary>
         public List<ConnectionDetail> Connections { get; set; }
+
+        public string Name { get; set; }
 
         public string Password
         {
@@ -73,7 +76,7 @@ namespace McTools.Xrm.Connection
 
         public static CrmConnections LoadFromFile(string filePath)
         {
-            var crmConnections = new CrmConnections();
+            var crmConnections = new CrmConnections("Default");
 
             if (!File.Exists(filePath))
             {
@@ -100,6 +103,12 @@ namespace McTools.Xrm.Connection
                 if (useMruDisplayElt != null)
                 {
                     crmConnections.UseMruDisplay = useMruDisplayElt.Value == "true";
+                }
+
+                var nameElt = connectionsElt.Element("Name");
+                if (nameElt != null)
+                {
+                    crmConnections.Name = nameElt.Value;
                 }
 
                 var proxyElt = connectionsElt.Element("Proxy");
@@ -290,7 +299,8 @@ namespace McTools.Xrm.Connection
                     new XElement("Password", _password),
                     new XElement("UseDefaultCredentials", UseDefaultCredentials),
                     new XElement("ByPassProxyOnLocal", ByPassProxyOnLocal)),
-                new XElement("UseMruDisplay", UseMruDisplay));
+                new XElement("UseMruDisplay", UseMruDisplay),
+                new XElement("Name", Name));
 
             foreach (var connection in Connections)
             {
@@ -310,6 +320,11 @@ namespace McTools.Xrm.Connection
                 doc.WriteTo(writer);
                 writer.Close();
             }
+        }
+
+        public override string ToString()
+        {
+            return Name;
         }
 
         #endregion methods

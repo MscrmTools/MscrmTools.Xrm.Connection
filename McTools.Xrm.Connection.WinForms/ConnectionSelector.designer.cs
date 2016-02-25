@@ -42,6 +42,9 @@
             this.tsbDeleteConnection = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tsb_UseMru = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.tscbbConnectionsFile = new System.Windows.Forms.ToolStripComboBox();
+            this.tsbRemoveConnectionList = new System.Windows.Forms.ToolStripButton();
             this.menu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -117,7 +120,10 @@
             this.tsbUpdateConnection,
             this.tsbDeleteConnection,
             this.toolStripSeparator1,
-            this.tsb_UseMru});
+            this.tsb_UseMru,
+            this.toolStripSeparator2,
+            this.tscbbConnectionsFile,
+            this.tsbRemoveConnectionList});
             this.menu.Location = new System.Drawing.Point(0, 0);
             this.menu.Name = "menu";
             this.menu.Size = new System.Drawing.Size(555, 25);
@@ -135,19 +141,21 @@
             // 
             // tsbUpdateConnection
             // 
+            this.tsbUpdateConnection.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.tsbUpdateConnection.Image = ((System.Drawing.Image)(resources.GetObject("tsbUpdateConnection.Image")));
             this.tsbUpdateConnection.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbUpdateConnection.Name = "tsbUpdateConnection";
-            this.tsbUpdateConnection.Size = new System.Drawing.Size(128, 22);
+            this.tsbUpdateConnection.Size = new System.Drawing.Size(23, 22);
             this.tsbUpdateConnection.Text = "Update connection";
             this.tsbUpdateConnection.Click += new System.EventHandler(this.tsbUpdateConnection_Click);
             // 
             // tsbDeleteConnection
             // 
+            this.tsbDeleteConnection.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.tsbDeleteConnection.Image = ((System.Drawing.Image)(resources.GetObject("tsbDeleteConnection.Image")));
             this.tsbDeleteConnection.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbDeleteConnection.Name = "tsbDeleteConnection";
-            this.tsbDeleteConnection.Size = new System.Drawing.Size(123, 22);
+            this.tsbDeleteConnection.Size = new System.Drawing.Size(23, 22);
             this.tsbDeleteConnection.Text = "Delete connection";
             this.tsbDeleteConnection.Click += new System.EventHandler(this.tsbDeleteConnection_Click);
             // 
@@ -166,6 +174,28 @@
             this.tsb_UseMru.Text = "Display MRU first";
             this.tsb_UseMru.ToolTipText = "Display Most Recently Used connections first";
             // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // tscbbConnectionsFile
+            // 
+            this.tscbbConnectionsFile.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.tscbbConnectionsFile.Name = "tscbbConnectionsFile";
+            this.tscbbConnectionsFile.Size = new System.Drawing.Size(200, 25);
+            this.tscbbConnectionsFile.SelectedIndexChanged += new System.EventHandler(this.tscbbConnectionsFile_SelectedIndexChanged);
+            // 
+            // tsbRemoveConnectionList
+            // 
+            this.tsbRemoveConnectionList.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbRemoveConnectionList.Image = ((System.Drawing.Image)(resources.GetObject("tsbRemoveConnectionList.Image")));
+            this.tsbRemoveConnectionList.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbRemoveConnectionList.Name = "tsbRemoveConnectionList";
+            this.tsbRemoveConnectionList.Size = new System.Drawing.Size(23, 22);
+            this.tsbRemoveConnectionList.Text = "Remove selected connection list";
+            this.tsbRemoveConnectionList.Click += new System.EventHandler(this.tsbRemoveConnectionList_Click);
+            // 
             // ConnectionSelector
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -179,6 +209,7 @@
             this.Name = "ConnectionSelector";
             this.ShowIcon = false;
             this.Text = "Select connection";
+            this.Load += new System.EventHandler(this.ConnectionSelector_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ConnectionSelector_KeyDown);
             this.menu.ResumeLayout(false);
             this.menu.PerformLayout();
@@ -202,6 +233,8 @@
         private System.Windows.Forms.ToolStripButton tsbDeleteConnection;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton tsb_UseMru;
-
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripComboBox tscbbConnectionsFile;
+        private System.Windows.Forms.ToolStripButton tsbRemoveConnectionList;
     }
 }

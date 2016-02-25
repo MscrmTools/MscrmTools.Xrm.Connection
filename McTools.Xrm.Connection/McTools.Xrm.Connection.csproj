@@ -135,6 +135,7 @@
   <ItemGroup>
     <Compile Include="ConnectionDetail.cs" />
     <Compile Include="ConnectionManager.cs" />
+    <Compile Include="ConnectionsList.cs" />
     <Compile Include="CrmConnections.cs" />
     <Compile Include="CrmExceptionHelper.cs" />
     <Compile Include="CryptoManager.cs" />
@@ -168,7 +169,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_ConfigurationName="Release" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_UpdateFileVersion="False" BuildVersion_BuildVersioningStyle="None.None.DeltaBaseDate.Increment" BuildVersion_StartDate="2012/1/1" />
+      <UserProperties BuildVersion_StartDate="2012/1/1" BuildVersion_BuildVersioningStyle="None.None.DeltaBaseDate.Increment" BuildVersion_UpdateFileVersion="False" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_ConfigurationName="Release" />
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
