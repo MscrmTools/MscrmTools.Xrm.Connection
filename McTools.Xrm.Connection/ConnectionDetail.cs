@@ -1,4 +1,6 @@
-﻿using Microsoft.Xrm.Sdk.Client;
+﻿using McTools.Xrm.Connection.Utils;
+using Microsoft.Xrm.Sdk.Client;
+using Microsoft.Xrm.Sdk.Discovery;
 using Microsoft.Xrm.Tooling.Connector;
 using System;
 using System.Collections.Generic;
@@ -7,6 +9,7 @@ using System.Data.Common;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.ServiceModel.Description;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -208,8 +211,15 @@ namespace McTools.Xrm.Connection
                 crmSvc = tasks.FirstOrDefault(t => t.Result.IsReady)?.Result;
                 if (crmSvc == null)
                 {
-                    // None of the attempts above were successful, so get a failed one to be able to display correct error message
-                    crmSvc = tasks.FirstOrDefault(t => t.Result != null).Result;
+                    var uniqueName = ResolveCrmOnlineUniqueOrg();
+
+                    crmSvc = ConnectOnline(UseOsdp, true, uniqueName);
+
+                    if (crmSvc == null)
+                    {
+                        // None of the attempts above were successful, so get a failed one to be able to display correct error message
+                        crmSvc = tasks.FirstOrDefault(t => t.Result != null).Result;
+                    }
                 }
 
                 // crmSvc = ConnectOnline(UseOsdp);
@@ -313,7 +323,7 @@ namespace McTools.Xrm.Connection
             HomeRealmUrl = editedConnection.HomeRealmUrl;
         }
 
-        private CrmServiceClient ConnectOnline(bool isOffice365, bool useSsl)
+        private CrmServiceClient ConnectOnline(bool isOffice365, bool useSsl, string expliciteOrgName = null)
         {
             var password = CryptoManager.Decrypt(userPassword, ConnectionManager.CryptoPassPhrase,
                  ConnectionManager.CryptoSaltValue,
@@ -322,7 +332,7 @@ namespace McTools.Xrm.Connection
                  ConnectionManager.CryptoInitVector,
                  ConnectionManager.CryptoKeySize);
 
-            return new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password), GetOnlineRegion(ServerName), OrganizationUrlName, true, useSsl, isOffice365: isOffice365);
+            return new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password), GetOnlineRegion(ServerName), expliciteOrgName ?? OrganizationUrlName, true, useSsl, isOffice365: isOffice365);
         }
 
         private string GetOnlineRegion(string hostname)
@@ -429,6 +439,82 @@ namespace McTools.Xrm.Connection
             //dbcb.Add("AuthType", UseOsdp ? "Office365" : (UseIfd ? "IFD" : "AD"));
 
             return dbcb.ToString();
+        }
+
+        private TProxy GetProxy<TService, TProxy>(Uri discoveryUri)
+         where TService : class
+         where TProxy : ServiceProxy<TService>
+        {
+            // Get appropriate Uri from Configuration.
+            Uri serviceUri = discoveryUri;
+
+            // Set service management for either organization service Uri or discovery service Uri.
+            // For organization service Uri, if service management exists
+            // then use it from cache. Otherwise create new service management for current organization.
+            IServiceManagement<TService> serviceManagement = ServiceConfigurationFactory.CreateManagement<TService>(
+                serviceUri);
+
+            var decryptedPassword = CryptoManager.Decrypt(userPassword, ConnectionManager.CryptoPassPhrase,
+                 ConnectionManager.CryptoSaltValue,
+                 ConnectionManager.CryptoHashAlgorythm,
+                 ConnectionManager.CryptoPasswordIterations,
+                 ConnectionManager.CryptoInitVector,
+                 ConnectionManager.CryptoKeySize);
+
+            var credentials = new ClientCredentials();
+            credentials.UserName.UserName = UserName;
+            credentials.UserName.Password = decryptedPassword;
+
+            // Set the credentials.
+            AuthenticationCredentials authCredentials = new AuthenticationCredentials();
+            authCredentials.ClientCredentials = credentials;
+
+            Type classType;
+
+            // Obtain discovery/organization service proxy for Federated,
+            // Microsoft account and OnlineFederated environments.
+
+            AuthenticationCredentials tokenCredentials =
+                serviceManagement.Authenticate(
+                    authCredentials);
+
+            // Set classType to ManagedTokenDiscoveryServiceProxy.
+            classType = typeof(ManagedTokenDiscoveryServiceProxy);
+
+            // Invokes ManagedTokenOrganizationServiceProxy or ManagedTokenDiscoveryServiceProxy
+            // (IServiceManagement<TService>, SecurityTokenResponse) constructor.
+            var obj = (TProxy)classType
+                .GetConstructor(new Type[]
+                {
+                    typeof (IServiceManagement<TService>),
+                    typeof (SecurityTokenResponse)
+                })
+                .Invoke(new object[]
+                {
+                    serviceManagement,
+                    tokenCredentials.SecurityTokenResponse
+                });
+
+            return obj;
+        }
+
+        private string ResolveCrmOnlineUniqueOrg()
+        {
+            string endpointUri = string.Format("https://disco.{0}/XrmServices/2011/Discovery.svc", ServerName.Remove(0, ServerName.IndexOf('.') + 1));
+
+            DiscoveryServiceProxy discoveryProxy = GetProxy<IDiscoveryService, DiscoveryServiceProxy>(new Uri(endpointUri));
+            discoveryProxy.Execute(new RetrieveOrganizationsRequest());
+
+            RetrieveOrganizationsRequest orgRequest = new RetrieveOrganizationsRequest();
+            RetrieveOrganizationsResponse orgResponse = (RetrieveOrganizationsResponse)discoveryProxy.Execute(orgRequest);
+
+            var org = orgResponse.Details.FirstOrDefault(d => d.UrlName == OrganizationUrlName);
+            if (org == null)
+            {
+                throw new Exception("Unable to find the organization based on its url name");
+            }
+
+            return org.UniqueName;
         }
 
         #endregion Méthodes
