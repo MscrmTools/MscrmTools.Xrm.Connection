@@ -339,6 +339,9 @@ namespace McTools.Xrm.Connection
         private object Connect(List<object> parameters)
         {
             WebRequest.DefaultWebProxy = WebRequest.GetSystemWebProxy();
+            //Use default credentials if no proxy credentials
+            if (WebRequest.DefaultWebProxy.Credentials == null)
+                WebRequest.DefaultWebProxy.Credentials = System.Net.CredentialCache.DefaultCredentials;
 
             var detail = (ConnectionDetail)parameters[0];
             SendStepChange("Creating Organization service proxy...");
