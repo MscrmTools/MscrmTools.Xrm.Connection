@@ -155,6 +155,12 @@ namespace McTools.Xrm.Connection
                     var connectionNameElement = elt.Element("ConnectionName");
                     cd.ConnectionName = connectionNameElement != null ? connectionNameElement.Value : null;
 
+                    var connectionStringElement = elt.Element("ConnectionString");
+                    cd.ConnectionString = connectionStringElement?.Value;
+
+                    var useConnectionStringElement = elt.Element("UseConnectionString");
+                    cd.UseConnectionString = useConnectionStringElement != null && useConnectionStringElement.Value == "true";
+
                     var homeRealmUrlElement = elt.Element("HomeRealmUrl");
                     cd.HomeRealmUrl = homeRealmUrlElement != null ? homeRealmUrlElement.Value : null;
 

@@ -37,6 +37,8 @@ namespace McTools.Xrm.Connection
         /// </summary>
         public string ConnectionName { get; set; }
 
+        public string ConnectionString { get; set; }
+
         /// <summary>
         /// Get or set the Crm Ticket
         /// </summary>
@@ -135,6 +137,8 @@ namespace McTools.Xrm.Connection
             set { Timeout = new TimeSpan(value); }
         }
 
+        public bool UseConnectionString { get; set; }
+
         /// <summary>
         /// Get or set flag to know if we use IFD
         /// </summary>
@@ -196,6 +200,58 @@ namespace McTools.Xrm.Connection
             }
 
             //return new CrmServiceClient(GetOrganizationCrmConnectionString());
+
+            if (UseConnectionString)
+            {
+                crmSvc = new CrmServiceClient(ConnectionString);
+
+                if (crmSvc.IsReady)
+                {
+                    OrganizationFriendlyName = crmSvc.ConnectedOrgFriendlyName;
+                    OrganizationDataServiceUrl = crmSvc.ConnectedOrgPublishedEndpoints[EndpointType.OrganizationDataService];
+                    OrganizationServiceUrl = crmSvc.ConnectedOrgPublishedEndpoints[EndpointType.OrganizationService];
+                    WebApplicationUrl = crmSvc.ConnectedOrgPublishedEndpoints[EndpointType.WebApplication];
+                    Organization = crmSvc.ConnectedOrgUniqueName;
+                    OrganizationVersion = crmSvc.ConnectedOrgVersion.ToString();
+
+                    var webAppURi = new Uri(WebApplicationUrl);
+                    ServerName = webAppURi.Host;
+                    ServerPort = webAppURi.Port;
+
+                    UseOnline = crmSvc.CrmConnectOrgUriActual.Host.Contains(".dynamics.com");
+                    UseOsdp = crmSvc.CrmConnectOrgUriActual.Host.Contains(".dynamics.com");
+                    UseSsl = crmSvc.CrmConnectOrgUriActual.AbsoluteUri.ToLower().StartsWith("https");
+                    UseIfd = crmSvc.ActiveAuthenticationType == AuthenticationType.IFD;
+
+                    switch (crmSvc.ActiveAuthenticationType)
+                    {
+                        case AuthenticationType.AD:
+                        case AuthenticationType.Claims:
+                            AuthType = AuthenticationProviderType.ActiveDirectory;
+                            break;
+
+                        case AuthenticationType.IFD:
+                            AuthType = AuthenticationProviderType.Federation;
+                            break;
+
+                        case AuthenticationType.Live:
+                            AuthType = AuthenticationProviderType.LiveId;
+                            break;
+
+                        case AuthenticationType.OAuth:
+                            // TODO add new property in ConnectionDetail class?
+                            break;
+
+                        case AuthenticationType.Office365:
+                            AuthType = AuthenticationProviderType.OnlineFederation;
+                            break;
+                    }
+
+                    IsCustomAuth = ConnectionString.ToLower().Contains("username=");
+                }
+
+                return crmSvc;
+            }
 
             if (UseOnline)
             {
@@ -526,6 +582,8 @@ namespace McTools.Xrm.Connection
                 AuthType = AuthType,
                 ConnectionId = ConnectionId,
                 ConnectionName = ConnectionName,
+                ConnectionString = ConnectionString,
+                UseConnectionString = UseConnectionString,
                 CrmTicket = CrmTicket,
                 HomeRealmUrl = HomeRealmUrl,
                 IsCustomAuth = IsCustomAuth,
@@ -605,6 +663,8 @@ namespace McTools.Xrm.Connection
                     new XElement("AuthType", AuthType),
                     new XElement("ConnectionId", ConnectionId),
                     new XElement("ConnectionName", ConnectionName),
+                    new XElement("ConnectionString", ConnectionString),
+                    new XElement("UseConnectionString", UseConnectionString),
                     new XElement("IsCustomAuth", IsCustomAuth),
                     new XElement("UseIfd", UseIfd),
                     new XElement("UseOnline", UseOnline),

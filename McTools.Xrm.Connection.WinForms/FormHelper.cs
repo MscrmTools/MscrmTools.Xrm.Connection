@@ -30,7 +30,7 @@ namespace McTools.Xrm.Connection.WinForms
             if (cs.ShowDialog(_innerAppForm) == DialogResult.OK)
             {
                 var connectionDetail = cs.SelectedConnections.First();
-                if (connectionDetail.IsCustomAuth)
+                if (!connectionDetail.UseConnectionString && connectionDetail.IsCustomAuth)
                 {
                     if (connectionDetail.PasswordIsEmpty)
                     {

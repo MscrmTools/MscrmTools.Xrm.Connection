@@ -166,4 +166,7 @@ Expected format : HH:mm:ss</value>
 
 Note that this is required to validate this wizard</value>
   </data>
+  <data name="ConnectionWizard_ConnectionStringConnectionHeaderDescription" xml:space="preserve">
+    <value>Please provide the connection string you want to use to connect to your Microsoft Dynamics CRM organization</value>
+  </data>
 </root>

@@ -4,6 +4,7 @@ using Microsoft.Xrm.Tooling.Connector;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -51,6 +52,7 @@ namespace McTools.Xrm.Connection.WinForms
                     txtPassword.ForeColor = Color.Black;
                 }
 
+                txtConnectionString.Text = detail.ConnectionString;
                 txtHomeRealm.Text = detail.HomeRealmUrl;
                 chkUseIntegratedAuthentication.Checked = !detail.IsCustomAuth;
                 rbIfdYes.Checked = detail.UseIfd;
@@ -58,6 +60,11 @@ namespace McTools.Xrm.Connection.WinForms
                 updatedDetail = (ConnectionDetail)originalDetail.Clone();
 
                 lblHeader.Text = "Edit connection";
+
+                if (originalDetail.UseConnectionString)
+                {
+                    llUseConnectionString_LinkClicked(null, null);
+                }
             }
         }
 
@@ -92,6 +99,24 @@ namespace McTools.Xrm.Connection.WinForms
                     pnl.Visible = pnl.Name == visitedPath.Last();
                 }
             }
+        }
+
+        private void btnConnectWithConnectionString_Click(object sender, EventArgs e)
+        {
+            if (txtConnectionString.Text.Length == 0)
+            {
+                return;
+            }
+
+            updatedDetail = new ConnectionDetail(true)
+            {
+                UseConnectionString = true,
+                ConnectionString = txtConnectionString.Text
+            };
+
+            lblDescription.Text = Resources.ConnectionWizard_ConnectingHeaderDescription;
+            DisplayPanel(pnlWaiting, null);
+            Connect();
         }
 
         private void btnFinish_Click(object sender, EventArgs e)
@@ -423,16 +448,6 @@ namespace McTools.Xrm.Connection.WinForms
             }
         }
 
-        //private CrmServiceClient ConnectOnline(bool isOffice365, ConnectionSettings settings)
-        //{
-        //    var securePassword = new SecureString();
-        //    foreach (char c in settings.Password)
-        //        securePassword.AppendChar(c);
-        //    securePassword.MakeReadOnly();
-
-        //    return new CrmServiceClient(settings.Username, securePassword, GetOnlineRegion(hostName), orga, true, useSsl, isOffice365: isOffice365);
-        //}
-
         private void DisplayPanel(Panel panel, Button acceptButton)
         {
             foreach (var ctrl in Controls)
@@ -492,6 +507,24 @@ namespace McTools.Xrm.Connection.WinForms
         //        detail.AuthType = isIfd ? AuthenticationProviderType.Federation : AuthenticationProviderType.ActiveDirectory;
         //    }
         //}
+
+        private void llConnectionStringHelp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(string.Format("https://msdn.microsoft.com/{0}/library/mt608573.aspx", CultureInfo.CurrentUICulture.Name));
+
+            txtConnectionString.Focus();
+        }
+
+        private void llUseConnectionString_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            visitedPath.Add(pnlConnectWithConnectionString.Name);
+
+            lblDescription.Text = Resources.ConnectionWizard_ConnectionStringConnectionHeaderDescription;
+
+            DisplayPanel(pnlConnectWithConnectionString, btnConnectWithConnectionString);
+
+            txtConnectionString.Focus();
+        }
 
         private void rbIfdYes_CheckedChanged(object sender, EventArgs e)
         {

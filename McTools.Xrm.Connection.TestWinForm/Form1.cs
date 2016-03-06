@@ -142,7 +142,7 @@ namespace McTools.Xrm.Connection.TestWinForm
                 ccsb.SetProgress(i * 10);
 
                 MessageBox.Show(this, "Your ID is: " + response.UserId.ToString("B"));
-            } while (i < 10);
+            } while (i < 1);
 
             ccsb.SetMessage("Done");
             ccsb.SetProgress(null);

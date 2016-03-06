@@ -70,6 +70,15 @@ namespace McTools.Xrm.Connection.WinForms.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Please provide the connection string you want to use to connect to your Microsoft Dynamics CRM organization.
+        /// </summary>
+        internal static string ConnectionWizard_ConnectionStringConnectionHeaderDescription {
+            get {
+                return ResourceManager.GetString("ConnectionWizard_ConnectionStringConnectionHeaderDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Enter credentials required to connect to Microsoft Dynamics CRM organization.
         /// </summary>
         internal static string ConnectionWizard_CredentialsHeaderDescription {

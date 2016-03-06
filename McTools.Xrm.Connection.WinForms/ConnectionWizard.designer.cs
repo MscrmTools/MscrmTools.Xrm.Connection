@@ -70,6 +70,16 @@
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.lblError = new System.Windows.Forms.Label();
+            this.llUseConnectionString = new System.Windows.Forms.LinkLabel();
+            this.llUseConnectionString2 = new System.Windows.Forms.LinkLabel();
+            this.pnlConnectWithConnectionString = new System.Windows.Forms.Panel();
+            this.btnReset2 = new System.Windows.Forms.Button();
+            this.btnBack2 = new System.Windows.Forms.Button();
+            this.lblConnectionString = new System.Windows.Forms.Label();
+            this.txtConnectionString = new System.Windows.Forms.TextBox();
+            this.llConnectionStringHelp = new System.Windows.Forms.LinkLabel();
+            this.btnConnectWithConnectionString = new System.Windows.Forms.Button();
+            this.lblPreview = new System.Windows.Forms.Label();
             this.pnlConnectMoreActiveDirectoryInfo.SuspendLayout();
             this.pnlConnectAuthentication.SuspendLayout();
             this.pnlHeader.SuspendLayout();
@@ -77,6 +87,7 @@
             this.pnlWaiting.SuspendLayout();
             this.pnlConnected.SuspendLayout();
             this.pnlError.SuspendLayout();
+            this.pnlConnectWithConnectionString.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtOrganizationUrl
@@ -345,11 +356,10 @@
             // 
             // lblDescription
             // 
-            this.lblDescription.AutoSize = true;
             this.lblDescription.Location = new System.Drawing.Point(10, 31);
             this.lblDescription.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblDescription.Name = "lblDescription";
-            this.lblDescription.Size = new System.Drawing.Size(504, 26);
+            this.lblDescription.Size = new System.Drawing.Size(550, 36);
             this.lblDescription.TabIndex = 1;
             this.lblDescription.Text = "Enter the url displayed in the browser when you are connected to your Microsoft D" +
     "ynamics CRM \r\norganization";
@@ -377,6 +387,7 @@
             // 
             // pnlConnectUrl
             // 
+            this.pnlConnectUrl.Controls.Add(this.llUseConnectionString);
             this.pnlConnectUrl.Controls.Add(this.txtTimeout);
             this.pnlConnectUrl.Controls.Add(this.label4);
             this.pnlConnectUrl.Controls.Add(this.chkUseIntegratedAuthentication);
@@ -503,6 +514,7 @@
             // 
             // pnlError
             // 
+            this.pnlError.Controls.Add(this.llUseConnectionString2);
             this.pnlError.Controls.Add(this.button1);
             this.pnlError.Controls.Add(this.button2);
             this.pnlError.Controls.Add(this.lblError);
@@ -547,19 +559,134 @@
             this.lblError.TabIndex = 0;
             this.lblError.Text = "[lblError]";
             // 
+            // llUseConnectionString
+            // 
+            this.llUseConnectionString.AutoSize = true;
+            this.llUseConnectionString.Location = new System.Drawing.Point(5, 107);
+            this.llUseConnectionString.Name = "llUseConnectionString";
+            this.llUseConnectionString.Size = new System.Drawing.Size(443, 13);
+            this.llUseConnectionString.TabIndex = 12;
+            this.llUseConnectionString.TabStop = true;
+            this.llUseConnectionString.Text = "I will connect to the Microsoft Dynamics CRM organization using a connection stri" +
+    "ng";
+            this.llUseConnectionString.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llUseConnectionString_LinkClicked);
+            // 
+            // llUseConnectionString2
+            // 
+            this.llUseConnectionString2.AutoSize = true;
+            this.llUseConnectionString2.Location = new System.Drawing.Point(5, 112);
+            this.llUseConnectionString2.Name = "llUseConnectionString2";
+            this.llUseConnectionString2.Size = new System.Drawing.Size(249, 13);
+            this.llUseConnectionString2.TabIndex = 16;
+            this.llUseConnectionString2.TabStop = true;
+            this.llUseConnectionString2.Text = "Let me try to connect using a connection string";
+            this.llUseConnectionString2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llUseConnectionString_LinkClicked);
+            // 
+            // pnlConnectWithConnectionString
+            // 
+            this.pnlConnectWithConnectionString.Controls.Add(this.lblPreview);
+            this.pnlConnectWithConnectionString.Controls.Add(this.btnConnectWithConnectionString);
+            this.pnlConnectWithConnectionString.Controls.Add(this.llConnectionStringHelp);
+            this.pnlConnectWithConnectionString.Controls.Add(this.txtConnectionString);
+            this.pnlConnectWithConnectionString.Controls.Add(this.lblConnectionString);
+            this.pnlConnectWithConnectionString.Controls.Add(this.btnReset2);
+            this.pnlConnectWithConnectionString.Controls.Add(this.btnBack2);
+            this.pnlConnectWithConnectionString.Location = new System.Drawing.Point(0, 71);
+            this.pnlConnectWithConnectionString.Margin = new System.Windows.Forms.Padding(2);
+            this.pnlConnectWithConnectionString.Name = "pnlConnectWithConnectionString";
+            this.pnlConnectWithConnectionString.Size = new System.Drawing.Size(563, 135);
+            this.pnlConnectWithConnectionString.TabIndex = 15;
+            this.pnlConnectWithConnectionString.Visible = false;
+            // 
+            // btnReset2
+            // 
+            this.btnReset2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnReset2.Location = new System.Drawing.Point(346, 107);
+            this.btnReset2.Margin = new System.Windows.Forms.Padding(2);
+            this.btnReset2.Name = "btnReset2";
+            this.btnReset2.Size = new System.Drawing.Size(67, 23);
+            this.btnReset2.TabIndex = 14;
+            this.btnReset2.Text = "Reset";
+            this.btnReset2.UseVisualStyleBackColor = true;
+            this.btnReset2.Click += new System.EventHandler(this.btnReset_Click);
+            // 
+            // btnBack2
+            // 
+            this.btnBack2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnBack2.Location = new System.Drawing.Point(417, 107);
+            this.btnBack2.Margin = new System.Windows.Forms.Padding(2);
+            this.btnBack2.Name = "btnBack2";
+            this.btnBack2.Size = new System.Drawing.Size(67, 23);
+            this.btnBack2.TabIndex = 15;
+            this.btnBack2.Text = "Back";
+            this.btnBack2.UseVisualStyleBackColor = true;
+            this.btnBack2.Click += new System.EventHandler(this.btnBack_Click);
+            // 
+            // lblConnectionString
+            // 
+            this.lblConnectionString.AutoSize = true;
+            this.lblConnectionString.Location = new System.Drawing.Point(3, 16);
+            this.lblConnectionString.Name = "lblConnectionString";
+            this.lblConnectionString.Size = new System.Drawing.Size(100, 13);
+            this.lblConnectionString.TabIndex = 16;
+            this.lblConnectionString.Text = "Connection string";
+            // 
+            // txtConnectionString
+            // 
+            this.txtConnectionString.Location = new System.Drawing.Point(3, 38);
+            this.txtConnectionString.Multiline = true;
+            this.txtConnectionString.Name = "txtConnectionString";
+            this.txtConnectionString.Size = new System.Drawing.Size(557, 64);
+            this.txtConnectionString.TabIndex = 17;
+            // 
+            // llConnectionStringHelp
+            // 
+            this.llConnectionStringHelp.AutoSize = true;
+            this.llConnectionStringHelp.Location = new System.Drawing.Point(8, 112);
+            this.llConnectionStringHelp.Name = "llConnectionStringHelp";
+            this.llConnectionStringHelp.Size = new System.Drawing.Size(189, 13);
+            this.llConnectionStringHelp.TabIndex = 18;
+            this.llConnectionStringHelp.TabStop = true;
+            this.llConnectionStringHelp.Text = "Help me with the connection stirng";
+            this.llConnectionStringHelp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llConnectionStringHelp_LinkClicked);
+            // 
+            // btnConnectWithConnectionString
+            // 
+            this.btnConnectWithConnectionString.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnConnectWithConnectionString.Location = new System.Drawing.Point(488, 107);
+            this.btnConnectWithConnectionString.Margin = new System.Windows.Forms.Padding(2);
+            this.btnConnectWithConnectionString.Name = "btnConnectWithConnectionString";
+            this.btnConnectWithConnectionString.Size = new System.Drawing.Size(67, 23);
+            this.btnConnectWithConnectionString.TabIndex = 19;
+            this.btnConnectWithConnectionString.Text = "Connect";
+            this.btnConnectWithConnectionString.UseVisualStyleBackColor = true;
+            this.btnConnectWithConnectionString.Click += new System.EventHandler(this.btnConnectWithConnectionString_Click);
+            // 
+            // lblPreview
+            // 
+            this.lblPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblPreview.AutoSize = true;
+            this.lblPreview.ForeColor = System.Drawing.Color.Red;
+            this.lblPreview.Location = new System.Drawing.Point(455, 16);
+            this.lblPreview.Name = "lblPreview";
+            this.lblPreview.Size = new System.Drawing.Size(100, 13);
+            this.lblPreview.TabIndex = 20;
+            this.lblPreview.Text = "PREVIEW FEATURE";
+            // 
             // ConnectionWizard
             // 
             this.AcceptButton = this.btnGo;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(563, 212);
+            this.Controls.Add(this.pnlConnectWithConnectionString);
             this.Controls.Add(this.pnlHeader);
-            this.Controls.Add(this.pnlConnectMoreActiveDirectoryInfo);
             this.Controls.Add(this.pnlError);
             this.Controls.Add(this.pnlConnected);
             this.Controls.Add(this.pnlWaiting);
             this.Controls.Add(this.pnlConnectUrl);
             this.Controls.Add(this.pnlConnectAuthentication);
+            this.Controls.Add(this.pnlConnectMoreActiveDirectoryInfo);
             this.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Margin = new System.Windows.Forms.Padding(2);
@@ -579,6 +706,9 @@
             this.pnlConnected.ResumeLayout(false);
             this.pnlConnected.PerformLayout();
             this.pnlError.ResumeLayout(false);
+            this.pnlError.PerformLayout();
+            this.pnlConnectWithConnectionString.ResumeLayout(false);
+            this.pnlConnectWithConnectionString.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -627,6 +757,16 @@
         private System.Windows.Forms.CheckBox chkSavePassword;
         private System.Windows.Forms.TextBox txtTimeout;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.LinkLabel llUseConnectionString;
+        private System.Windows.Forms.LinkLabel llUseConnectionString2;
+        private System.Windows.Forms.Panel pnlConnectWithConnectionString;
+        private System.Windows.Forms.LinkLabel llConnectionStringHelp;
+        private System.Windows.Forms.TextBox txtConnectionString;
+        private System.Windows.Forms.Label lblConnectionString;
+        private System.Windows.Forms.Button btnReset2;
+        private System.Windows.Forms.Button btnBack2;
+        private System.Windows.Forms.Button btnConnectWithConnectionString;
+        private System.Windows.Forms.Label lblPreview;
     }
 }
 
