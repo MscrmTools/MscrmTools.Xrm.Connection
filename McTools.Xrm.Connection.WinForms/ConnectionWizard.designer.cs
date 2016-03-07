@@ -55,6 +55,7 @@
             this.lblHeader = new System.Windows.Forms.Label();
             this.lblUrl = new System.Windows.Forms.Label();
             this.pnlConnectUrl = new System.Windows.Forms.Panel();
+            this.llUseConnectionString = new System.Windows.Forms.LinkLabel();
             this.txtTimeout = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.chkUseIntegratedAuthentication = new System.Windows.Forms.CheckBox();
@@ -67,19 +68,18 @@
             this.txtConnectionName = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.pnlError = new System.Windows.Forms.Panel();
+            this.llUseConnectionString2 = new System.Windows.Forms.LinkLabel();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.lblError = new System.Windows.Forms.Label();
-            this.llUseConnectionString = new System.Windows.Forms.LinkLabel();
-            this.llUseConnectionString2 = new System.Windows.Forms.LinkLabel();
             this.pnlConnectWithConnectionString = new System.Windows.Forms.Panel();
+            this.lblPreview = new System.Windows.Forms.Label();
+            this.btnConnectWithConnectionString = new System.Windows.Forms.Button();
+            this.llConnectionStringHelp = new System.Windows.Forms.LinkLabel();
+            this.txtConnectionString = new System.Windows.Forms.TextBox();
+            this.lblConnectionString = new System.Windows.Forms.Label();
             this.btnReset2 = new System.Windows.Forms.Button();
             this.btnBack2 = new System.Windows.Forms.Button();
-            this.lblConnectionString = new System.Windows.Forms.Label();
-            this.txtConnectionString = new System.Windows.Forms.TextBox();
-            this.llConnectionStringHelp = new System.Windows.Forms.LinkLabel();
-            this.btnConnectWithConnectionString = new System.Windows.Forms.Button();
-            this.lblPreview = new System.Windows.Forms.Label();
             this.pnlConnectMoreActiveDirectoryInfo.SuspendLayout();
             this.pnlConnectAuthentication.SuspendLayout();
             this.pnlHeader.SuspendLayout();
@@ -92,19 +92,17 @@
             // 
             // txtOrganizationUrl
             // 
-            this.txtOrganizationUrl.Location = new System.Drawing.Point(94, 3);
-            this.txtOrganizationUrl.Margin = new System.Windows.Forms.Padding(2);
+            this.txtOrganizationUrl.Location = new System.Drawing.Point(141, 4);
             this.txtOrganizationUrl.Name = "txtOrganizationUrl";
-            this.txtOrganizationUrl.Size = new System.Drawing.Size(388, 22);
+            this.txtOrganizationUrl.Size = new System.Drawing.Size(580, 29);
             this.txtOrganizationUrl.TabIndex = 0;
             this.txtOrganizationUrl.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtOrganizationUrl_KeyDown);
             // 
             // btnGo
             // 
-            this.btnGo.Location = new System.Drawing.Point(486, 2);
-            this.btnGo.Margin = new System.Windows.Forms.Padding(2);
+            this.btnGo.Location = new System.Drawing.Point(729, 3);
             this.btnGo.Name = "btnGo";
-            this.btnGo.Size = new System.Drawing.Size(70, 23);
+            this.btnGo.Size = new System.Drawing.Size(105, 34);
             this.btnGo.TabIndex = 3;
             this.btnGo.Text = "Go";
             this.btnGo.UseVisualStyleBackColor = true;
@@ -120,19 +118,17 @@
             this.pnlConnectMoreActiveDirectoryInfo.Controls.Add(this.rbIfdNo);
             this.pnlConnectMoreActiveDirectoryInfo.Controls.Add(this.rbIfdYes);
             this.pnlConnectMoreActiveDirectoryInfo.Controls.Add(this.btnValidateIfdInfo);
-            this.pnlConnectMoreActiveDirectoryInfo.Location = new System.Drawing.Point(0, 71);
-            this.pnlConnectMoreActiveDirectoryInfo.Margin = new System.Windows.Forms.Padding(2);
+            this.pnlConnectMoreActiveDirectoryInfo.Location = new System.Drawing.Point(0, 106);
             this.pnlConnectMoreActiveDirectoryInfo.Name = "pnlConnectMoreActiveDirectoryInfo";
-            this.pnlConnectMoreActiveDirectoryInfo.Size = new System.Drawing.Size(563, 135);
+            this.pnlConnectMoreActiveDirectoryInfo.Size = new System.Drawing.Size(844, 202);
             this.pnlConnectMoreActiveDirectoryInfo.TabIndex = 2;
             this.pnlConnectMoreActiveDirectoryInfo.Visible = false;
             // 
             // btnReset
             // 
-            this.btnReset.Location = new System.Drawing.Point(333, 109);
-            this.btnReset.Margin = new System.Windows.Forms.Padding(2);
+            this.btnReset.Location = new System.Drawing.Point(500, 164);
             this.btnReset.Name = "btnReset";
-            this.btnReset.Size = new System.Drawing.Size(67, 23);
+            this.btnReset.Size = new System.Drawing.Size(100, 34);
             this.btnReset.TabIndex = 8;
             this.btnReset.Text = "Reset";
             this.btnReset.UseVisualStyleBackColor = true;
@@ -140,10 +136,9 @@
             // 
             // btnBack
             // 
-            this.btnBack.Location = new System.Drawing.Point(404, 109);
-            this.btnBack.Margin = new System.Windows.Forms.Padding(2);
+            this.btnBack.Location = new System.Drawing.Point(606, 164);
             this.btnBack.Name = "btnBack";
-            this.btnBack.Size = new System.Drawing.Size(67, 23);
+            this.btnBack.Size = new System.Drawing.Size(100, 34);
             this.btnBack.TabIndex = 9;
             this.btnBack.Text = "Back";
             this.btnBack.UseVisualStyleBackColor = true;
@@ -152,40 +147,36 @@
             // lblIfdQuestion
             // 
             this.lblIfdQuestion.AutoSize = true;
-            this.lblIfdQuestion.Location = new System.Drawing.Point(8, 2);
-            this.lblIfdQuestion.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblIfdQuestion.Location = new System.Drawing.Point(12, 3);
             this.lblIfdQuestion.Name = "lblIfdQuestion";
-            this.lblIfdQuestion.Size = new System.Drawing.Size(357, 13);
+            this.lblIfdQuestion.Size = new System.Drawing.Size(476, 21);
             this.lblIfdQuestion.TabIndex = 8;
             this.lblIfdQuestion.Text = "Are you connecting to an Internet Facing Deployment organization?";
             // 
             // lblHomeRealmQuestion
             // 
             this.lblHomeRealmQuestion.AutoSize = true;
-            this.lblHomeRealmQuestion.Location = new System.Drawing.Point(10, 33);
-            this.lblHomeRealmQuestion.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblHomeRealmQuestion.Location = new System.Drawing.Point(15, 50);
             this.lblHomeRealmQuestion.Name = "lblHomeRealmQuestion";
-            this.lblHomeRealmQuestion.Size = new System.Drawing.Size(253, 13);
+            this.lblHomeRealmQuestion.Size = new System.Drawing.Size(345, 21);
             this.lblHomeRealmQuestion.TabIndex = 7;
             this.lblHomeRealmQuestion.Text = "If necessary, you can speficiy the home realm url";
             // 
             // txtHomeRealm
             // 
             this.txtHomeRealm.Enabled = false;
-            this.txtHomeRealm.Location = new System.Drawing.Point(11, 52);
-            this.txtHomeRealm.Margin = new System.Windows.Forms.Padding(2);
+            this.txtHomeRealm.Location = new System.Drawing.Point(16, 78);
             this.txtHomeRealm.Name = "txtHomeRealm";
-            this.txtHomeRealm.Size = new System.Drawing.Size(545, 22);
+            this.txtHomeRealm.Size = new System.Drawing.Size(816, 29);
             this.txtHomeRealm.TabIndex = 7;
             // 
             // rbIfdNo
             // 
             this.rbIfdNo.AutoSize = true;
             this.rbIfdNo.Checked = true;
-            this.rbIfdNo.Location = new System.Drawing.Point(369, 1);
-            this.rbIfdNo.Margin = new System.Windows.Forms.Padding(2);
+            this.rbIfdNo.Location = new System.Drawing.Point(554, 2);
             this.rbIfdNo.Name = "rbIfdNo";
-            this.rbIfdNo.Size = new System.Drawing.Size(40, 17);
+            this.rbIfdNo.Size = new System.Drawing.Size(56, 25);
             this.rbIfdNo.TabIndex = 5;
             this.rbIfdNo.TabStop = true;
             this.rbIfdNo.Text = "No";
@@ -194,10 +185,9 @@
             // rbIfdYes
             // 
             this.rbIfdYes.AutoSize = true;
-            this.rbIfdYes.Location = new System.Drawing.Point(413, 1);
-            this.rbIfdYes.Margin = new System.Windows.Forms.Padding(2);
+            this.rbIfdYes.Location = new System.Drawing.Point(620, 2);
             this.rbIfdYes.Name = "rbIfdYes";
-            this.rbIfdYes.Size = new System.Drawing.Size(40, 17);
+            this.rbIfdYes.Size = new System.Drawing.Size(58, 25);
             this.rbIfdYes.TabIndex = 6;
             this.rbIfdYes.Text = "Yes";
             this.rbIfdYes.UseVisualStyleBackColor = true;
@@ -205,10 +195,9 @@
             // 
             // btnValidateIfdInfo
             // 
-            this.btnValidateIfdInfo.Location = new System.Drawing.Point(475, 109);
-            this.btnValidateIfdInfo.Margin = new System.Windows.Forms.Padding(2);
+            this.btnValidateIfdInfo.Location = new System.Drawing.Point(712, 164);
             this.btnValidateIfdInfo.Name = "btnValidateIfdInfo";
-            this.btnValidateIfdInfo.Size = new System.Drawing.Size(80, 23);
+            this.btnValidateIfdInfo.Size = new System.Drawing.Size(120, 34);
             this.btnValidateIfdInfo.TabIndex = 10;
             this.btnValidateIfdInfo.Text = "Next";
             this.btnValidateIfdInfo.UseVisualStyleBackColor = true;
@@ -226,10 +215,9 @@
             this.pnlConnectAuthentication.Controls.Add(this.txtUsername);
             this.pnlConnectAuthentication.Controls.Add(this.txtDomain);
             this.pnlConnectAuthentication.Controls.Add(this.btnConnect);
-            this.pnlConnectAuthentication.Location = new System.Drawing.Point(0, 71);
-            this.pnlConnectAuthentication.Margin = new System.Windows.Forms.Padding(2);
+            this.pnlConnectAuthentication.Location = new System.Drawing.Point(0, 106);
             this.pnlConnectAuthentication.Name = "pnlConnectAuthentication";
-            this.pnlConnectAuthentication.Size = new System.Drawing.Size(563, 135);
+            this.pnlConnectAuthentication.Size = new System.Drawing.Size(844, 202);
             this.pnlConnectAuthentication.TabIndex = 8;
             this.pnlConnectAuthentication.Visible = false;
             // 
@@ -237,9 +225,10 @@
             // 
             this.chkSavePassword.AutoSize = true;
             this.chkSavePassword.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkSavePassword.Location = new System.Drawing.Point(254, 87);
+            this.chkSavePassword.Location = new System.Drawing.Point(381, 130);
+            this.chkSavePassword.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkSavePassword.Name = "chkSavePassword";
-            this.chkSavePassword.Size = new System.Drawing.Size(301, 17);
+            this.chkSavePassword.Size = new System.Drawing.Size(405, 25);
             this.chkSavePassword.TabIndex = 6;
             this.chkSavePassword.Text = "Save password as encrypted string in connections file";
             this.chkSavePassword.UseVisualStyleBackColor = true;
@@ -247,10 +236,9 @@
             // btnReset3
             // 
             this.btnReset3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnReset3.Location = new System.Drawing.Point(333, 109);
-            this.btnReset3.Margin = new System.Windows.Forms.Padding(2);
+            this.btnReset3.Location = new System.Drawing.Point(500, 164);
             this.btnReset3.Name = "btnReset3";
-            this.btnReset3.Size = new System.Drawing.Size(67, 23);
+            this.btnReset3.Size = new System.Drawing.Size(100, 34);
             this.btnReset3.TabIndex = 7;
             this.btnReset3.Text = "Reset";
             this.btnReset3.UseVisualStyleBackColor = true;
@@ -259,10 +247,9 @@
             // btnBack3
             // 
             this.btnBack3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBack3.Location = new System.Drawing.Point(404, 109);
-            this.btnBack3.Margin = new System.Windows.Forms.Padding(2);
+            this.btnBack3.Location = new System.Drawing.Point(606, 164);
             this.btnBack3.Name = "btnBack3";
-            this.btnBack3.Size = new System.Drawing.Size(67, 23);
+            this.btnBack3.Size = new System.Drawing.Size(100, 34);
             this.btnBack3.TabIndex = 8;
             this.btnBack3.Text = "Back";
             this.btnBack3.UseVisualStyleBackColor = true;
@@ -271,30 +258,27 @@
             // lblPassword
             // 
             this.lblPassword.AutoSize = true;
-            this.lblPassword.Location = new System.Drawing.Point(8, 64);
-            this.lblPassword.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblPassword.Location = new System.Drawing.Point(12, 96);
             this.lblPassword.Name = "lblPassword";
-            this.lblPassword.Size = new System.Drawing.Size(56, 13);
+            this.lblPassword.Size = new System.Drawing.Size(76, 21);
             this.lblPassword.TabIndex = 11;
             this.lblPassword.Text = "Password";
             // 
             // lblUsername
             // 
             this.lblUsername.AutoSize = true;
-            this.lblUsername.Location = new System.Drawing.Point(10, 38);
-            this.lblUsername.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblUsername.Location = new System.Drawing.Point(15, 57);
             this.lblUsername.Name = "lblUsername";
-            this.lblUsername.Size = new System.Drawing.Size(58, 13);
+            this.lblUsername.Size = new System.Drawing.Size(81, 21);
             this.lblUsername.TabIndex = 10;
             this.lblUsername.Text = "Username";
             // 
             // lblDomain
             // 
             this.lblDomain.AutoSize = true;
-            this.lblDomain.Location = new System.Drawing.Point(11, 12);
-            this.lblDomain.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblDomain.Location = new System.Drawing.Point(16, 18);
             this.lblDomain.Name = "lblDomain";
-            this.lblDomain.Size = new System.Drawing.Size(47, 13);
+            this.lblDomain.Size = new System.Drawing.Size(65, 21);
             this.lblDomain.TabIndex = 9;
             this.lblDomain.Text = "Domain";
             // 
@@ -302,11 +286,10 @@
             // 
             this.txtPassword.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPassword.Location = new System.Drawing.Point(72, 61);
-            this.txtPassword.Margin = new System.Windows.Forms.Padding(2);
+            this.txtPassword.Location = new System.Drawing.Point(108, 92);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.PasswordChar = '*';
-            this.txtPassword.Size = new System.Drawing.Size(483, 22);
+            this.txtPassword.Size = new System.Drawing.Size(722, 29);
             this.txtPassword.TabIndex = 5;
             this.txtPassword.Enter += new System.EventHandler(this.txtPassword_Enter);
             // 
@@ -314,29 +297,26 @@
             // 
             this.txtUsername.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtUsername.Location = new System.Drawing.Point(72, 35);
-            this.txtUsername.Margin = new System.Windows.Forms.Padding(2);
+            this.txtUsername.Location = new System.Drawing.Point(108, 52);
             this.txtUsername.Name = "txtUsername";
-            this.txtUsername.Size = new System.Drawing.Size(483, 22);
+            this.txtUsername.Size = new System.Drawing.Size(722, 29);
             this.txtUsername.TabIndex = 4;
             // 
             // txtDomain
             // 
             this.txtDomain.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtDomain.Location = new System.Drawing.Point(72, 9);
-            this.txtDomain.Margin = new System.Windows.Forms.Padding(2);
+            this.txtDomain.Location = new System.Drawing.Point(108, 14);
             this.txtDomain.Name = "txtDomain";
-            this.txtDomain.Size = new System.Drawing.Size(483, 22);
+            this.txtDomain.Size = new System.Drawing.Size(722, 29);
             this.txtDomain.TabIndex = 3;
             // 
             // btnConnect
             // 
             this.btnConnect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnConnect.Location = new System.Drawing.Point(475, 109);
-            this.btnConnect.Margin = new System.Windows.Forms.Padding(2);
+            this.btnConnect.Location = new System.Drawing.Point(712, 164);
             this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(80, 23);
+            this.btnConnect.Size = new System.Drawing.Size(120, 34);
             this.btnConnect.TabIndex = 9;
             this.btnConnect.Text = "Connect";
             this.btnConnect.UseVisualStyleBackColor = true;
@@ -349,17 +329,15 @@
             this.pnlHeader.Controls.Add(this.lblHeader);
             this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlHeader.Location = new System.Drawing.Point(0, 0);
-            this.pnlHeader.Margin = new System.Windows.Forms.Padding(2);
             this.pnlHeader.Name = "pnlHeader";
-            this.pnlHeader.Size = new System.Drawing.Size(563, 67);
+            this.pnlHeader.Size = new System.Drawing.Size(844, 100);
             this.pnlHeader.TabIndex = 9;
             // 
             // lblDescription
             // 
-            this.lblDescription.Location = new System.Drawing.Point(10, 31);
-            this.lblDescription.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblDescription.Location = new System.Drawing.Point(15, 46);
             this.lblDescription.Name = "lblDescription";
-            this.lblDescription.Size = new System.Drawing.Size(550, 36);
+            this.lblDescription.Size = new System.Drawing.Size(825, 54);
             this.lblDescription.TabIndex = 1;
             this.lblDescription.Text = "Enter the url displayed in the browser when you are connected to your Microsoft D" +
     "ynamics CRM \r\norganization";
@@ -368,20 +346,18 @@
             // 
             this.lblHeader.AutoSize = true;
             this.lblHeader.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblHeader.Location = new System.Drawing.Point(8, 6);
-            this.lblHeader.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblHeader.Location = new System.Drawing.Point(12, 9);
             this.lblHeader.Name = "lblHeader";
-            this.lblHeader.Size = new System.Drawing.Size(149, 25);
+            this.lblHeader.Size = new System.Drawing.Size(218, 38);
             this.lblHeader.TabIndex = 0;
             this.lblHeader.Text = "New connection";
             // 
             // lblUrl
             // 
             this.lblUrl.AutoSize = true;
-            this.lblUrl.Location = new System.Drawing.Point(3, 5);
-            this.lblUrl.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblUrl.Location = new System.Drawing.Point(4, 8);
             this.lblUrl.Name = "lblUrl";
-            this.lblUrl.Size = new System.Drawing.Size(92, 13);
+            this.lblUrl.Size = new System.Drawing.Size(123, 21);
             this.lblUrl.TabIndex = 10;
             this.lblUrl.Text = "Organization url";
             // 
@@ -394,38 +370,47 @@
             this.pnlConnectUrl.Controls.Add(this.txtOrganizationUrl);
             this.pnlConnectUrl.Controls.Add(this.lblUrl);
             this.pnlConnectUrl.Controls.Add(this.btnGo);
-            this.pnlConnectUrl.Location = new System.Drawing.Point(0, 71);
-            this.pnlConnectUrl.Margin = new System.Windows.Forms.Padding(2);
+            this.pnlConnectUrl.Location = new System.Drawing.Point(0, 106);
             this.pnlConnectUrl.Name = "pnlConnectUrl";
-            this.pnlConnectUrl.Size = new System.Drawing.Size(563, 135);
+            this.pnlConnectUrl.Size = new System.Drawing.Size(844, 202);
             this.pnlConnectUrl.TabIndex = 11;
+            // 
+            // llUseConnectionString
+            // 
+            this.llUseConnectionString.AutoSize = true;
+            this.llUseConnectionString.Location = new System.Drawing.Point(8, 160);
+            this.llUseConnectionString.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.llUseConnectionString.Name = "llUseConnectionString";
+            this.llUseConnectionString.Size = new System.Drawing.Size(593, 21);
+            this.llUseConnectionString.TabIndex = 12;
+            this.llUseConnectionString.TabStop = true;
+            this.llUseConnectionString.Text = "I will connect to the Microsoft Dynamics CRM organization using a connection stri" +
+    "ng";
+            this.llUseConnectionString.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llUseConnectionString_LinkClicked);
             // 
             // txtTimeout
             // 
-            this.txtTimeout.Location = new System.Drawing.Point(94, 68);
-            this.txtTimeout.Margin = new System.Windows.Forms.Padding(2);
+            this.txtTimeout.Location = new System.Drawing.Point(141, 102);
             this.txtTimeout.Name = "txtTimeout";
-            this.txtTimeout.Size = new System.Drawing.Size(50, 22);
+            this.txtTimeout.Size = new System.Drawing.Size(73, 29);
             this.txtTimeout.TabIndex = 2;
             this.txtTimeout.Text = "00:02:00";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 71);
-            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label4.Location = new System.Drawing.Point(4, 106);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(85, 13);
+            this.label4.Size = new System.Drawing.Size(118, 21);
             this.label4.TabIndex = 11;
             this.label4.Text = "Service timeout";
             // 
             // chkUseIntegratedAuthentication
             // 
             this.chkUseIntegratedAuthentication.AutoSize = true;
-            this.chkUseIntegratedAuthentication.Location = new System.Drawing.Point(94, 28);
-            this.chkUseIntegratedAuthentication.Margin = new System.Windows.Forms.Padding(2);
+            this.chkUseIntegratedAuthentication.Location = new System.Drawing.Point(141, 42);
             this.chkUseIntegratedAuthentication.Name = "chkUseIntegratedAuthentication";
-            this.chkUseIntegratedAuthentication.Size = new System.Drawing.Size(170, 17);
+            this.chkUseIntegratedAuthentication.Size = new System.Drawing.Size(231, 25);
             this.chkUseIntegratedAuthentication.TabIndex = 1;
             this.chkUseIntegratedAuthentication.Text = "Use your current credentials";
             this.chkUseIntegratedAuthentication.UseVisualStyleBackColor = true;
@@ -435,28 +420,27 @@
             // 
             this.pnlWaiting.Controls.Add(this.label3);
             this.pnlWaiting.Controls.Add(this.progressBar1);
-            this.pnlWaiting.Location = new System.Drawing.Point(0, 71);
-            this.pnlWaiting.Margin = new System.Windows.Forms.Padding(2);
+            this.pnlWaiting.Location = new System.Drawing.Point(0, 106);
             this.pnlWaiting.Name = "pnlWaiting";
-            this.pnlWaiting.Size = new System.Drawing.Size(563, 135);
+            this.pnlWaiting.Size = new System.Drawing.Size(844, 202);
             this.pnlWaiting.TabIndex = 12;
             this.pnlWaiting.Visible = false;
             // 
             // label3
             // 
-            this.label3.Location = new System.Drawing.Point(9, 27);
+            this.label3.Location = new System.Drawing.Point(14, 40);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(546, 23);
+            this.label3.Size = new System.Drawing.Size(819, 34);
             this.label3.TabIndex = 1;
             this.label3.Text = "Trying to connect to your Microsoft Dynamics CRM organization";
             this.label3.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(9, 3);
-            this.progressBar1.Margin = new System.Windows.Forms.Padding(2);
+            this.progressBar1.Location = new System.Drawing.Point(14, 4);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(546, 21);
+            this.progressBar1.Size = new System.Drawing.Size(819, 32);
             this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.progressBar1.TabIndex = 0;
             // 
@@ -466,20 +450,18 @@
             this.pnlConnected.Controls.Add(this.label2);
             this.pnlConnected.Controls.Add(this.txtConnectionName);
             this.pnlConnected.Controls.Add(this.label1);
-            this.pnlConnected.Location = new System.Drawing.Point(0, 71);
-            this.pnlConnected.Margin = new System.Windows.Forms.Padding(2);
+            this.pnlConnected.Location = new System.Drawing.Point(0, 106);
             this.pnlConnected.Name = "pnlConnected";
-            this.pnlConnected.Size = new System.Drawing.Size(563, 135);
+            this.pnlConnected.Size = new System.Drawing.Size(844, 202);
             this.pnlConnected.TabIndex = 13;
             this.pnlConnected.Visible = false;
             // 
             // btnFinish
             // 
             this.btnFinish.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnFinish.Location = new System.Drawing.Point(476, 107);
-            this.btnFinish.Margin = new System.Windows.Forms.Padding(2);
+            this.btnFinish.Location = new System.Drawing.Point(714, 160);
             this.btnFinish.Name = "btnFinish";
-            this.btnFinish.Size = new System.Drawing.Size(80, 23);
+            this.btnFinish.Size = new System.Drawing.Size(120, 34);
             this.btnFinish.TabIndex = 17;
             this.btnFinish.Text = "Finish";
             this.btnFinish.UseVisualStyleBackColor = true;
@@ -488,26 +470,27 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 58);
+            this.label2.Location = new System.Drawing.Point(20, 87);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(36, 13);
+            this.label2.Size = new System.Drawing.Size(52, 21);
             this.label2.TabIndex = 2;
             this.label2.Text = "Name";
             // 
             // txtConnectionName
             // 
-            this.txtConnectionName.Location = new System.Drawing.Point(57, 55);
+            this.txtConnectionName.Location = new System.Drawing.Point(86, 82);
+            this.txtConnectionName.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtConnectionName.Name = "txtConnectionName";
-            this.txtConnectionName.Size = new System.Drawing.Size(494, 22);
+            this.txtConnectionName.Size = new System.Drawing.Size(739, 29);
             this.txtConnectionName.TabIndex = 16;
             this.txtConnectionName.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(10, 9);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label1.Location = new System.Drawing.Point(15, 14);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(542, 42);
+            this.label1.Size = new System.Drawing.Size(813, 63);
             this.label1.TabIndex = 0;
             this.label1.Text = "The connection was created successfully. If you want to save this connection, ple" +
     "ase provide a name for this connection.";
@@ -518,20 +501,30 @@
             this.pnlError.Controls.Add(this.button1);
             this.pnlError.Controls.Add(this.button2);
             this.pnlError.Controls.Add(this.lblError);
-            this.pnlError.Location = new System.Drawing.Point(0, 71);
-            this.pnlError.Margin = new System.Windows.Forms.Padding(2);
+            this.pnlError.Location = new System.Drawing.Point(0, 106);
             this.pnlError.Name = "pnlError";
-            this.pnlError.Size = new System.Drawing.Size(563, 135);
+            this.pnlError.Size = new System.Drawing.Size(844, 202);
             this.pnlError.TabIndex = 14;
             this.pnlError.Visible = false;
+            // 
+            // llUseConnectionString2
+            // 
+            this.llUseConnectionString2.AutoSize = true;
+            this.llUseConnectionString2.Location = new System.Drawing.Point(8, 168);
+            this.llUseConnectionString2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.llUseConnectionString2.Name = "llUseConnectionString2";
+            this.llUseConnectionString2.Size = new System.Drawing.Size(334, 21);
+            this.llUseConnectionString2.TabIndex = 16;
+            this.llUseConnectionString2.TabStop = true;
+            this.llUseConnectionString2.Text = "Let me try to connect using a connection string";
+            this.llUseConnectionString2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llUseConnectionString_LinkClicked);
             // 
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(423, 107);
-            this.button1.Margin = new System.Windows.Forms.Padding(2);
+            this.button1.Location = new System.Drawing.Point(634, 160);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(67, 23);
+            this.button1.Size = new System.Drawing.Size(100, 34);
             this.button1.TabIndex = 14;
             this.button1.Text = "Reset";
             this.button1.UseVisualStyleBackColor = true;
@@ -540,10 +533,9 @@
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Location = new System.Drawing.Point(494, 107);
-            this.button2.Margin = new System.Windows.Forms.Padding(2);
+            this.button2.Location = new System.Drawing.Point(741, 160);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(67, 23);
+            this.button2.Size = new System.Drawing.Size(100, 34);
             this.button2.TabIndex = 15;
             this.button2.Text = "Back";
             this.button2.UseVisualStyleBackColor = true;
@@ -552,35 +544,11 @@
             // lblError
             // 
             this.lblError.ForeColor = System.Drawing.Color.Red;
-            this.lblError.Location = new System.Drawing.Point(13, 12);
-            this.lblError.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblError.Location = new System.Drawing.Point(20, 18);
             this.lblError.Name = "lblError";
-            this.lblError.Size = new System.Drawing.Size(539, 83);
+            this.lblError.Size = new System.Drawing.Size(808, 124);
             this.lblError.TabIndex = 0;
             this.lblError.Text = "[lblError]";
-            // 
-            // llUseConnectionString
-            // 
-            this.llUseConnectionString.AutoSize = true;
-            this.llUseConnectionString.Location = new System.Drawing.Point(5, 107);
-            this.llUseConnectionString.Name = "llUseConnectionString";
-            this.llUseConnectionString.Size = new System.Drawing.Size(443, 13);
-            this.llUseConnectionString.TabIndex = 12;
-            this.llUseConnectionString.TabStop = true;
-            this.llUseConnectionString.Text = "I will connect to the Microsoft Dynamics CRM organization using a connection stri" +
-    "ng";
-            this.llUseConnectionString.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llUseConnectionString_LinkClicked);
-            // 
-            // llUseConnectionString2
-            // 
-            this.llUseConnectionString2.AutoSize = true;
-            this.llUseConnectionString2.Location = new System.Drawing.Point(5, 112);
-            this.llUseConnectionString2.Name = "llUseConnectionString2";
-            this.llUseConnectionString2.Size = new System.Drawing.Size(249, 13);
-            this.llUseConnectionString2.TabIndex = 16;
-            this.llUseConnectionString2.TabStop = true;
-            this.llUseConnectionString2.Text = "Let me try to connect using a connection string";
-            this.llUseConnectionString2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llUseConnectionString_LinkClicked);
             // 
             // pnlConnectWithConnectionString
             // 
@@ -591,20 +559,76 @@
             this.pnlConnectWithConnectionString.Controls.Add(this.lblConnectionString);
             this.pnlConnectWithConnectionString.Controls.Add(this.btnReset2);
             this.pnlConnectWithConnectionString.Controls.Add(this.btnBack2);
-            this.pnlConnectWithConnectionString.Location = new System.Drawing.Point(0, 71);
-            this.pnlConnectWithConnectionString.Margin = new System.Windows.Forms.Padding(2);
+            this.pnlConnectWithConnectionString.Location = new System.Drawing.Point(0, 106);
             this.pnlConnectWithConnectionString.Name = "pnlConnectWithConnectionString";
-            this.pnlConnectWithConnectionString.Size = new System.Drawing.Size(563, 135);
+            this.pnlConnectWithConnectionString.Size = new System.Drawing.Size(844, 202);
             this.pnlConnectWithConnectionString.TabIndex = 15;
             this.pnlConnectWithConnectionString.Visible = false;
+            // 
+            // lblPreview
+            // 
+            this.lblPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblPreview.AutoSize = true;
+            this.lblPreview.ForeColor = System.Drawing.Color.Red;
+            this.lblPreview.Location = new System.Drawing.Point(682, 24);
+            this.lblPreview.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPreview.Name = "lblPreview";
+            this.lblPreview.Size = new System.Drawing.Size(140, 21);
+            this.lblPreview.TabIndex = 20;
+            this.lblPreview.Text = "PREVIEW FEATURE";
+            // 
+            // btnConnectWithConnectionString
+            // 
+            this.btnConnectWithConnectionString.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnConnectWithConnectionString.Location = new System.Drawing.Point(732, 160);
+            this.btnConnectWithConnectionString.Name = "btnConnectWithConnectionString";
+            this.btnConnectWithConnectionString.Size = new System.Drawing.Size(100, 34);
+            this.btnConnectWithConnectionString.TabIndex = 19;
+            this.btnConnectWithConnectionString.Text = "Connect";
+            this.btnConnectWithConnectionString.UseVisualStyleBackColor = true;
+            this.btnConnectWithConnectionString.Click += new System.EventHandler(this.btnConnectWithConnectionString_Click);
+            // 
+            // llConnectionStringHelp
+            // 
+            this.llConnectionStringHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.llConnectionStringHelp.AutoSize = true;
+            this.llConnectionStringHelp.Location = new System.Drawing.Point(12, 168);
+            this.llConnectionStringHelp.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.llConnectionStringHelp.Name = "llConnectionStringHelp";
+            this.llConnectionStringHelp.Size = new System.Drawing.Size(252, 21);
+            this.llConnectionStringHelp.TabIndex = 18;
+            this.llConnectionStringHelp.TabStop = true;
+            this.llConnectionStringHelp.Text = "Help me with the connection stirng";
+            this.llConnectionStringHelp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llConnectionStringHelp_LinkClicked);
+            // 
+            // txtConnectionString
+            // 
+            this.txtConnectionString.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtConnectionString.Location = new System.Drawing.Point(4, 57);
+            this.txtConnectionString.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtConnectionString.Multiline = true;
+            this.txtConnectionString.Name = "txtConnectionString";
+            this.txtConnectionString.Size = new System.Drawing.Size(834, 94);
+            this.txtConnectionString.TabIndex = 17;
+            // 
+            // lblConnectionString
+            // 
+            this.lblConnectionString.AutoSize = true;
+            this.lblConnectionString.Location = new System.Drawing.Point(4, 24);
+            this.lblConnectionString.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblConnectionString.Name = "lblConnectionString";
+            this.lblConnectionString.Size = new System.Drawing.Size(133, 21);
+            this.lblConnectionString.TabIndex = 16;
+            this.lblConnectionString.Text = "Connection string";
             // 
             // btnReset2
             // 
             this.btnReset2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnReset2.Location = new System.Drawing.Point(346, 107);
-            this.btnReset2.Margin = new System.Windows.Forms.Padding(2);
+            this.btnReset2.Location = new System.Drawing.Point(519, 160);
             this.btnReset2.Name = "btnReset2";
-            this.btnReset2.Size = new System.Drawing.Size(67, 23);
+            this.btnReset2.Size = new System.Drawing.Size(100, 34);
             this.btnReset2.TabIndex = 14;
             this.btnReset2.Text = "Reset";
             this.btnReset2.UseVisualStyleBackColor = true;
@@ -613,72 +637,20 @@
             // btnBack2
             // 
             this.btnBack2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBack2.Location = new System.Drawing.Point(417, 107);
-            this.btnBack2.Margin = new System.Windows.Forms.Padding(2);
+            this.btnBack2.Location = new System.Drawing.Point(626, 160);
             this.btnBack2.Name = "btnBack2";
-            this.btnBack2.Size = new System.Drawing.Size(67, 23);
+            this.btnBack2.Size = new System.Drawing.Size(100, 34);
             this.btnBack2.TabIndex = 15;
             this.btnBack2.Text = "Back";
             this.btnBack2.UseVisualStyleBackColor = true;
             this.btnBack2.Click += new System.EventHandler(this.btnBack_Click);
             // 
-            // lblConnectionString
-            // 
-            this.lblConnectionString.AutoSize = true;
-            this.lblConnectionString.Location = new System.Drawing.Point(3, 16);
-            this.lblConnectionString.Name = "lblConnectionString";
-            this.lblConnectionString.Size = new System.Drawing.Size(100, 13);
-            this.lblConnectionString.TabIndex = 16;
-            this.lblConnectionString.Text = "Connection string";
-            // 
-            // txtConnectionString
-            // 
-            this.txtConnectionString.Location = new System.Drawing.Point(3, 38);
-            this.txtConnectionString.Multiline = true;
-            this.txtConnectionString.Name = "txtConnectionString";
-            this.txtConnectionString.Size = new System.Drawing.Size(557, 64);
-            this.txtConnectionString.TabIndex = 17;
-            // 
-            // llConnectionStringHelp
-            // 
-            this.llConnectionStringHelp.AutoSize = true;
-            this.llConnectionStringHelp.Location = new System.Drawing.Point(8, 112);
-            this.llConnectionStringHelp.Name = "llConnectionStringHelp";
-            this.llConnectionStringHelp.Size = new System.Drawing.Size(189, 13);
-            this.llConnectionStringHelp.TabIndex = 18;
-            this.llConnectionStringHelp.TabStop = true;
-            this.llConnectionStringHelp.Text = "Help me with the connection stirng";
-            this.llConnectionStringHelp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llConnectionStringHelp_LinkClicked);
-            // 
-            // btnConnectWithConnectionString
-            // 
-            this.btnConnectWithConnectionString.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnConnectWithConnectionString.Location = new System.Drawing.Point(488, 107);
-            this.btnConnectWithConnectionString.Margin = new System.Windows.Forms.Padding(2);
-            this.btnConnectWithConnectionString.Name = "btnConnectWithConnectionString";
-            this.btnConnectWithConnectionString.Size = new System.Drawing.Size(67, 23);
-            this.btnConnectWithConnectionString.TabIndex = 19;
-            this.btnConnectWithConnectionString.Text = "Connect";
-            this.btnConnectWithConnectionString.UseVisualStyleBackColor = true;
-            this.btnConnectWithConnectionString.Click += new System.EventHandler(this.btnConnectWithConnectionString_Click);
-            // 
-            // lblPreview
-            // 
-            this.lblPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblPreview.AutoSize = true;
-            this.lblPreview.ForeColor = System.Drawing.Color.Red;
-            this.lblPreview.Location = new System.Drawing.Point(455, 16);
-            this.lblPreview.Name = "lblPreview";
-            this.lblPreview.Size = new System.Drawing.Size(100, 13);
-            this.lblPreview.TabIndex = 20;
-            this.lblPreview.Text = "PREVIEW FEATURE";
-            // 
             // ConnectionWizard
             // 
             this.AcceptButton = this.btnGo;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(563, 212);
+            this.ClientSize = new System.Drawing.Size(844, 318);
             this.Controls.Add(this.pnlConnectWithConnectionString);
             this.Controls.Add(this.pnlHeader);
             this.Controls.Add(this.pnlError);
@@ -689,7 +661,6 @@
             this.Controls.Add(this.pnlConnectMoreActiveDirectoryInfo);
             this.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ConnectionWizard";

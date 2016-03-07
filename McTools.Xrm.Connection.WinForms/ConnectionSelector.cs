@@ -1,5 +1,4 @@
-﻿using Microsoft.Xrm.Sdk.Client;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -75,7 +74,7 @@ namespace McTools.Xrm.Connection.WinForms
 
                 if (!ConnectionManager.Instance.ConnectionsList.UseMruDisplay)
                 {
-                    item.Group = GetGroup(detail.AuthType);
+                    item.Group = GetGroup(detail);
                 }
 
                 lvConnections.Items.Add(item);
@@ -223,27 +222,25 @@ namespace McTools.Xrm.Connection.WinForms
             LoadConnectionFile();
         }
 
-        private ListViewGroup GetGroup(AuthenticationProviderType type)
+        private ListViewGroup GetGroup(ConnectionDetail detail)
         {
-            string groupName = string.Empty;
+            string groupName;
 
-            switch (type)
+            if (detail.UseOsdp)
             {
-                case AuthenticationProviderType.ActiveDirectory:
-                    groupName = "OnPremise";
-                    break;
-
-                case AuthenticationProviderType.OnlineFederation:
-                    groupName = "CRM Online - Office 365";
-                    break;
-
-                case AuthenticationProviderType.LiveId:
-                    groupName = "CRM Online - CTP";
-                    break;
-
-                case AuthenticationProviderType.Federation:
-                    groupName = "Claims authentication - Internet Facing Deployment";
-                    break;
+                groupName = "CRM Online - Office 365";
+            }
+            else if (detail.UseOnline)
+            {
+                groupName = "CRM Online - CTP";
+            }
+            else if (detail.UseIfd)
+            {
+                groupName = "Claims authentication - Internet Facing Deployment";
+            }
+            else
+            {
+                groupName = "OnPremise";
             }
 
             var group = lvConnections.Groups.Cast<ListViewGroup>().FirstOrDefault(g => g.Name == groupName);
@@ -287,7 +284,7 @@ namespace McTools.Xrm.Connection.WinForms
         private void tsb_UseMru_CheckedChanged(object sender, EventArgs e)
         {
             var tsb = (ToolStripButton)sender;
-            ConnectionManager.Instance.ConnectionsList.UseMruDisplay = tsb_UseMru.Checked;
+            ConnectionManager.Instance.ConnectionsList.UseMruDisplay = tsb.Checked;
 
             DisplayConnections(allowMultipleSelection);
         }
@@ -331,7 +328,7 @@ namespace McTools.Xrm.Connection.WinForms
                 item.SubItems.Add(newConnection.Organization);
                 item.SubItems.Add(newConnection.OrganizationVersion);
                 item.Tag = newConnection;
-                item.Group = GetGroup(newConnection.AuthType);
+                item.Group = GetGroup(newConnection);
                 item.ImageIndex = GetImageIndex(newConnection);
 
                 lvConnections.Items.Add(item);
@@ -395,7 +392,7 @@ namespace McTools.Xrm.Connection.WinForms
                     {
                         item.SubItems.Add(cForm.CrmConnectionDetail.OrganizationVersion);
                     }
-                    item.Group = GetGroup(cForm.CrmConnectionDetail.AuthType);
+                    item.Group = GetGroup(cForm.CrmConnectionDetail);
 
                     lvConnections.Refresh();
 
