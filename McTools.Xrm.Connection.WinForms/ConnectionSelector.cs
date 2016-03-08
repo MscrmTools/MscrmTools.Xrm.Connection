@@ -205,18 +205,28 @@ namespace McTools.Xrm.Connection.WinForms
 
         private void ConnectionSelector_Load(object sender, EventArgs e)
         {
+            var mostRecentFile = ConnectionsList.Instance.Files.OrderByDescending(f => f.LastUsed).First();
+            var index = 0;
+            var indexToSelect = 0;
+
             tscbbConnectionsFile.Items.Add(ConnectionsList.Instance.Files.First(k => k.Name == "Default"));
             currentIndex = 0;
 
             foreach (var file in ConnectionsList.Instance.Files.Where(k => k.Name != "Default").OrderBy(k => k.Name))
             {
                 tscbbConnectionsFile.Items.Add(file);
+
+                index++;
+                if (file.Name == mostRecentFile.Name)
+                {
+                    indexToSelect = index;
+                }
             }
 
             tscbbConnectionsFile.Items.Add("<Create new connection file>");
             tscbbConnectionsFile.Items.Add("<Add an existing connection file>");
 
-            tscbbConnectionsFile.SelectedIndex = 0;
+            tscbbConnectionsFile.SelectedIndex = indexToSelect;
 
             // Display connections
             LoadConnectionFile();
@@ -410,11 +420,11 @@ namespace McTools.Xrm.Connection.WinForms
         private void tscbbConnectionsFile_SelectedIndexChanged(object sender, EventArgs e)
         {
             var cbbValue = tscbbConnectionsFile.SelectedItem;
-            var connection = cbbValue as ConnectionFile;
+            var connectionFile = cbbValue as ConnectionFile;
             bool loadConnections = true;
 
             // If null, then we selected an action rather than a connection file
-            if (connection == null)
+            if (connectionFile == null)
             {
                 tscbbConnectionsFile.SelectedIndexChanged -= tscbbConnectionsFile_SelectedIndexChanged;
                 tscbbConnectionsFile.SelectedIndex = currentIndex;
@@ -464,15 +474,19 @@ namespace McTools.Xrm.Connection.WinForms
                 currentIndex = tscbbConnectionsFile.SelectedIndex;
 
                 // Or it is a connection file so we load it for the connection manager
-                ConnectionManager.ConfigurationFile = connection.Path;
+                ConnectionManager.ConfigurationFile = connectionFile.Path;
 
                 tsbRemoveConnectionList.Enabled = ConnectionManager.Instance.ConnectionsList.Name != "Default";
+
+                connectionFile.LastUsed = DateTime.Now;
             }
 
             if (loadConnections)
             {
                 LoadConnectionFile();
             }
+
+            ConnectionsList.Instance.Save();
         }
     }
 }

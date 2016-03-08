@@ -37,7 +37,7 @@ namespace McTools.Xrm.Connection.WinForms
             CrmConnections cc = new CrmConnections(txtConnectionName.Text);
             cc.SerializeToFile(txtFilePath.Text);
 
-            ConnectionsList.Instance.Files.Add(new ConnectionFile { Name = txtConnectionName.Text, Path = txtFilePath.Text });
+            ConnectionsList.Instance.Files.Add(new ConnectionFile { Name = txtConnectionName.Text, Path = txtFilePath.Text, LastUsed = DateTime.Now });
             ConnectionsList.Instance.Save();
 
             CreatedFilePath = txtFilePath.Text;

@@ -16,7 +16,7 @@ namespace McTools.Xrm.Connection.WinForms
         {
             var ofd = new OpenFileDialog
             {
-                Filter = "XML file|*.xml",
+                Filter = "XML file|*.xml|CONFIG file|*.config",
             };
 
             if (ofd.ShowDialog(this) == DialogResult.OK)
@@ -41,7 +41,8 @@ namespace McTools.Xrm.Connection.WinForms
                 ConnectionsList.Instance.Files.Add(new ConnectionFile
                 {
                     Name = ConnectionManager.Instance.ConnectionsList.Name,
-                    Path = txtFilePath.Text
+                    Path = txtFilePath.Text,
+                    LastUsed = DateTime.Now
                 });
                 ConnectionsList.Instance.Save();
 

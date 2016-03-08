@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
@@ -6,6 +7,8 @@ namespace McTools.Xrm.Connection
 {
     public class ConnectionFile
     {
+        public DateTime LastUsed { get; set; }
+
         public string Name { get; set; }
 
         public string Path { get; set; }
