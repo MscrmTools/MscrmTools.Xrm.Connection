@@ -101,9 +101,6 @@
     <Reference Include="Microsoft.Xrm.Tooling.CrmConnectControl">
       <HintPath>..\..\Referenced Assemblies\Microsoft.Xrm.Tooling.CrmConnectControl.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Xrm.Tooling.CrmConnectControl">
-      <HintPath>..\..\Referenced Assemblies\Microsoft.Xrm.Tooling.CrmConnectControl.dll</HintPath>
-    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
