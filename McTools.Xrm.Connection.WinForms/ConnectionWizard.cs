@@ -194,17 +194,6 @@ namespace McTools.Xrm.Connection.WinForms
 
                 if (updatedDetail.ServerName.IndexOf("dynamics.com", StringComparison.Ordinal) > 0)
                 {
-                    // MFA test
-                    //var t = new Task(() =>
-                    //{
-                    //    var svc1 = new CrmServiceClient("AuthType=OAuth;Username=user1@crm2016rtm.onmicrosoft.com; Password=pass@word1;Url=https://crm2016rtm.crm4.dynamics.com;AppId=7d770fd6-f087-40f0-b41f-e55bf556cdac;RedirectUri=http://www.xrmtoolbox.com;TokenCacheStorePath=c:\\temp;LoginPrompt=Always");
-                    //    //var svc1 = new CrmServiceClient("AuthType=Office365;Username=tanguy@crm2016rtm.onmicrosoft.com; Password=Emeline18*;Url=https://crm2016rtm.crm4.dynamics.com;");
-                    //});
-
-                    //t.Start();
-
-                    // return;
-
                     updatedDetail.UseOnline = true;
                     updatedDetail.UseOsdp = true;
 
@@ -406,8 +395,7 @@ namespace McTools.Xrm.Connection.WinForms
             // Check data if authentication panel is the current displayed one
             if (pnlConnectAuthentication.Visible)
             {
-                if (string.IsNullOrEmpty(txtDomain.Text) && txtDomain.Enabled
-                    || string.IsNullOrEmpty(txtUsername.Text)
+                if (string.IsNullOrEmpty(txtUsername.Text)
                     || string.IsNullOrEmpty(txtPassword.Text))
                 {
                     MessageBox.Show(this, Resources.ConnectionWizard_PleaseEnterCredentials,
