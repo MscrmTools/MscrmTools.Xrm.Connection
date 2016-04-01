@@ -326,6 +326,11 @@ namespace McTools.Xrm.Connection
                 throw new Exception(error);
             }
 
+            if (crmSvc.OrganizationServiceProxy != null)
+            {
+                crmSvc.OrganizationServiceProxy.Timeout = Timeout;
+            }
+
             return crmSvc;
         }
 
@@ -377,6 +382,7 @@ namespace McTools.Xrm.Connection
             userPassword = editedConnection.userPassword;
             UseSsl = editedConnection.UseSsl;
             HomeRealmUrl = editedConnection.HomeRealmUrl;
+            Timeout = editedConnection.Timeout;
         }
 
         private CrmServiceClient ConnectOnline(bool isOffice365, bool useSsl, string expliciteOrgName = null)

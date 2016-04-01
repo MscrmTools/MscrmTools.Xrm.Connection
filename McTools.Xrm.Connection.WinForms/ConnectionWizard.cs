@@ -56,6 +56,7 @@ namespace McTools.Xrm.Connection.WinForms
                 txtHomeRealm.Text = detail.HomeRealmUrl;
                 chkUseIntegratedAuthentication.Checked = !detail.IsCustomAuth;
                 rbIfdYes.Checked = detail.UseIfd;
+                txtTimeout.Text = string.Format("{0:dd\\.hh\\:mm\\:ss}", detail.Timeout);
 
                 updatedDetail = (ConnectionDetail)originalDetail.Clone();
 
