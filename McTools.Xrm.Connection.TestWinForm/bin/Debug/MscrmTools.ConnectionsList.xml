@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ConnectionsList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Files>
+    <ConnectionFile>
+      <LastUsed>2016-05-23T12:04:21.2651606+02:00</LastUsed>
+      <Name>Default</Name>
+      <Path>mscrmtools2011.config</Path>
+    </ConnectionFile>
+  </Files>
+</ConnectionsList>
