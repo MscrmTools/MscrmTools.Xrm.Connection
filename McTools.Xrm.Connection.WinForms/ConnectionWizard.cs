@@ -42,14 +42,14 @@ namespace McTools.Xrm.Connection.WinForms
                     txtPassword.PasswordChar = (char)0;
                     txtPassword.UseSystemPasswordChar = false;
                     txtPassword.Text = SpecifyPasswordText;
-                    txtPassword.ForeColor = Color.DarkGray;
+                    txtPassword.ForeColor = SystemColors.GrayText;
                 }
                 else
                 {
                     txtPassword.PasswordChar = '•';
                     txtPassword.UseSystemPasswordChar = true;
                     txtPassword.Text = "@@PASSWORD@@";
-                    txtPassword.ForeColor = Color.Black;
+                    txtPassword.ForeColor = SystemColors.ActiveCaptionText;
                 }
 
                 txtConnectionString.Text = detail.ConnectionString;
@@ -538,12 +538,46 @@ namespace McTools.Xrm.Connection.WinForms
 
         private void txtPassword_Enter(object sender, EventArgs e)
         {
-            if (txtPassword.ForeColor == Color.DarkGray && txtPassword.Text == SpecifyPasswordText)
+
+        }
+
+        private void txt_Enter(object sender, EventArgs e)
+        {
+            var txt = (TextBox)sender;
+            if (txt.ForeColor == SystemColors.GrayText)
             {
-                txtPassword.Text = string.Empty;
-                txtPassword.ForeColor = Color.Black;
-                txtPassword.PasswordChar = '•';
-                txtPassword.UseSystemPasswordChar = true;
+                txt.Text = string.Empty;
+                txt.ForeColor = SystemColors.ActiveCaptionText;
+
+                if (txt == txtPassword)
+                {
+                    txt.UseSystemPasswordChar = true;
+                    txt.PasswordChar = '•';
+                }
+            }
+        }
+
+        private void txt_Leave(object sender, EventArgs e)
+        {
+            var txt = (TextBox)sender;
+
+            if (txt.Text.Length == 0)
+            {
+                txt.ForeColor = SystemColors.GrayText;
+                if (txt == txtDomain)
+                {
+                    txt.Text = "Provide domain name, possibly not mandatory for IFD connection";
+                }
+                else if (txt == txtUsername)
+                {
+                    txt.Text = "Provide user name. For IFD connections, try domain\\username";
+                }
+                else if (txt == txtPassword)
+                {
+                    txt.PasswordChar = '\0';
+                    txt.UseSystemPasswordChar = false;
+                    txt.Text = "Type your password here";
+                }
             }
         }
     }

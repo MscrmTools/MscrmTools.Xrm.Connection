@@ -226,7 +226,7 @@
             this.chkSavePassword.AutoSize = true;
             this.chkSavePassword.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.chkSavePassword.Location = new System.Drawing.Point(381, 130);
-            this.chkSavePassword.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkSavePassword.Margin = new System.Windows.Forms.Padding(4);
             this.chkSavePassword.Name = "chkSavePassword";
             this.chkSavePassword.Size = new System.Drawing.Size(405, 25);
             this.chkSavePassword.TabIndex = 6;
@@ -286,30 +286,40 @@
             // 
             this.txtPassword.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtPassword.ForeColor = System.Drawing.SystemColors.GrayText;
             this.txtPassword.Location = new System.Drawing.Point(108, 92);
             this.txtPassword.Name = "txtPassword";
-            this.txtPassword.PasswordChar = '*';
             this.txtPassword.Size = new System.Drawing.Size(722, 29);
             this.txtPassword.TabIndex = 5;
-            this.txtPassword.Enter += new System.EventHandler(this.txtPassword_Enter);
+            this.txtPassword.Text = "Type your password here";
+            this.txtPassword.Enter += new System.EventHandler(this.txt_Enter);
+            this.txtPassword.Leave += new System.EventHandler(this.txt_Leave);
             // 
             // txtUsername
             // 
             this.txtUsername.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtUsername.ForeColor = System.Drawing.SystemColors.GrayText;
             this.txtUsername.Location = new System.Drawing.Point(108, 52);
             this.txtUsername.Name = "txtUsername";
             this.txtUsername.Size = new System.Drawing.Size(722, 29);
             this.txtUsername.TabIndex = 4;
+            this.txtUsername.Text = "Provide user name. For IFD connections, try domain\\username";
+            this.txtUsername.Enter += new System.EventHandler(this.txt_Enter);
+            this.txtUsername.Leave += new System.EventHandler(this.txt_Leave);
             // 
             // txtDomain
             // 
             this.txtDomain.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtDomain.ForeColor = System.Drawing.SystemColors.GrayText;
             this.txtDomain.Location = new System.Drawing.Point(108, 14);
             this.txtDomain.Name = "txtDomain";
             this.txtDomain.Size = new System.Drawing.Size(722, 29);
             this.txtDomain.TabIndex = 3;
+            this.txtDomain.Text = "Provide domain name, possibly not mandatory for IFD connection";
+            this.txtDomain.Enter += new System.EventHandler(this.txt_Enter);
+            this.txtDomain.Leave += new System.EventHandler(this.txt_Leave);
             // 
             // btnConnect
             // 
@@ -428,19 +438,21 @@
             // 
             // label3
             // 
-            this.label3.Location = new System.Drawing.Point(14, 40);
+            this.label3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label3.Location = new System.Drawing.Point(0, 32);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(819, 34);
+            this.label3.Size = new System.Drawing.Size(844, 34);
             this.label3.TabIndex = 1;
             this.label3.Text = "Trying to connect to your Microsoft Dynamics CRM organization";
             this.label3.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(14, 4);
+            this.progressBar1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.progressBar1.Location = new System.Drawing.Point(0, 0);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(819, 32);
+            this.progressBar1.Size = new System.Drawing.Size(844, 32);
             this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.progressBar1.TabIndex = 0;
             // 
@@ -480,7 +492,7 @@
             // txtConnectionName
             // 
             this.txtConnectionName.Location = new System.Drawing.Point(86, 82);
-            this.txtConnectionName.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtConnectionName.Margin = new System.Windows.Forms.Padding(4);
             this.txtConnectionName.Name = "txtConnectionName";
             this.txtConnectionName.Size = new System.Drawing.Size(739, 29);
             this.txtConnectionName.TabIndex = 16;
@@ -607,7 +619,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtConnectionString.Location = new System.Drawing.Point(4, 57);
-            this.txtConnectionString.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtConnectionString.Margin = new System.Windows.Forms.Padding(4);
             this.txtConnectionString.Multiline = true;
             this.txtConnectionString.Name = "txtConnectionString";
             this.txtConnectionString.Size = new System.Drawing.Size(834, 94);
@@ -651,14 +663,14 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(844, 318);
-            this.Controls.Add(this.pnlConnectWithConnectionString);
             this.Controls.Add(this.pnlHeader);
-            this.Controls.Add(this.pnlError);
-            this.Controls.Add(this.pnlConnected);
-            this.Controls.Add(this.pnlWaiting);
             this.Controls.Add(this.pnlConnectUrl);
             this.Controls.Add(this.pnlConnectAuthentication);
             this.Controls.Add(this.pnlConnectMoreActiveDirectoryInfo);
+            this.Controls.Add(this.pnlConnectWithConnectionString);
+            this.Controls.Add(this.pnlError);
+            this.Controls.Add(this.pnlConnected);
+            this.Controls.Add(this.pnlWaiting);
             this.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
