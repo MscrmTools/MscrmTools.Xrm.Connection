@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("McTools.Xrm.Connection")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
+[assembly: AssemblyCompany("MscrmTools")]
 [assembly: AssemblyProduct("McTools.Xrm.Connection")]
 [assembly: AssemblyCopyright("Copyright © MscrmTools 2012")]
 [assembly: AssemblyTrademark("")]
