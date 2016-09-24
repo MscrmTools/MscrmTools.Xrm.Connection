@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using System.Xml;
+using Message = System.ServiceModel.Channels.Message;
 
 namespace McTools.Xrm.Connection.WinForms
 {
@@ -211,22 +215,42 @@ namespace McTools.Xrm.Connection.WinForms
 
             tscbbConnectionsFile.Items.Add(ConnectionsList.Instance.Files.First(k => k.Name == "Default"));
             currentIndex = 0;
-
-            foreach (var file in ConnectionsList.Instance.Files.Where(k => k.Name != "Default").OrderBy(k => k.Name))
+           
+            foreach (var file in ConnectionsList.Instance.Files.Where(k=>k.Name != "Default").OrderBy(k => k.Name))
             {
-                tscbbConnectionsFile.Items.Add(file);
-
                 index++;
                 if (file.Name == mostRecentFile.Name)
                 {
                     indexToSelect = index;
                 }
+                else
+                {
+                    index--;
+                    tsbMoveToExistingFile.DropDownItems.Add(new ToolStripButton
+                    {
+                        Text = file.Name,
+                        Tag = file,
+                        Size = new Size(155, 22),
+                        AutoSize = true
+                    });
+                }
+
+                if (file.Name == "Default")
+                {
+                    continue;
+                }
+
+                tscbbConnectionsFile.Items.Add(file);
             }
 
             tscbbConnectionsFile.Items.Add("<Create new connection file>");
             tscbbConnectionsFile.Items.Add("<Add an existing connection file>");
 
+            tscbbConnectionsFile.SelectedIndexChanged -= tscbbConnectionsFile_SelectedIndexChanged;
             tscbbConnectionsFile.SelectedIndex = indexToSelect;
+            tscbbConnectionsFile.SelectedIndexChanged += tscbbConnectionsFile_SelectedIndexChanged;
+
+            tsbMoveToExistingFile.Enabled = tscbbConnectionsFile.Items.Count > 3;
 
             // Display connections
             LoadConnectionFile();
@@ -323,11 +347,6 @@ namespace McTools.Xrm.Connection.WinForms
                 StartPosition = FormStartPosition.CenterParent
             };
 
-            //var cForm = new ConnectionForm(true, false)
-            //{
-            //    StartPosition = FormStartPosition.CenterParent
-            //};
-
             if (cForm.ShowDialog(this) == DialogResult.OK)
             {
                 var newConnection = cForm.CrmConnectionDetail;
@@ -365,11 +384,18 @@ namespace McTools.Xrm.Connection.WinForms
 
         private void tsbRemoveConnectionList_Click(object sender, EventArgs e)
         {
+            var message = "Are you sure you want to delete this connections list file?";
+            if (MessageBox.Show(this, message, "Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question) ==
+                DialogResult.No)
+                return;
+
             var item = (ConnectionFile)tscbbConnectionsFile.SelectedItem;
             tscbbConnectionsFile.Items.RemoveAt(tscbbConnectionsFile.SelectedIndex);
             ConnectionsList.Instance.Files.Remove(item);
             ConnectionsList.Instance.Save();
             tscbbConnectionsFile.SelectedIndex = tscbbConnectionsFile.Items.Count - 3;
+
+            tsbMoveToExistingFile.Enabled = tscbbConnectionsFile.Items.Count > 3;
         }
 
         private void tsbUpdateConnection_Click(object sender, EventArgs e)
@@ -382,12 +408,6 @@ namespace McTools.Xrm.Connection.WinForms
                 {
                     StartPosition = FormStartPosition.CenterParent
                 };
-
-                //var cForm = new ConnectionForm(false, false)
-                //{
-                //    CrmConnectionDetail = (ConnectionDetail)item.Tag,
-                //    StartPosition = FormStartPosition.CenterParent
-                //};
 
                 if (cForm.ShowDialog(this) == DialogResult.OK)
                 {
@@ -444,6 +464,8 @@ namespace McTools.Xrm.Connection.WinForms
                             ConnectionsList.Instance.Files.First(f => f.Path == nfd.CreatedFilePath));
                         tscbbConnectionsFile.SelectedIndex = newIndex;
                         tsbRemoveConnectionList.Enabled = true;
+
+                        tsbMoveToExistingFile.Enabled = tscbbConnectionsFile.Items.Count > 3;
                     }
                     else
                     {
@@ -479,6 +501,23 @@ namespace McTools.Xrm.Connection.WinForms
                 tsbRemoveConnectionList.Enabled = ConnectionManager.Instance.ConnectionsList.Name != "Default";
 
                 connectionFile.LastUsed = DateTime.Now;
+
+                tsbMoveToExistingFile.DropDownItems.Clear();
+                foreach (var file in ConnectionsList.Instance.Files.OrderBy(k => k.Name))
+                {
+                    if (connectionFile.Path == file.Path)
+                    {
+                        continue;
+                    }
+
+                    tsbMoveToExistingFile.DropDownItems.Add(new ToolStripButton
+                        {
+                            Text = file.Name,
+                            Tag = file,
+                            Size = new Size(155,22),
+                            AutoSize = true
+                        });
+                }
             }
 
             if (loadConnections)
@@ -487,6 +526,69 @@ namespace McTools.Xrm.Connection.WinForms
             }
 
             ConnectionsList.Instance.Save();
+        }
+
+        private void tsbMoveAllToNewFile_Click(object sender, EventArgs e)
+        {
+            bool loadConnections = true;
+
+            var nfd = new NewConnectionFileDialog();
+            if (nfd.ShowDialog(this) == DialogResult.OK)
+            {
+                var allConnections = ConnectionManager.Instance.ConnectionsList.Connections;
+                ConnectionManager.Instance.ConnectionsList.Connections = new List<ConnectionDetail>();
+                ConnectionManager.Instance.SaveConnectionsFile();
+                
+                ConnectionManager.ConfigurationFile = nfd.CreatedFilePath;
+
+                var newIndex = tscbbConnectionsFile.Items.Count - 2;
+
+                tscbbConnectionsFile.Items.Insert(newIndex, ConnectionsList.Instance.Files.First(f => f.Path == nfd.CreatedFilePath));
+                tscbbConnectionsFile.SelectedIndex = newIndex;
+                tsbRemoveConnectionList.Enabled = true;
+
+                ConnectionManager.Instance.ConnectionsList.Connections = allConnections;
+                ConnectionManager.Instance.SaveConnectionsFile();
+            }
+            else
+            {
+                loadConnections = false;
+            }
+
+            if (loadConnections)
+            {
+                LoadConnectionFile();
+            }
+
+            ConnectionsList.Instance.Save();
+
+            tsbMoveToExistingFile.Enabled = tscbbConnectionsFile.Items.Count > 3;
+        }
+
+        private void tsbMoveToExistingFile_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            var connectionsIds =
+                lvConnections.SelectedItems.Cast<ListViewItem>().Select(i => ((ConnectionDetail) i.Tag).ConnectionId);
+
+            var currentFilePath = ConnectionManager.ConfigurationFile;
+            var newFilePath = ((ConnectionFile) e.ClickedItem.Tag).Path;
+
+            var currentDoc = new XmlDocument();
+            currentDoc.Load(currentFilePath);
+            var newDoc = new XmlDocument();
+            newDoc.Load(newFilePath);
+
+            foreach (var connectionId in connectionsIds)
+            {
+                var nodeToMove = currentDoc.SelectSingleNode("//ConnectionDetail[ConnectionId/text()='" + connectionId + "']");
+
+                newDoc.SelectSingleNode("//Connections").AppendChild(newDoc.ImportNode(nodeToMove, true));
+                currentDoc.SelectSingleNode("//Connections").RemoveChild(nodeToMove);
+            }
+
+            currentDoc.Save(currentFilePath);
+            newDoc.Save(newFilePath);
+            LoadConnectionFile();
         }
     }
 }

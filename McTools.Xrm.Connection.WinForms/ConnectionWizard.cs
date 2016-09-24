@@ -7,9 +7,12 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace McTools.Xrm.Connection.WinForms
 {
@@ -578,6 +581,50 @@ namespace McTools.Xrm.Connection.WinForms
                     txt.UseSystemPasswordChar = false;
                     txt.Text = "Type your password here";
                 }
+            }
+        }
+
+        private void llOpenConnectionLog_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            string logFileName = "";
+
+            //Define XMLDocument for reading config file in to XML doc.
+            XmlDocument xdoc = new XmlDocument();
+            xdoc.Load(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile);
+
+            //Filter desired section
+            XmlNode xnodes = xdoc.SelectSingleNode("/configuration/system.diagnostics/sharedListeners");
+
+            //enumerate nodes in the section
+            foreach (XmlNode xnn in xnodes.ChildNodes)
+            {
+                //when the right node is met
+                if (xnn.Name == "add")
+                {
+                    //enumerate all itc atrubutes
+                    foreach (var att in xnn.Attributes)
+                    {
+                        var a = att as XmlAttribute;
+                        if (a != null)
+                        {
+                            //and get the right one
+                            if (a.Name == "initializeData")
+                            {
+                                //store file path in the variable
+                                logFileName = a.Value;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (string.IsNullOrEmpty(logFileName))
+            {
+                MessageBox.Show(this, "Cannot find log file name in configuration file");
+            }
+            else
+            {
+                Process.Start(Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().FullName).DirectoryName,logFileName));
             }
         }
     }

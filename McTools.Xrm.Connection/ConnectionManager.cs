@@ -173,6 +173,13 @@ namespace McTools.Xrm.Connection
                 configfile = value;
                 if (instance != null)
                 {
+                    var existingFile = Connection.ConnectionsList.Instance.Files.FirstOrDefault(f => f.Path == value);
+                    if (existingFile == null)
+                    {
+                        Connection.ConnectionsList.Instance.Files.Add(new ConnectionFile { Name = new FileInfo(configfile).Name, Path = configfile, LastUsed = DateTime.Now });
+                        Connection.ConnectionsList.Instance.Save();
+                    }
+
                     instance.ConnectionsList = instance.LoadConnectionsList();
                     instance.SetupFileSystemWatcher();
                     if (instance.ConnectionListUpdated != null)

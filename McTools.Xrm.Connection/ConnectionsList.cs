@@ -22,10 +22,17 @@ namespace McTools.Xrm.Connection
     public class ConnectionsList
     {
         private static ConnectionsList instance;
+        private static string connectionsListFilePath = "MscrmTools.ConnectionsList.xml";
 
         private ConnectionsList()
         {
             Files = new List<ConnectionFile>();
+        }
+
+        public static string ConnectionsListFilePath
+        {
+            get { return connectionsListFilePath; }
+            set { connectionsListFilePath = value; }
         }
 
         public static ConnectionsList Instance
@@ -34,8 +41,8 @@ namespace McTools.Xrm.Connection
             {
                 if (instance == null)
                 {
-                    var filename = Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName,
-                        "MscrmTools.ConnectionsList.xml");
+                    var filename = Path.IsPathRooted(connectionsListFilePath) ? connectionsListFilePath : Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName,
+                        connectionsListFilePath);
 
                     if (File.Exists(filename))
                     {
@@ -45,8 +52,10 @@ namespace McTools.Xrm.Connection
                     }
                     else
                     {
+                        var directory = new FileInfo(filename).DirectoryName;
+
                         instance = new ConnectionsList();
-                        instance.Files.Add(new ConnectionFile { Name = "Default", Path = "mscrmtools2011.config" });
+                        instance.Files.Add(new ConnectionFile { Name = "Default", Path = Path.Combine(directory, "mscrmtools2011.config") });
                         instance.Save();
                     }
                 }
@@ -59,7 +68,10 @@ namespace McTools.Xrm.Connection
 
         public void Save()
         {
-            XmlSerializerHelper.SerializeToFile(instance, Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName, "MscrmTools.ConnectionsList.xml"));
+            var filename = Path.IsPathRooted(connectionsListFilePath) ? connectionsListFilePath : Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName,
+                       connectionsListFilePath);
+
+            XmlSerializerHelper.SerializeToFile(instance, filename);
         }
     }
 }

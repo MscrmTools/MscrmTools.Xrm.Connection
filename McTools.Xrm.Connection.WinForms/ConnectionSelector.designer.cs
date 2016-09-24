@@ -45,13 +45,15 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tscbbConnectionsFile = new System.Windows.Forms.ToolStripComboBox();
             this.tsbRemoveConnectionList = new System.Windows.Forms.ToolStripButton();
+            this.tsbMoveAllToNewFile = new System.Windows.Forms.ToolStripButton();
+            this.tsbMoveToExistingFile = new System.Windows.Forms.ToolStripDropDownButton();
             this.menu.SuspendLayout();
             this.SuspendLayout();
             // 
             // bValidate
             // 
             this.bValidate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.bValidate.Location = new System.Drawing.Point(387, 375);
+            this.bValidate.Location = new System.Drawing.Point(479, 375);
             this.bValidate.Name = "bValidate";
             this.bValidate.Size = new System.Drawing.Size(75, 23);
             this.bValidate.TabIndex = 3;
@@ -63,7 +65,7 @@
             // 
             this.bCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.bCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.bCancel.Location = new System.Drawing.Point(468, 375);
+            this.bCancel.Location = new System.Drawing.Point(560, 375);
             this.bCancel.Name = "bCancel";
             this.bCancel.Size = new System.Drawing.Size(75, 23);
             this.bCancel.TabIndex = 4;
@@ -85,7 +87,7 @@
             this.lvConnections.GridLines = true;
             this.lvConnections.Location = new System.Drawing.Point(12, 28);
             this.lvConnections.Name = "lvConnections";
-            this.lvConnections.Size = new System.Drawing.Size(531, 341);
+            this.lvConnections.Size = new System.Drawing.Size(623, 341);
             this.lvConnections.TabIndex = 2;
             this.lvConnections.UseCompatibleStateImageBehavior = false;
             this.lvConnections.View = System.Windows.Forms.View.Details;
@@ -123,10 +125,12 @@
             this.tsb_UseMru,
             this.toolStripSeparator2,
             this.tscbbConnectionsFile,
-            this.tsbRemoveConnectionList});
+            this.tsbRemoveConnectionList,
+            this.tsbMoveAllToNewFile,
+            this.tsbMoveToExistingFile});
             this.menu.Location = new System.Drawing.Point(0, 0);
             this.menu.Name = "menu";
-            this.menu.Size = new System.Drawing.Size(555, 25);
+            this.menu.Size = new System.Drawing.Size(647, 25);
             this.menu.TabIndex = 1;
             this.menu.Text = "toolStrip1";
             // 
@@ -196,12 +200,32 @@
             this.tsbRemoveConnectionList.Text = "Remove selected connection list";
             this.tsbRemoveConnectionList.Click += new System.EventHandler(this.tsbRemoveConnectionList_Click);
             // 
+            // tsbMoveAllToNewFile
+            // 
+            this.tsbMoveAllToNewFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbMoveAllToNewFile.Image = ((System.Drawing.Image)(resources.GetObject("tsbMoveAllToNewFile.Image")));
+            this.tsbMoveAllToNewFile.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbMoveAllToNewFile.Name = "tsbMoveAllToNewFile";
+            this.tsbMoveAllToNewFile.Size = new System.Drawing.Size(23, 22);
+            this.tsbMoveAllToNewFile.Text = "Save all connections to a new file";
+            this.tsbMoveAllToNewFile.Click += new System.EventHandler(this.tsbMoveAllToNewFile_Click);
+            // 
+            // tsbMoveToExistingFile
+            // 
+            this.tsbMoveToExistingFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbMoveToExistingFile.Image = ((System.Drawing.Image)(resources.GetObject("tsbMoveToExistingFile.Image")));
+            this.tsbMoveToExistingFile.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbMoveToExistingFile.Name = "tsbMoveToExistingFile";
+            this.tsbMoveToExistingFile.Size = new System.Drawing.Size(29, 22);
+            this.tsbMoveToExistingFile.Text = "Move selected connections to existing file";
+            this.tsbMoveToExistingFile.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.tsbMoveToExistingFile_DropDownItemClicked);
+            // 
             // ConnectionSelector
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.bCancel;
-            this.ClientSize = new System.Drawing.Size(555, 410);
+            this.ClientSize = new System.Drawing.Size(647, 410);
             this.Controls.Add(this.menu);
             this.Controls.Add(this.bValidate);
             this.Controls.Add(this.bCancel);
@@ -236,5 +260,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripComboBox tscbbConnectionsFile;
         private System.Windows.Forms.ToolStripButton tsbRemoveConnectionList;
+        private System.Windows.Forms.ToolStripButton tsbMoveAllToNewFile;
+        private System.Windows.Forms.ToolStripDropDownButton tsbMoveToExistingFile;
     }
 }
