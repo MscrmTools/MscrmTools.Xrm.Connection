@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace McTools.Xrm.Connection
@@ -47,15 +48,23 @@ namespace McTools.Xrm.Connection
                     if (File.Exists(filename))
                     {
                         using (var sr = new StreamReader(filename))
-
+                        {
                             instance = (ConnectionsList)XmlSerializerHelper.Deserialize(sr.ReadToEnd(), typeof(ConnectionsList));
+                        }
                     }
                     else
                     {
                         var directory = new FileInfo(filename).DirectoryName;
 
+                        if (!Directory.Exists(directory))
+                        {
+                            Directory.CreateDirectory(directory);
+                        }
+
+                        var defaultFilePath = Path.Combine(directory, "ConnectionsList.Default.xml");
+
                         instance = new ConnectionsList();
-                        instance.Files.Add(new ConnectionFile { Name = "Default", Path = Path.Combine(directory, "mscrmtools2011.config") });
+                        instance.Files.Add(new ConnectionFile { Name = "Default", Path = defaultFilePath });
                         instance.Save();
                     }
                 }

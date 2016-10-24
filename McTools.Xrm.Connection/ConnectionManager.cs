@@ -166,6 +166,15 @@ namespace McTools.Xrm.Connection
         {
             get
             {
+                if (string.IsNullOrEmpty(configfile))
+                {
+                    var lastUsedFile = Connection.ConnectionsList.Instance.Files.OrderByDescending(f => f.LastUsed).FirstOrDefault();
+                    if (lastUsedFile != null)
+                    {
+                        return lastUsedFile.Path;
+                    }
+                }
+
                 return string.IsNullOrEmpty(configfile) ? DefaultConfigFileName : configfile;
             }
             set

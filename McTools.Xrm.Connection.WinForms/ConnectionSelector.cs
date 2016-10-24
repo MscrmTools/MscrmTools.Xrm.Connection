@@ -214,6 +214,7 @@ namespace McTools.Xrm.Connection.WinForms
             var indexToSelect = 0;
 
             tscbbConnectionsFile.Items.Add(ConnectionsList.Instance.Files.First(k => k.Name == "Default"));
+            tsbRemoveConnectionList.Enabled = false;
             currentIndex = 0;
            
             foreach (var file in ConnectionsList.Instance.Files.Where(k=>k.Name != "Default").OrderBy(k => k.Name))

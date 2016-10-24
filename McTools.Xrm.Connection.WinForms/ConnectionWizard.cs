@@ -7,12 +7,10 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Windows.Forms;
-using System.Xml;
 
 namespace McTools.Xrm.Connection.WinForms
 {
@@ -317,7 +315,6 @@ namespace McTools.Xrm.Connection.WinForms
             {
                 visitedPath.Add(pnlConnectAuthentication.Name);
                 lblDescription.Text = Resources.ConnectionWizard_CredentialsHeaderDescription;
-                // txtDomain.Enabled = !updatedDetail.UseIfd;
                 DisplayPanel(pnlConnectAuthentication, btnConnect);
 
                 if (txtDomain.Enabled)
@@ -453,53 +450,6 @@ namespace McTools.Xrm.Connection.WinForms
             AcceptButton = acceptButton;
         }
 
-        //private void FillConnectionDetailFromControls(ConnectionDetail detail)
-        //{
-        //    detail.ConnectionName = txtConnectionName.Text;
-        //    detail.OriginalUrl = txtOrganizationUrl.Text;
-        //    detail.UserDomain = txtDomain.Text;
-        //    detail.UserName = txtUsername.Text;
-        //    detail.SavePassword = chkSavePassword.Checked;
-        //    detail.IsCustomAuth = !chkUseIntegratedAuthentication.Checked;
-        //    detail.UseIfd = rbIfdYes.Checked;
-        //    detail.ConnectionId = Guid.NewGuid();
-        //    detail.UseOsdp = isOffice365 || (originalDetail != null && originalDetail.UseOsdp);
-        //    detail.UseOnline = isOnline;
-        //    detail.UseSsl = txtOrganizationUrl.Text.ToLower().StartsWith("https");
-        //    detail.ServerName = hostName;
-        //    detail.Timeout = TimeSpan.Parse(txtTimeout.Text);
-
-        //    if (txtPassword.Text != "@@PASSWORD@@" && txtPassword.Text != SpecifyPasswordText)
-        //    {
-        //        detail.SetPassword(txtPassword.Text);
-        //    }
-
-        //    if (string.IsNullOrEmpty(hostPort))
-        //    {
-        //        if (useSsl)
-        //        {
-        //            detail.ServerPort = 443;
-        //        }
-        //        else
-        //        {
-        //            detail.ServerPort = 80;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        detail.ServerPort = int.Parse(hostPort);
-        //    }
-
-        //    if (isOnline)
-        //    {
-        //        detail.AuthType = detail.UseOsdp ? AuthenticationProviderType.OnlineFederation : AuthenticationProviderType.LiveId;
-        //    }
-        //    else
-        //    {
-        //        detail.AuthType = isIfd ? AuthenticationProviderType.Federation : AuthenticationProviderType.ActiveDirectory;
-        //    }
-        //}
-
         private void llConnectionStringHelp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start(string.Format("https://msdn.microsoft.com/{0}/library/mt608573.aspx", CultureInfo.CurrentUICulture.Name));
@@ -586,45 +536,27 @@ namespace McTools.Xrm.Connection.WinForms
 
         private void llOpenConnectionLog_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            string logFileName = "";
+            // Log folder is defined by configuration file and follows Microsoft
+            // SDK tools configuration. It stores connection log file in path
+            // path\Company\Product\Version
+            var assembly = Assembly.GetEntryAssembly();
+            var companyName = ((AssemblyCompanyAttribute)assembly.GetCustomAttribute(typeof(AssemblyCompanyAttribute))).Company;
+            var productName = ((AssemblyProductAttribute)assembly.GetCustomAttribute(typeof(AssemblyProductAttribute))).Product;
+            var version = assembly.GetName().Version.ToString();
 
-            //Define XMLDocument for reading config file in to XML doc.
-            XmlDocument xdoc = new XmlDocument();
-            xdoc.Load(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile);
+            var logFolder = string.Format("{0}\\{1}\\{2}\\{3}", 
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                companyName,
+                productName,
+                version);
 
-            //Filter desired section
-            XmlNode xnodes = xdoc.SelectSingleNode("/configuration/system.diagnostics/sharedListeners");
-
-            //enumerate nodes in the section
-            foreach (XmlNode xnn in xnodes.ChildNodes)
+            if (string.IsNullOrEmpty(logFolder))
             {
-                //when the right node is met
-                if (xnn.Name == "add")
-                {
-                    //enumerate all itc atrubutes
-                    foreach (var att in xnn.Attributes)
-                    {
-                        var a = att as XmlAttribute;
-                        if (a != null)
-                        {
-                            //and get the right one
-                            if (a.Name == "initializeData")
-                            {
-                                //store file path in the variable
-                                logFileName = a.Value;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (string.IsNullOrEmpty(logFileName))
-            {
-                MessageBox.Show(this, "Cannot find log file name in configuration file");
+                MessageBox.Show(this, "There is no connection log folder available currently!");
             }
             else
             {
-                Process.Start(Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().FullName).DirectoryName,logFileName));
+                Process.Start(logFolder);
             }
         }
     }

@@ -2,7 +2,12 @@
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Windows.Forms;
+using Microsoft.Xrm.Tooling.Connector;
 
 namespace McTools.Xrm.Connection.TestWinForm
 {
@@ -34,7 +39,6 @@ namespace McTools.Xrm.Connection.TestWinForm
         public Form1()
         {
             InitializeComponent();
-
             // Create the connection manager with its events
             this.cManager = ConnectionManager.Instance;
             this.cManager.ConnectionSucceed += new ConnectionManager.ConnectionSucceedEventHandler(cManager_ConnectionSucceed);

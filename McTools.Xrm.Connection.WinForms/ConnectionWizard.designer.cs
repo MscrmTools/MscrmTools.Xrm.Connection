@@ -686,7 +686,7 @@
             this.llOpenConnectionLog.Size = new System.Drawing.Size(117, 13);
             this.llOpenConnectionLog.TabIndex = 17;
             this.llOpenConnectionLog.TabStop = true;
-            this.llOpenConnectionLog.Text = "Open connection log";
+            this.llOpenConnectionLog.Text = "Open Logs folder";
             this.llOpenConnectionLog.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llOpenConnectionLog_LinkClicked);
             // 
             // ConnectionWizard
