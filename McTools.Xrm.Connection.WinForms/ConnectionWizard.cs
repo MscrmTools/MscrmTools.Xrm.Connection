@@ -21,10 +21,13 @@ namespace McTools.Xrm.Connection.WinForms
         private readonly List<string> visitedPath;
         private CrmServiceClient serviceClient;
         private ConnectionDetail updatedDetail;
+        private string initialDomainText;
 
         public ConnectionWizard(ConnectionDetail detail = null)
         {
             InitializeComponent();
+
+            initialDomainText = txtDomain.Text;
 
             originalDetail = (ConnectionDetail)detail?.Clone();
             updatedDetail = new ConnectionDetail(true);
@@ -406,7 +409,7 @@ namespace McTools.Xrm.Connection.WinForms
                 }
             }
 
-            updatedDetail.UserDomain = txtDomain.Text;
+            updatedDetail.UserDomain = txtDomain.Text != initialDomainText ? txtDomain.Text : null;
             updatedDetail.UserName = txtUsername.Text;
             updatedDetail.SavePassword = chkSavePassword.Checked;
             updatedDetail.SetPassword(txtPassword.Text);
