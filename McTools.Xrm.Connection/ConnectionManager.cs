@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
+using System.Xml;
 
 namespace McTools.Xrm.Connection
 {
@@ -185,16 +186,15 @@ namespace McTools.Xrm.Connection
                     var existingFile = Connection.ConnectionsList.Instance.Files.FirstOrDefault(f => f.Path == value);
                     if (existingFile == null)
                     {
-                        Connection.ConnectionsList.Instance.Files.Add(new ConnectionFile { Name = new FileInfo(configfile).Name, Path = configfile, LastUsed = DateTime.Now });
+                        CrmConnections newCc = CrmConnections.LoadFromFile(value);
+                        
+                        Connection.ConnectionsList.Instance.Files.Add(new ConnectionFile { Name = newCc.Name, Path = configfile, LastUsed = DateTime.Now });
                         Connection.ConnectionsList.Instance.Save();
                     }
 
                     instance.ConnectionsList = instance.LoadConnectionsList();
                     instance.SetupFileSystemWatcher();
-                    if (instance.ConnectionListUpdated != null)
-                    {
-                        instance.ConnectionListUpdated(null, new EventArgs());
-                    }
+                    instance.ConnectionListUpdated?.Invoke(null, new EventArgs());
                 }
             }
         }
