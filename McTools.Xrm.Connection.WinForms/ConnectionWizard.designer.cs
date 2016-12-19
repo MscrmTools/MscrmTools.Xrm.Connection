@@ -610,7 +610,7 @@
             this.llConnectionStringHelp.Size = new System.Drawing.Size(252, 21);
             this.llConnectionStringHelp.TabIndex = 18;
             this.llConnectionStringHelp.TabStop = true;
-            this.llConnectionStringHelp.Text = "Help me with the connection stirng";
+            this.llConnectionStringHelp.Text = "Help me with the connection string";
             this.llConnectionStringHelp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llConnectionStringHelp_LinkClicked);
             // 
             // txtConnectionString
@@ -664,13 +664,13 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(844, 318);
             this.Controls.Add(this.pnlHeader);
+            this.Controls.Add(this.pnlConnectWithConnectionString);
             this.Controls.Add(this.pnlError);
             this.Controls.Add(this.pnlConnected);
             this.Controls.Add(this.pnlWaiting);
             this.Controls.Add(this.pnlConnectUrl);
             this.Controls.Add(this.pnlConnectAuthentication);
             this.Controls.Add(this.pnlConnectMoreActiveDirectoryInfo);
-            this.Controls.Add(this.pnlConnectWithConnectionString);
             this.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
