@@ -2,4 +2,7 @@
 # Ce fichier .gitignore a été automatiquement créé par Microsoft(R) Visual Studio.
 ################################################################################
 
-/McTools.Xrm.Connection.TestWinForm/bin/Debug
+/McTools.Xrm.Connection.TestWinForm/bin
+/McTools.Xrm.Connection/obj
+/McTools.Xrm.Connection.TestWinForm/obj
+/McTools.Xrm.Connection.WinForms/obj
