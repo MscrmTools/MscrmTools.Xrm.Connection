@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -331,6 +332,26 @@ namespace McTools.Xrm.Connection
         public override string ToString()
         {
             return Name;
+        }
+
+        public ConnectionDetail CloneConnection(ConnectionDetail detail)
+        {
+            var newDetail = (ConnectionDetail)detail.Clone();
+            newDetail.ConnectionId = Guid.NewGuid();
+
+            int cloneId = 0;
+            string newName;
+            do
+            {
+                cloneId++;
+                newName = string.Format("{0} ({1})", newDetail.ConnectionName, cloneId);
+            } while (Connections.Any(c => c.ConnectionName == newName));
+
+            newDetail.ConnectionName = newName;
+
+            Connections.Add(newDetail);
+
+            return newDetail;
         }
 
         #endregion methods

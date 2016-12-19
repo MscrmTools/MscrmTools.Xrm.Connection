@@ -109,6 +109,7 @@ namespace McTools.Xrm.Connection.WinForms
                 Text = "Select a connection";
                 tsbDeleteConnection.Visible = false;
                 tsbUpdateConnection.Visible = false;
+                tsbCloneConnection.Visible = false;
                 tsbRemoveConnectionList.Visible = false;
                 bCancel.Text = "Cancel";
                 bValidate.Visible = true;
@@ -118,6 +119,7 @@ namespace McTools.Xrm.Connection.WinForms
                 Text = "Connections list";
                 tsbDeleteConnection.Visible = true;
                 tsbUpdateConnection.Visible = true;
+                tsbCloneConnection.Visible = true;
                 tsbRemoveConnectionList.Visible = true;
                 bCancel.Text = "Close";
                 bValidate.Visible = false;
@@ -438,6 +440,30 @@ namespace McTools.Xrm.Connection.WinForms
             }
         }
 
+        private void tsbCloneConnection_Click(object sender, EventArgs e)
+        {
+            var newItems = new List<ListViewItem>();
+
+            foreach (ListViewItem item in lvConnections.SelectedItems)
+            {
+                var detail = (ConnectionDetail)item.Tag;
+
+                var newDetail = ConnectionManager.Instance.ConnectionsList.CloneConnection(detail);
+
+                var newItem = new ListViewItem(newDetail.ConnectionName);
+                newItem.SubItems.Add(newDetail.ServerName);
+                newItem.SubItems.Add(newDetail.Organization);
+                newItem.SubItems.Add(newDetail.OrganizationVersion);
+                newItem.Tag = newDetail;
+                newItem.Group = GetGroup(newDetail);
+                newItem.ImageIndex = GetImageIndex(newDetail);
+
+                newItems.Add(newItem);
+            }
+
+            lvConnections.Items.AddRange(newItems.ToArray());
+        }
+
         private void tscbbConnectionsFile_SelectedIndexChanged(object sender, EventArgs e)
         {
             var cbbValue = tscbbConnectionsFile.SelectedItem;
@@ -591,5 +617,7 @@ namespace McTools.Xrm.Connection.WinForms
             newDoc.Save(newFilePath);
             LoadConnectionFile();
         }
+
+       
     }
 }

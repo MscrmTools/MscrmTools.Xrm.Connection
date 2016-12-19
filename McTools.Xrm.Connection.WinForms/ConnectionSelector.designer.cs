@@ -39,6 +39,7 @@
             this.menu = new System.Windows.Forms.ToolStrip();
             this.tsbNewConnection = new System.Windows.Forms.ToolStripButton();
             this.tsbUpdateConnection = new System.Windows.Forms.ToolStripButton();
+            this.tsbCloneConnection = new System.Windows.Forms.ToolStripButton();
             this.tsbDeleteConnection = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tsb_UseMru = new System.Windows.Forms.ToolStripButton();
@@ -123,6 +124,7 @@
             this.menu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsbNewConnection,
             this.tsbUpdateConnection,
+            this.tsbCloneConnection,
             this.tsbDeleteConnection,
             this.toolStripSeparator1,
             this.tsb_UseMru,
@@ -156,6 +158,16 @@
             this.tsbUpdateConnection.Size = new System.Drawing.Size(28, 30);
             this.tsbUpdateConnection.Text = "Update connection";
             this.tsbUpdateConnection.Click += new System.EventHandler(this.tsbUpdateConnection_Click);
+            // 
+            // tsbCloneConnection
+            // 
+            this.tsbCloneConnection.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbCloneConnection.Image = ((System.Drawing.Image)(resources.GetObject("tsbUpdateConnection.Image")));
+            this.tsbCloneConnection.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbCloneConnection.Name = "tsbCloneConnection";
+            this.tsbCloneConnection.Size = new System.Drawing.Size(28, 30);
+            this.tsbCloneConnection.Text = "Clone connection";
+            this.tsbCloneConnection.Click += new System.EventHandler(this.tsbCloneConnection_Click);
             // 
             // tsbDeleteConnection
             // 
@@ -259,6 +271,7 @@
         private System.Windows.Forms.ToolStrip menu;
         private System.Windows.Forms.ToolStripButton tsbNewConnection;
         private System.Windows.Forms.ToolStripButton tsbUpdateConnection;
+        private System.Windows.Forms.ToolStripButton tsbCloneConnection;
         private System.Windows.Forms.ToolStripButton tsbDeleteConnection;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton tsb_UseMru;
