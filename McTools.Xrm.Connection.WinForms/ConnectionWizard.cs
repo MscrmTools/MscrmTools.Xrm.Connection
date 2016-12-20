@@ -113,6 +113,12 @@ namespace McTools.Xrm.Connection.WinForms
                 return;
             }
 
+            if (!txtConnectionString.Text.EndsWith(";"))
+            {
+                txtConnectionString.Text += ";";
+            }
+            txtConnectionString.Text += "RequireNewInstance=True;";
+
             updatedDetail = new ConnectionDetail(true)
             {
                 UseConnectionString = true,
