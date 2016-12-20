@@ -375,8 +375,7 @@ namespace McTools.Xrm.Connection.WinForms
                     {
                         var newIndex = tscbbConnectionsFile.Items.Count - 2;
 
-                        tscbbConnectionsFile.Items.Insert(newIndex,
-                            ConnectionsList.Instance.Files.First(f => f.Path == afd.OpenedFilePath));
+                        tscbbConnectionsFile.Items.Insert(newIndex, afd.OpenedFile);
                         tscbbConnectionsFile.SelectedIndex = newIndex;
                         tsbRemoveConnectionList.Enabled = true;
                     }

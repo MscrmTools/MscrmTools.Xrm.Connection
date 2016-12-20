@@ -162,7 +162,7 @@
             // tsbCloneConnection
             // 
             this.tsbCloneConnection.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbCloneConnection.Image = ((System.Drawing.Image)(resources.GetObject("tsbUpdateConnection.Image")));
+            this.tsbCloneConnection.Image = ((System.Drawing.Image)(resources.GetObject("tsbCloneConnection.Image")));
             this.tsbCloneConnection.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbCloneConnection.Name = "tsbCloneConnection";
             this.tsbCloneConnection.Size = new System.Drawing.Size(28, 30);
@@ -203,7 +203,7 @@
             // 
             this.tscbbConnectionsFile.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.tscbbConnectionsFile.Name = "tscbbConnectionsFile";
-            this.tscbbConnectionsFile.Size = new System.Drawing.Size(200, 33);
+            this.tscbbConnectionsFile.Size = new System.Drawing.Size(300, 33);
             this.tscbbConnectionsFile.SelectedIndexChanged += new System.EventHandler(this.tscbbConnectionsFile_SelectedIndexChanged);
             // 
             // tsbRemoveConnectionList

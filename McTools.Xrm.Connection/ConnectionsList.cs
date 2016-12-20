@@ -3,14 +3,21 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Xml.Serialization;
 
 namespace McTools.Xrm.Connection
 {
     public class ConnectionFile
     {
-        public DateTime LastUsed { get; set; }
+        public string  Name { get; set; }
 
-        public string Name { get; set; }
+        public ConnectionFile() { }
+        public ConnectionFile(CrmConnections Connections)
+        {
+            Name = Connections.Name;
+        }
+
+        public DateTime LastUsed { get; set; }
 
         public string Path { get; set; }
 
@@ -67,7 +74,7 @@ namespace McTools.Xrm.Connection
                         cc.SerializeToFile(defaultFilePath);
 
                         instance = new ConnectionsList();
-                        instance.Files.Add(new ConnectionFile { Name = cc.Name, Path = defaultFilePath });
+                        instance.Files.Add(new ConnectionFile(cc) { Path = defaultFilePath });
                         instance.Save();
                     }
                 }

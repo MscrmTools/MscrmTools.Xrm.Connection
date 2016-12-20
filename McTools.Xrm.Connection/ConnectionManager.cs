@@ -188,7 +188,7 @@ namespace McTools.Xrm.Connection
                     {
                         CrmConnections newCc = CrmConnections.LoadFromFile(value);
                         
-                        Connection.ConnectionsList.Instance.Files.Add(new ConnectionFile { Name = newCc.Name, Path = configfile, LastUsed = DateTime.Now });
+                        Connection.ConnectionsList.Instance.Files.Add(new ConnectionFile(newCc) { Path = configfile, LastUsed = DateTime.Now });
                         Connection.ConnectionsList.Instance.Save();
                     }
 
