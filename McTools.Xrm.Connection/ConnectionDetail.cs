@@ -199,10 +199,17 @@ namespace McTools.Xrm.Connection
                 return crmSvc;
             }
 
-            //return new CrmServiceClient(GetOrganizationCrmConnectionString());
-
             if (UseConnectionString)
             {
+                if (ConnectionString.IndexOf("RequireNewInstance=", StringComparison.Ordinal) < 0)
+                {
+                    if (!ConnectionString.EndsWith(";"))
+                    {
+                        ConnectionString += ";";
+                    }
+                    ConnectionString += "RequireNewInstance=True;";
+                }
+
                 crmSvc = new CrmServiceClient(ConnectionString);
 
                 if (crmSvc.IsReady)
