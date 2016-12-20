@@ -63,8 +63,11 @@ namespace McTools.Xrm.Connection
 
                         var defaultFilePath = Path.Combine(directory, "ConnectionsList.Default.xml");
 
+                        CrmConnections cc = new CrmConnections("Default");
+                        cc.SerializeToFile(defaultFilePath);
+
                         instance = new ConnectionsList();
-                        instance.Files.Add(new ConnectionFile { Name = "Default", Path = defaultFilePath });
+                        instance.Files.Add(new ConnectionFile { Name = cc.Name, Path = defaultFilePath });
                         instance.Save();
                     }
                 }
