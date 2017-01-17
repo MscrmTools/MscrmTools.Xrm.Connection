@@ -251,8 +251,8 @@ namespace McTools.Xrm.Connection.WinForms
                 return;
             }
 
-
             tsbMoveToExistingFile.Enabled = tscbbConnectionsFile.Items.Count > 3;
+            tsbRemoveConnectionList.Enabled = tscbbConnectionsFile.Items.Count > 3;
 
             // Display connections
             LoadConnectionFile();
@@ -391,7 +391,7 @@ namespace McTools.Xrm.Connection.WinForms
                 // Or it is a connection file so we load it for the connection manager
                 ConnectionManager.ConfigurationFile = connectionFile.Path;
 
-                tsbRemoveConnectionList.Enabled = ConnectionManager.Instance.ConnectionsList.Name != "Default";
+                tsbRemoveConnectionList.Enabled = tscbbConnectionsFile.Items.Count > 3;
 
                 connectionFile.LastUsed = DateTime.Now;
 
