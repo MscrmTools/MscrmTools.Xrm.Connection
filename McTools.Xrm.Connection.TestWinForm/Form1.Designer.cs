@@ -32,6 +32,8 @@
             this.btnWhoAmI = new System.Windows.Forms.Button();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.tsbManageConnections = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsbMergeConnectionsFiles = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -51,7 +53,9 @@
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsbManageConnections});
+            this.tsbManageConnections,
+            this.toolStripSeparator1,
+            this.tsbMergeConnectionsFiles});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(576, 32);
@@ -66,6 +70,21 @@
             this.tsbManageConnections.Size = new System.Drawing.Size(204, 29);
             this.tsbManageConnections.Text = "Manage connections";
             this.tsbManageConnections.Click += new System.EventHandler(this.tsbManageConnections_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 32);
+            // 
+            // tsbMergeConnectionsFiles
+            // 
+            this.tsbMergeConnectionsFiles.CheckOnClick = true;
+            this.tsbMergeConnectionsFiles.Image = ((System.Drawing.Image)(resources.GetObject("tsbMergeConnectionsFiles.Image")));
+            this.tsbMergeConnectionsFiles.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbMergeConnectionsFiles.Name = "tsbMergeConnectionsFiles";
+            this.tsbMergeConnectionsFiles.Size = new System.Drawing.Size(227, 29);
+            this.tsbMergeConnectionsFiles.Text = "Merge connections files";
+            this.tsbMergeConnectionsFiles.Click += new System.EventHandler(this.tsbMergeConnectionsFiles_Click);
             // 
             // Form1
             // 
@@ -89,6 +108,8 @@
         private System.Windows.Forms.Button btnWhoAmI;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton tsbManageConnections;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripButton tsbMergeConnectionsFiles;
     }
 }
 

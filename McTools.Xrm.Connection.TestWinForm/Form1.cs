@@ -48,7 +48,7 @@ namespace McTools.Xrm.Connection.TestWinForm
             formHelper = new FormHelper(this);
 
             // Instantiate and add the connection control to the form
-            ccsb = new CrmConnectionStatusBar(formHelper, true);
+            ccsb = new CrmConnectionStatusBar(formHelper, tsbMergeConnectionsFiles.Checked);
             this.Controls.Add(ccsb);
 
             this.ccsb.SetMessage("A message to display...");
@@ -157,6 +157,11 @@ namespace McTools.Xrm.Connection.TestWinForm
         private void tsbManageConnections_Click(object sender, EventArgs e)
         {
             formHelper.DisplayConnectionsList(this);
+        }
+
+        private void tsbMergeConnectionsFiles_Click(object sender, EventArgs e)
+        {
+            ccsb.MergeConnectionsFiles = tsbMergeConnectionsFiles.Checked;
         }
     }
 }
