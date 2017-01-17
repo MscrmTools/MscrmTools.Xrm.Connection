@@ -155,6 +155,7 @@ namespace McTools.Xrm.Connection.WinForms
         private void AddActionsList(ToolStripDropDownButton btn)
         {
             var list = new List<ToolStripItem>();
+            int filesCount = ConnectionsList.Instance.Files.Count;
 
             foreach (var file in ConnectionsList.Instance.Files)
             {
@@ -163,7 +164,7 @@ namespace McTools.Xrm.Connection.WinForms
 
                 var fileItem = new ToolStripMenuItem(file.Name);
                 fileItem.Tag = file;
-                if (!mergeConnectionFiles)
+                if (!mergeConnectionFiles && filesCount > 1)
                 {
                     list.Add(fileItem);
                 }
@@ -200,7 +201,7 @@ namespace McTools.Xrm.Connection.WinForms
                     }
 
                     BuildActionItems(item);
-                    if (!mergeConnectionFiles)
+                    if (!mergeConnectionFiles && filesCount > 1)
                     {
                         fileItem.DropDownItems.Add(item);
                     }
@@ -210,7 +211,7 @@ namespace McTools.Xrm.Connection.WinForms
                     }
                 }
 
-                if (!mergeConnectionFiles)
+                if (!mergeConnectionFiles && filesCount > 1)
                 {
                     if (fileItem.DropDownItems.Count > 0)
                     {
@@ -225,13 +226,13 @@ namespace McTools.Xrm.Connection.WinForms
                 newConnectionItem.Image = (Image)resources.GetObject("server_add");
                 newConnectionItem.Click += newConnectionItem_Click;
 
-                if (!mergeConnectionFiles)
+                if (!mergeConnectionFiles && filesCount > 1)
                 {
                     fileItem.DropDownItems.Add(newConnectionItem);
                 }
             }
 
-            if (mergeConnectionFiles)
+            if (mergeConnectionFiles || filesCount == 1)
             {
                 if (list.Count > 0)
                 {
@@ -294,7 +295,7 @@ namespace McTools.Xrm.Connection.WinForms
             ToolStripDropDownButton connexionManager = new ToolStripDropDownButton();
             connexionManager.Text = "Not connected";
             connexionManager.Image = (Image)resources.GetObject("server");
-
+            connexionManager.Click += connexionManager_Click;
             AddActionsList(connexionManager);
 
             Items.Add(connexionManager);
