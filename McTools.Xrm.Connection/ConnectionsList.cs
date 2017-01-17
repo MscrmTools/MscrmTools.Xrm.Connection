@@ -11,7 +11,12 @@ namespace McTools.Xrm.Connection
     {
         public string  Name { get; set; }
 
-        public ConnectionFile() { }
+        public ConnectionFile(){}
+
+        public ConnectionFile(string name)
+        {
+            Name = name;
+        }
         public ConnectionFile(CrmConnections Connections)
         {
             Name = Connections.Name;

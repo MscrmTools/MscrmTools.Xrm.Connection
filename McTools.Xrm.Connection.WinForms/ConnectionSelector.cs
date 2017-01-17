@@ -211,32 +211,35 @@ namespace McTools.Xrm.Connection.WinForms
 
         private void ConnectionSelector_Load(object sender, EventArgs e)
         {
-            var mostRecentFile = ConnectionsList.Instance.Files.OrderByDescending(f => f.LastUsed).First();
+            var mostRecentFile = ConnectionsList.Instance.Files.OrderByDescending(f => f.LastUsed).FirstOrDefault();
             var index = 0;
             var indexToSelect = 0;
 
             tsbRemoveConnectionList.Enabled = false;
             currentIndex = 0;
-           
-            foreach (var file in ConnectionsList.Instance.Files.OrderBy(k => k.Name))
-            {
-                if (file.Name == mostRecentFile.Name)
-                {
-                    indexToSelect = index;
-                }
-                else
-                {
-                    tsbMoveToExistingFile.DropDownItems.Add(new ToolStripButton
-                    {
-                        Text = file.Name,
-                        Tag = file,
-                        Size = new Size(155, 22),
-                        AutoSize = true
-                    });
-                }
 
-                tscbbConnectionsFile.Items.Add(file);
-                index++;
+            if (mostRecentFile != null)
+            {
+                foreach (var file in ConnectionsList.Instance.Files.OrderBy(k => k.Name))
+                {
+                    if (file.Name == mostRecentFile.Name)
+                    {
+                        indexToSelect = index;
+                    }
+                    else
+                    {
+                        tsbMoveToExistingFile.DropDownItems.Add(new ToolStripButton
+                        {
+                            Text = file.Name,
+                            Tag = file,
+                            Size = new Size(155, 22),
+                            AutoSize = true
+                        });
+                    }
+
+                    tscbbConnectionsFile.Items.Add(file);
+                    index++;
+                }
             }
 
             tscbbConnectionsFile.Items.Add("<Create new connection file>");

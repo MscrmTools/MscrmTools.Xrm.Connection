@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace McTools.Xrm.Connection.WinForms
@@ -173,6 +174,17 @@ namespace McTools.Xrm.Connection.WinForms
         {
             var list = new List<ToolStripItem>();
             int filesCount = ConnectionsList.Instance.Files.Count;
+
+            if (filesCount == 0)
+            {
+                var defaultFilePath = Path.Combine(new FileInfo(ConnectionsList.ConnectionsListFilePath).DirectoryName, "ConnectionsList.Default.xml");
+
+                CrmConnections cc = new CrmConnections("Default");
+                cc.SerializeToFile(defaultFilePath);
+
+                ConnectionsList.Instance.Files.Add(new ConnectionFile(cc) { Path = defaultFilePath, LastUsed = DateTime.Now});
+                ConnectionsList.Instance.Save();
+            }
 
             foreach (var file in ConnectionsList.Instance.Files)
             {
