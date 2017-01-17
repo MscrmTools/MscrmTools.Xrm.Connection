@@ -215,20 +215,17 @@ namespace McTools.Xrm.Connection.WinForms
             var index = 0;
             var indexToSelect = 0;
 
-            tscbbConnectionsFile.Items.Add(ConnectionsList.Instance.Files.First(k => k.Name == "Default"));
             tsbRemoveConnectionList.Enabled = false;
             currentIndex = 0;
            
-            foreach (var file in ConnectionsList.Instance.Files.Where(k=>k.Name != "Default").OrderBy(k => k.Name))
+            foreach (var file in ConnectionsList.Instance.Files.OrderBy(k => k.Name))
             {
-                index++;
                 if (file.Name == mostRecentFile.Name)
                 {
                     indexToSelect = index;
                 }
                 else
                 {
-                    index--;
                     tsbMoveToExistingFile.DropDownItems.Add(new ToolStripButton
                     {
                         Text = file.Name,
@@ -238,12 +235,8 @@ namespace McTools.Xrm.Connection.WinForms
                     });
                 }
 
-                if (file.Name == "Default")
-                {
-                    continue;
-                }
-
                 tscbbConnectionsFile.Items.Add(file);
+                index++;
             }
 
             tscbbConnectionsFile.Items.Add("<Create new connection file>");

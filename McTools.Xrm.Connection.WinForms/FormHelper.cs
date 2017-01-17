@@ -97,51 +97,66 @@ namespace McTools.Xrm.Connection.WinForms
         /// </summary>
         /// <param name="isCreation">Indicates if it is a connection creation</param>
         /// <param name="connectionToUpdate">Details of the connection to update</param>
+        /// <param name="connectionFile">List of connections where the connection is edited from</param>
         /// <returns>Created or updated connection</returns>
-        public ConnectionDetail EditConnection(bool isCreation, ConnectionDetail connectionToUpdate)
+        public ConnectionDetail EditConnection(bool isCreation, ConnectionDetail connectionToUpdate, ConnectionFile connectionFile = null)
         {
             var cForm = new ConnectionWizard(connectionToUpdate) { StartPosition = FormStartPosition.CenterParent };
 
-            //var cForm = new ConnectionForm(isCreation) { StartPosition = FormStartPosition.CenterParent };
-
-            //if (!isCreation)
-            //{
-            //    cForm.CrmConnectionDetail = connectionToUpdate;
-            //}
-
             if (cForm.ShowDialog(_innerAppForm) == DialogResult.OK)
             {
-                // TODO on garde?
-                //if (cForm.DoConnect)
-                //{
-                //    ConnectionManager.Instance.ConnectToServer(cForm.CrmConnectionDetail);
-                //}
-
-                //if (!cForm.CrmConnectionDetail.PasswordIsEmpty && !cForm.CrmConnectionDetail.SavePassword)
-                //{
-                //    cForm.CrmConnectionDetail.ErasePassword();
-                //}
-
                 if (isCreation)
                 {
-                    if (ConnectionManager.Instance.ConnectionsList.Connections.FirstOrDefault(
-                        d => d.ConnectionId == cForm.CrmConnectionDetail.ConnectionId) == null)
+                    if (connectionFile == null)
                     {
-                        ConnectionManager.Instance.ConnectionsList.Connections.Add(cForm.CrmConnectionDetail);
+                        if (ConnectionManager.Instance.ConnectionsList.Connections.FirstOrDefault(
+                            d => d.ConnectionId == cForm.CrmConnectionDetail.ConnectionId) == null)
+                        {
+                            ConnectionManager.Instance.ConnectionsList.Connections.Add(cForm.CrmConnectionDetail);
+                        }
+
+                        ConnectionManager.Instance.SaveConnectionsFile();
+                    }
+                    else
+                    {
+                        var connections = CrmConnections.LoadFromFile(connectionFile.Path);
+                        if (connections.Connections.FirstOrDefault(
+                            d => d.ConnectionId == cForm.CrmConnectionDetail.ConnectionId) == null)
+                        {
+                            connections.Connections.Add(cForm.CrmConnectionDetail);
+                        }
+
+                        connections.SerializeToFile(connectionFile.Path);
                     }
                 }
                 else
                 {
-                    foreach (ConnectionDetail detail in ConnectionManager.Instance.ConnectionsList.Connections)
+                    if (connectionFile == null)
                     {
-                        if (detail.ConnectionId == cForm.CrmConnectionDetail.ConnectionId)
+                        foreach (ConnectionDetail detail in ConnectionManager.Instance.ConnectionsList.Connections)
                         {
-                            detail.UpdateAfterEdit(cForm.CrmConnectionDetail);
+                            if (detail.ConnectionId == cForm.CrmConnectionDetail.ConnectionId)
+                            {
+                                detail.UpdateAfterEdit(cForm.CrmConnectionDetail);
+                            }
                         }
+
+                        ConnectionManager.Instance.SaveConnectionsFile();
+                    }
+                    else
+                    {
+                        var connections = CrmConnections.LoadFromFile(connectionFile.Path);
+                        foreach (ConnectionDetail detail in connections.Connections)
+                        {
+                            if (detail.ConnectionId == cForm.CrmConnectionDetail.ConnectionId)
+                            {
+                                detail.UpdateAfterEdit(cForm.CrmConnectionDetail);
+                            }
+                        }
+
+                        connections.SerializeToFile(connectionFile.Path);
                     }
                 }
-
-                ConnectionManager.Instance.SaveConnectionsFile();
 
                 return cForm.CrmConnectionDetail;
             }

@@ -48,7 +48,7 @@ namespace McTools.Xrm.Connection.TestWinForm
             formHelper = new FormHelper(this);
 
             // Instantiate and add the connection control to the form
-            ccsb = new CrmConnectionStatusBar(formHelper);
+            ccsb = new CrmConnectionStatusBar(formHelper, true);
             this.Controls.Add(ccsb);
 
             this.ccsb.SetMessage("A message to display...");
