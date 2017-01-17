@@ -116,7 +116,7 @@ namespace McTools.Xrm.Connection.WinForms
             }
             else
             {
-                Text = "Connections list";
+                Text = "Connections Manager";
                 tsbDeleteConnection.Visible = true;
                 tsbUpdateConnection.Visible = true;
                 tsbCloneConnection.Visible = true;
@@ -467,7 +467,8 @@ namespace McTools.Xrm.Connection.WinForms
 
         private void tsbDeleteConnection_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this, "Are you sure you want to delete selected connection(s)?", "Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+            if (lvConnections.SelectedItems.Count > 0 &&
+                MessageBox.Show(this, "Are you sure you want to delete selected connection(s)?", "Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                 return;
 
             foreach (ListViewItem connectionItem in lvConnections.SelectedItems)
@@ -543,6 +544,31 @@ namespace McTools.Xrm.Connection.WinForms
             }
 
             lvConnections.Items.AddRange(newItems.ToArray());
+        }
+
+        private void tsbUpdatePassword_Click(object sender, EventArgs e)
+        {
+            var connections =
+                lvConnections.SelectedItems.Cast<ListViewItem>().Select(lvi => (ConnectionDetail)lvi.Tag);
+
+            if (!connections.Any())
+            {
+                return;
+            }
+
+            var upDialog = new UpdatePasswordForm(connections);
+            var result = upDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                ConnectionManager.Instance.SaveConnectionsFile();
+                MessageBox.Show(this, "Connections have been updated!", "Information", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+            else if (result == DialogResult.Ignore)
+            {
+                MessageBox.Show(this, "No connection were updated!", "Warning", MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+            }
         }
 
         #endregion

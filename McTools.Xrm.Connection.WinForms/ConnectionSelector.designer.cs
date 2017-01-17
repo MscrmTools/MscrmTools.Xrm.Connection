@@ -41,6 +41,8 @@
             this.tsbUpdateConnection = new System.Windows.Forms.ToolStripButton();
             this.tsbCloneConnection = new System.Windows.Forms.ToolStripButton();
             this.tsbDeleteConnection = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsbUpdatePassword = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tsb_UseMru = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -54,7 +56,7 @@
             // bValidate
             // 
             this.bValidate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.bValidate.Location = new System.Drawing.Point(718, 577);
+            this.bValidate.Location = new System.Drawing.Point(726, 577);
             this.bValidate.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.bValidate.Name = "bValidate";
             this.bValidate.Size = new System.Drawing.Size(112, 35);
@@ -67,7 +69,7 @@
             // 
             this.bCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.bCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.bCancel.Location = new System.Drawing.Point(840, 577);
+            this.bCancel.Location = new System.Drawing.Point(848, 577);
             this.bCancel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.bCancel.Name = "bCancel";
             this.bCancel.Size = new System.Drawing.Size(112, 35);
@@ -91,7 +93,7 @@
             this.lvConnections.Location = new System.Drawing.Point(18, 43);
             this.lvConnections.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.lvConnections.Name = "lvConnections";
-            this.lvConnections.Size = new System.Drawing.Size(932, 522);
+            this.lvConnections.Size = new System.Drawing.Size(940, 522);
             this.lvConnections.TabIndex = 2;
             this.lvConnections.UseCompatibleStateImageBehavior = false;
             this.lvConnections.View = System.Windows.Forms.View.Details;
@@ -126,6 +128,8 @@
             this.tsbUpdateConnection,
             this.tsbCloneConnection,
             this.tsbDeleteConnection,
+            this.toolStripSeparator3,
+            this.tsbUpdatePassword,
             this.toolStripSeparator1,
             this.tsb_UseMru,
             this.toolStripSeparator2,
@@ -136,7 +140,7 @@
             this.menu.Location = new System.Drawing.Point(0, 0);
             this.menu.Name = "menu";
             this.menu.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
-            this.menu.Size = new System.Drawing.Size(970, 33);
+            this.menu.Size = new System.Drawing.Size(978, 33);
             this.menu.TabIndex = 1;
             this.menu.Text = "toolStrip1";
             // 
@@ -179,6 +183,22 @@
             this.tsbDeleteConnection.Text = "Delete connection";
             this.tsbDeleteConnection.Click += new System.EventHandler(this.tsbDeleteConnection_Click);
             // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 33);
+            // 
+            // tsbUpdatePassword
+            // 
+            this.tsbUpdatePassword.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbUpdatePassword.Image = ((System.Drawing.Image)(resources.GetObject("tsbUpdatePassword.Image")));
+            this.tsbUpdatePassword.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbUpdatePassword.Name = "tsbUpdatePassword";
+            this.tsbUpdatePassword.Size = new System.Drawing.Size(28, 30);
+            this.tsbUpdatePassword.Text = "Update password";
+            this.tsbUpdatePassword.ToolTipText = "Update password for selected connection(s)";
+            this.tsbUpdatePassword.Click += new System.EventHandler(this.tsbUpdatePassword_Click);
+            // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
@@ -203,7 +223,7 @@
             // 
             this.tscbbConnectionsFile.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.tscbbConnectionsFile.Name = "tscbbConnectionsFile";
-            this.tscbbConnectionsFile.Size = new System.Drawing.Size(300, 33);
+            this.tscbbConnectionsFile.Size = new System.Drawing.Size(280, 33);
             this.tscbbConnectionsFile.SelectedIndexChanged += new System.EventHandler(this.tscbbConnectionsFile_SelectedIndexChanged);
             // 
             // tsbRemoveConnectionList
@@ -241,7 +261,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.bCancel;
-            this.ClientSize = new System.Drawing.Size(970, 631);
+            this.ClientSize = new System.Drawing.Size(978, 631);
             this.Controls.Add(this.menu);
             this.Controls.Add(this.bValidate);
             this.Controls.Add(this.bCancel);
@@ -249,7 +269,7 @@
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "ConnectionSelector";
             this.ShowIcon = false;
-            this.Text = "Select connection";
+            this.Text = "Connection Manager";
             this.Load += new System.EventHandler(this.ConnectionSelector_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ConnectionSelector_KeyDown);
             this.menu.ResumeLayout(false);
@@ -280,5 +300,7 @@
         private System.Windows.Forms.ToolStripButton tsbRemoveConnectionList;
         private System.Windows.Forms.ToolStripButton tsbMoveAllToNewFile;
         private System.Windows.Forms.ToolStripDropDownButton tsbMoveToExistingFile;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripButton tsbUpdatePassword;
     }
 }

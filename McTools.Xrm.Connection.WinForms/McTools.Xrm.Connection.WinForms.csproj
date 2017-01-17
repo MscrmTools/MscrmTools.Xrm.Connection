@@ -132,6 +132,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="UpdatePasswordForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UpdatePasswordForm.designer.cs">
+      <DependentUpon>UpdatePasswordForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ConnectionSelector.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -186,6 +192,9 @@
     <Compile Include="RessourceManager.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="UpdatePasswordForm.resx">
+      <DependentUpon>UpdatePasswordForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ConnectionSelector.resx">
       <DependentUpon>ConnectionSelector.cs</DependentUpon>
     </EmbeddedResource>

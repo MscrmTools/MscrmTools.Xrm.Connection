@@ -15,7 +15,7 @@ namespace McTools.Xrm.Connection.WinForms
 
         private readonly FormHelper _formHelper;
 
-        private readonly bool mergeConnectionFiles;
+        private bool mergeConnectionFiles;
 
         /// <summary>
         /// Resources manager
@@ -66,6 +66,23 @@ namespace McTools.Xrm.Connection.WinForms
         }
 
         #endregion Constructor
+
+        #region Properties
+
+        public bool MergeConnectionsFiles
+        {
+            get { return mergeConnectionFiles; }
+            set
+            {
+                if (value != mergeConnectionFiles)
+                {
+                    mergeConnectionFiles = value;
+                    RebuildConnectionList();
+                }
+            }
+        }
+
+        #endregion Properties
 
         #region Methods
 
@@ -310,7 +327,7 @@ namespace McTools.Xrm.Connection.WinForms
             ToolStripMenuItem clickedItem = (ToolStripMenuItem)sender;
             ToolStripMenuItem parentItem = (ToolStripMenuItem)clickedItem.OwnerItem;
             ConnectionDetail currentConnection = (ConnectionDetail)parentItem.Tag;
-            ToolStripDropDownButton connexionManager = (ToolStripDropDownButton)parentItem.OwnerItem;
+            ToolStripMenuItem connexionManager = (ToolStripMenuItem)parentItem.OwnerItem;
 
             switch (clickedItem.Text)
             {
