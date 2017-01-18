@@ -62,12 +62,11 @@ namespace McTools.Xrm.Connection.WinForms
                 }
 
                 file.Name = newName;
-                cc.SerializeToFile(txtFilePath.Text);
-
+              
                 MessageBox.Show(this, $"A connection file with this name already exists!\n\nIt has been renamed to '{newName}'", "Warning",
                   MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-
+            cc.SerializeToFile(txtFilePath.Text);
             ConnectionsList.Instance.Save();
 
             CreatedFilePath = txtFilePath.Text;
