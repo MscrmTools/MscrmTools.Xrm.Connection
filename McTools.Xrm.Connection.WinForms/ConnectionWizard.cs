@@ -268,7 +268,7 @@ namespace McTools.Xrm.Connection.WinForms
 
         private void btnReset_Click(object sender, EventArgs e)
         {
-            updatedDetail = new ConnectionDetail();
+            updatedDetail = new ConnectionDetail(true);
             txtOrganizationUrl.Text = string.Empty;
             txtHomeRealm.Text = string.Empty;
             txtDomain.Text = string.Empty;
