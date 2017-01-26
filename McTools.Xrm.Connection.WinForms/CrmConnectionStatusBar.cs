@@ -396,7 +396,7 @@ namespace McTools.Xrm.Connection.WinForms
         private void newConnectionItem_Click(object sender, EventArgs e)
         {
             var actionMenu = (ToolStripMenuItem) sender;
-            ToolStripMenuItem parentItem = (ToolStripMenuItem)actionMenu.OwnerItem;
+            ToolStripDropDownItem parentItem = (ToolStripDropDownItem)actionMenu.OwnerItem;
             var connectionFile = (ConnectionFile)parentItem.Tag;
 
             ConnectionDetail detail = _formHelper.EditConnection(true, null, connectionFile);
