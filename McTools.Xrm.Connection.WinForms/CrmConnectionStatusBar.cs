@@ -337,9 +337,9 @@ namespace McTools.Xrm.Connection.WinForms
         private void actionItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem clickedItem = (ToolStripMenuItem)sender;
-            ToolStripMenuItem parentItem = (ToolStripMenuItem)clickedItem.OwnerItem;
+            ToolStripDropDownItem parentItem = (ToolStripDropDownItem)clickedItem.OwnerItem;
             ConnectionDetail currentConnection = (ConnectionDetail)parentItem.Tag;
-            ToolStripMenuItem connexionManager = (ToolStripMenuItem)parentItem.OwnerItem;
+            ToolStripDropDownItem connexionManager = (ToolStripDropDownItem)parentItem.OwnerItem;
 
             switch (clickedItem.Text)
             {
