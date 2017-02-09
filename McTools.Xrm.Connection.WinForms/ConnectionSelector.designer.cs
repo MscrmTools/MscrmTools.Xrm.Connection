@@ -100,6 +100,8 @@
             this.lvConnections.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.LvConnectionsColumnClick);
             this.lvConnections.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvConnections_KeyDown);
             this.lvConnections.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.LvConnectionsMouseDoubleClick);
+            lvConnections.LabelEdit = true;
+            lvConnections.AfterLabelEdit += LvConnections_AfterLabelEdit;
             // 
             // columnHeader1
             // 
@@ -278,6 +280,8 @@
             this.PerformLayout();
 
         }
+
+     
 
         #endregion
 

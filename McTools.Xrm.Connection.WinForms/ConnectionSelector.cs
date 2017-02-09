@@ -574,6 +574,17 @@ namespace McTools.Xrm.Connection.WinForms
             }
         }
 
+        private void LvConnections_AfterLabelEdit(object sender, System.Windows.Forms.LabelEditEventArgs e)
+        {
+            if (!e.CancelEdit)
+            {
+                var detail = (ConnectionDetail) lvConnections.Items[e.Item].Tag;
+                detail.ConnectionName = e.Label;
+
+                ConnectionManager.Instance.SaveConnectionsFile();
+            }
+        }
+
         #endregion
 
         #region Connection file actions
