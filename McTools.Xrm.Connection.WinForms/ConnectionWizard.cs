@@ -16,7 +16,11 @@ namespace McTools.Xrm.Connection.WinForms
 {
     public partial class ConnectionWizard : Form
     {
-        private const string SpecifyPasswordText = "Please specify the password";
+        private const string PasswordTip = "Please specify the password";
+        private const string DomainTip = "Provide domain name, possibly not mandatory for IFD connection";
+        private const string UserTip = "Provide user name. For IFD connections, try domain\\username";
+
+
         private readonly ConnectionDetail originalDetail;
         private readonly List<string> visitedPath;
         private CrmServiceClient serviceClient;
@@ -45,7 +49,7 @@ namespace McTools.Xrm.Connection.WinForms
                 {
                     txtPassword.PasswordChar = (char)0;
                     txtPassword.UseSystemPasswordChar = false;
-                    txtPassword.Text = SpecifyPasswordText;
+                    txtPassword.Text = PasswordTip;
                     txtPassword.ForeColor = SystemColors.GrayText;
                 }
                 else
@@ -138,7 +142,7 @@ namespace McTools.Xrm.Connection.WinForms
                 // a connection, the service client is not instanciated
                 updatedDetail.Organization = serviceClient.ConnectedOrgUniqueName;
                 updatedDetail.OrganizationFriendlyName = serviceClient.ConnectedOrgFriendlyName;
-                updatedDetail.OrganizationUrlName = serviceClient.ConnectedOrgUniqueName;
+                updatedDetail.OrganizationUrlName = updatedDetail.OrganizationUrlName;
                 updatedDetail.OrganizationVersion = serviceClient.ConnectedOrgVersion.ToString();
                 updatedDetail.OrganizationDataServiceUrl = serviceClient.ConnectedOrgPublishedEndpoints[EndpointType.OrganizationDataService];
                 updatedDetail.OrganizationServiceUrl = serviceClient.ConnectedOrgPublishedEndpoints[EndpointType.OrganizationService];
@@ -498,17 +502,17 @@ namespace McTools.Xrm.Connection.WinForms
             }
         }
 
-        private void txtPassword_Enter(object sender, EventArgs e)
-        {
-
-        }
-
         private void txt_Enter(object sender, EventArgs e)
         {
             var txt = (TextBox)sender;
             if (txt.ForeColor == SystemColors.GrayText)
             {
-                txt.Text = string.Empty;
+                if (txt == txtDomain && txt.Text == DomainTip || 
+                    txt == txtUsername && txt.Text == UserTip)
+                {
+                    txt.Text = string.Empty;
+                }
+
                 txt.ForeColor = SystemColors.ActiveCaptionText;
 
                 if (txt == txtPassword)
@@ -528,11 +532,11 @@ namespace McTools.Xrm.Connection.WinForms
                 txt.ForeColor = SystemColors.GrayText;
                 if (txt == txtDomain)
                 {
-                    txt.Text = "Provide domain name, possibly not mandatory for IFD connection";
+                    txt.Text = DomainTip;
                 }
                 else if (txt == txtUsername)
                 {
-                    txt.Text = "Provide user name. For IFD connections, try domain\\username";
+                    txt.Text = UserTip;
                 }
                 else if (txt == txtPassword)
                 {

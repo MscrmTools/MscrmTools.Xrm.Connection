@@ -226,7 +226,7 @@
             this.chkSavePassword.AutoSize = true;
             this.chkSavePassword.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.chkSavePassword.Location = new System.Drawing.Point(381, 130);
-            this.chkSavePassword.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkSavePassword.Margin = new System.Windows.Forms.Padding(4);
             this.chkSavePassword.Name = "chkSavePassword";
             this.chkSavePassword.Size = new System.Drawing.Size(405, 25);
             this.chkSavePassword.TabIndex = 6;
@@ -491,8 +491,8 @@
             // 
             // txtConnectionName
             // 
-            this.txtConnectionName.Location = new System.Drawing.Point(86, 82);
-            this.txtConnectionName.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtConnectionName.Location = new System.Drawing.Point(80, 70);
+            this.txtConnectionName.Margin = new System.Windows.Forms.Padding(4);
             this.txtConnectionName.Name = "txtConnectionName";
             this.txtConnectionName.Size = new System.Drawing.Size(739, 29);
             this.txtConnectionName.TabIndex = 16;
@@ -619,7 +619,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtConnectionString.Location = new System.Drawing.Point(4, 57);
-            this.txtConnectionString.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtConnectionString.Margin = new System.Windows.Forms.Padding(4);
             this.txtConnectionString.Multiline = true;
             this.txtConnectionString.Name = "txtConnectionString";
             this.txtConnectionString.Size = new System.Drawing.Size(834, 94);
@@ -664,13 +664,13 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(844, 318);
             this.Controls.Add(this.pnlHeader);
+            this.Controls.Add(this.pnlConnectAuthentication);
+            this.Controls.Add(this.pnlConnectMoreActiveDirectoryInfo);
             this.Controls.Add(this.pnlConnectWithConnectionString);
             this.Controls.Add(this.pnlError);
             this.Controls.Add(this.pnlConnected);
             this.Controls.Add(this.pnlWaiting);
             this.Controls.Add(this.pnlConnectUrl);
-            this.Controls.Add(this.pnlConnectAuthentication);
-            this.Controls.Add(this.pnlConnectMoreActiveDirectoryInfo);
             this.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
