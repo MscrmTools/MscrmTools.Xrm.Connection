@@ -90,6 +90,7 @@
             this.columnHeader4});
             this.lvConnections.FullRowSelect = true;
             this.lvConnections.GridLines = true;
+            this.lvConnections.LabelEdit = true;
             this.lvConnections.Location = new System.Drawing.Point(18, 43);
             this.lvConnections.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.lvConnections.Name = "lvConnections";
@@ -100,8 +101,6 @@
             this.lvConnections.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.LvConnectionsColumnClick);
             this.lvConnections.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvConnections_KeyDown);
             this.lvConnections.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.LvConnectionsMouseDoubleClick);
-            lvConnections.LabelEdit = true;
-            lvConnections.AfterLabelEdit += LvConnections_AfterLabelEdit;
             // 
             // columnHeader1
             // 
