@@ -589,15 +589,20 @@ namespace McTools.Xrm.Connection.WinForms
             tscbbConnectionsFile.SelectedIndex = index;
         }
 
-        private void tsbMoveAllToNewFile_Click(object sender, EventArgs e)
+        private void tsbMoveToNewFile_Click(object sender, EventArgs e)
         {
             bool loadConnections = true;
 
             var nfd = new NewConnectionFileDialog();
             if (nfd.ShowDialog(this) == DialogResult.OK)
             {
-                var allConnections = ConnectionManager.Instance.ConnectionsList.Connections;
-                ConnectionManager.Instance.ConnectionsList.Connections = new List<ConnectionDetail>();
+
+                var scs = lvConnections.SelectedItems.Cast<ListViewItem>().Select(i => (ConnectionDetail) i.Tag).ToList();
+                foreach (var sc in scs)
+                {
+                    ConnectionManager.Instance.ConnectionsList.Connections.Remove(sc);
+                }
+
                 ConnectionManager.Instance.SaveConnectionsFile();
                 
                 ConnectionManager.ConfigurationFile = nfd.CreatedFilePath;
@@ -608,7 +613,7 @@ namespace McTools.Xrm.Connection.WinForms
                 tscbbConnectionsFile.SelectedIndex = newIndex;
                 tsbRemoveConnectionList.Enabled = true;
 
-                ConnectionManager.Instance.ConnectionsList.Connections = allConnections;
+                ConnectionManager.Instance.ConnectionsList.Connections = scs;
                 ConnectionManager.Instance.SaveConnectionsFile();
             }
             else

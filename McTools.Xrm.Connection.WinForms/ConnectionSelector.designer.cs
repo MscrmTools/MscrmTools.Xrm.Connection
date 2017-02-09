@@ -48,7 +48,7 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tscbbConnectionsFile = new System.Windows.Forms.ToolStripComboBox();
             this.tsbRemoveConnectionList = new System.Windows.Forms.ToolStripButton();
-            this.tsbMoveAllToNewFile = new System.Windows.Forms.ToolStripButton();
+            this.tsbMoveToNewFile = new System.Windows.Forms.ToolStripButton();
             this.tsbMoveToExistingFile = new System.Windows.Forms.ToolStripDropDownButton();
             this.menu.SuspendLayout();
             this.SuspendLayout();
@@ -135,7 +135,7 @@
             this.toolStripSeparator2,
             this.tscbbConnectionsFile,
             this.tsbRemoveConnectionList,
-            this.tsbMoveAllToNewFile,
+            this.tsbMoveToNewFile,
             this.tsbMoveToExistingFile});
             this.menu.Location = new System.Drawing.Point(0, 0);
             this.menu.Name = "menu";
@@ -236,15 +236,15 @@
             this.tsbRemoveConnectionList.Text = "Remove selected connection list";
             this.tsbRemoveConnectionList.Click += new System.EventHandler(this.tsbRemoveConnectionList_Click);
             // 
-            // tsbMoveAllToNewFile
+            // tsbMoveToNewFile
             // 
-            this.tsbMoveAllToNewFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbMoveAllToNewFile.Image = ((System.Drawing.Image)(resources.GetObject("tsbMoveAllToNewFile.Image")));
-            this.tsbMoveAllToNewFile.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbMoveAllToNewFile.Name = "tsbMoveAllToNewFile";
-            this.tsbMoveAllToNewFile.Size = new System.Drawing.Size(28, 30);
-            this.tsbMoveAllToNewFile.Text = "Save all connections to a new file";
-            this.tsbMoveAllToNewFile.Click += new System.EventHandler(this.tsbMoveAllToNewFile_Click);
+            this.tsbMoveToNewFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbMoveToNewFile.Image = ((System.Drawing.Image)(resources.GetObject("tsbMoveToNewFile.Image")));
+            this.tsbMoveToNewFile.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbMoveToNewFile.Name = "tsbMoveToNewFile";
+            this.tsbMoveToNewFile.Size = new System.Drawing.Size(28, 30);
+            this.tsbMoveToNewFile.Text = "Move selected connections to a new file";
+            this.tsbMoveToNewFile.Click += new System.EventHandler(this.tsbMoveToNewFile_Click);
             // 
             // tsbMoveToExistingFile
             // 
@@ -298,7 +298,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripComboBox tscbbConnectionsFile;
         private System.Windows.Forms.ToolStripButton tsbRemoveConnectionList;
-        private System.Windows.Forms.ToolStripButton tsbMoveAllToNewFile;
+        private System.Windows.Forms.ToolStripButton tsbMoveToNewFile;
         private System.Windows.Forms.ToolStripDropDownButton tsbMoveToExistingFile;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripButton tsbUpdatePassword;
