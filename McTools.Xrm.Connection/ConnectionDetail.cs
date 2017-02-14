@@ -634,6 +634,7 @@ namespace McTools.Xrm.Connection
             {
                 return true;
             }
+
             if (originalDetail.HomeRealmUrl != HomeRealmUrl
                || originalDetail.IsCustomAuth != IsCustomAuth
                || originalDetail.Organization != Organization
@@ -644,8 +645,8 @@ namespace McTools.Xrm.Connection
                || originalDetail.UseOnline != UseOnline
                || originalDetail.UseOsdp != UseOsdp
                || originalDetail.UseSsl != UseSsl
-               || originalDetail.UserDomain.ToLower() != UserDomain.ToLower()
-               || originalDetail.UserName.ToLower() != UserName.ToLower()
+               || originalDetail.UserDomain?.ToLower() != UserDomain?.ToLower()
+               || originalDetail.UserName?.ToLower() != UserName?.ToLower()
                || (SavePassword && !string.IsNullOrEmpty(userPassword) && originalDetail.userPassword != userPassword))
             {
                 return true;

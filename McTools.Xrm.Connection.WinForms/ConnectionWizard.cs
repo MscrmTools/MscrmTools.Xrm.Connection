@@ -19,7 +19,7 @@ namespace McTools.Xrm.Connection.WinForms
         private const string PasswordTip = "Please specify the password";
         private const string DomainTip = "Provide domain name, possibly not mandatory for IFD connection";
         private const string UserTip = "Provide user name. For IFD connections, try domain\\username";
-
+        private const string PasswordTemp = "@@PASSWORD@@";
 
         private readonly ConnectionDetail originalDetail;
         private readonly List<string> visitedPath;
@@ -56,7 +56,7 @@ namespace McTools.Xrm.Connection.WinForms
                 {
                     txtPassword.PasswordChar = '•';
                     txtPassword.UseSystemPasswordChar = true;
-                    txtPassword.Text = "@@PASSWORD@@";
+                    txtPassword.Text = PasswordTemp;
                     txtPassword.ForeColor = SystemColors.ActiveCaptionText;
                 }
 
@@ -419,10 +419,13 @@ namespace McTools.Xrm.Connection.WinForms
                 }
             }
 
-            updatedDetail.UserDomain = txtDomain.Text != initialDomainText ? txtDomain.Text : null;
+            updatedDetail.UserDomain = txtDomain.Text != initialDomainText ? txtDomain.Text : "";
             updatedDetail.UserName = txtUsername.Text;
             updatedDetail.SavePassword = chkSavePassword.Checked;
-            updatedDetail.SetPassword(txtPassword.Text);
+            if (txtPassword.Text != PasswordTemp)
+            {
+                updatedDetail.SetPassword(txtPassword.Text);
+            }
 
             if (originalDetail == null)
             {
@@ -517,6 +520,7 @@ namespace McTools.Xrm.Connection.WinForms
 
                 if (txt == txtPassword)
                 {
+                    txt.Text = string.Empty;
                     txt.UseSystemPasswordChar = true;
                     txt.PasswordChar = '•';
                 }
