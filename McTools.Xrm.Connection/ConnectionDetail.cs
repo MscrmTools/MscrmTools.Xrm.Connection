@@ -445,6 +445,9 @@ namespace McTools.Xrm.Connection
                 case "crm9":
                     region = "NorthAmerica2";
                     break;
+                case "crm11":
+                    region = "UnitedKingdom";
+                    break;
             }
 
             return region;
