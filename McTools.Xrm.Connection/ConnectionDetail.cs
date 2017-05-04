@@ -199,6 +199,7 @@ namespace McTools.Xrm.Connection
                 return crmSvc;
             }
 
+            
             if (UseConnectionString)
             {
                 if (ConnectionString.IndexOf("RequireNewInstance=", StringComparison.Ordinal) < 0)
@@ -400,8 +401,12 @@ namespace McTools.Xrm.Connection
                  ConnectionManager.CryptoPasswordIterations,
                  ConnectionManager.CryptoInitVector,
                  ConnectionManager.CryptoKeySize);
+            string region, orgName;
+            bool isOnPrem;
+            Utilities.GetOrgnameAndOnlineRegionFromServiceUri(new Uri(OriginalUrl), out region, out orgName, out isOnPrem);
 
-            return new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password), GetOnlineRegion(ServerName), expliciteOrgName ?? OrganizationUrlName, true, useSsl, isOffice365: isOffice365);
+            //return new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password), GetOnlineRegion(ServerName), expliciteOrgName ?? OrganizationUrlName, true, useSsl, isOffice365: isOffice365);
+            return new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password), region, orgName, true, useSsl, isOffice365: isOffice365);
         }
 
         private string GetOnlineRegion(string hostname)
