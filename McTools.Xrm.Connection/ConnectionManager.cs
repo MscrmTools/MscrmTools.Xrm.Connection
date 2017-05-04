@@ -111,6 +111,7 @@ namespace McTools.Xrm.Connection
         private static string configfile;
         private static ConnectionManager instance;
         private FileSystemWatcher fsw;
+        private Dictionary<Guid, CrmServiceClient> crmServices;
 
         #region Constructor
 
@@ -119,6 +120,7 @@ namespace McTools.Xrm.Connection
         /// </summary>
         private ConnectionManager()
         {
+            crmServices = new Dictionary<Guid, CrmServiceClient>();
             ConnectionsList = LoadConnectionsList();
             SetupFileSystemWatcher();
             ServicePointManager.ServerCertificateValidationCallback += ValidateRemoteCertificate;
@@ -216,6 +218,8 @@ namespace McTools.Xrm.Connection
         /// List of Crm connections
         /// </summary>
         public CrmConnections ConnectionsList { get; set; }
+
+        public bool ReuseConnections { get; set; }
 
         #endregion Properties
 
@@ -360,6 +364,18 @@ namespace McTools.Xrm.Connection
                 WebRequest.DefaultWebProxy.Credentials = System.Net.CredentialCache.DefaultCredentials;
 
             var detail = (ConnectionDetail)parameters[0];
+
+            if (ReuseConnections && crmServices.ContainsKey(detail.ConnectionId ?? Guid.Empty))
+            {
+                var service = crmServices[detail.ConnectionId ?? Guid.Empty];
+                if (service.IsReady)
+                {
+                    detail.LastUsedOn = DateTime.Now;
+                    SaveConnectionsFile();
+                    return service;
+                }
+            }
+
             SendStepChange("Creating Organization service proxy...");
 
             // Connecting to Crm server
@@ -406,6 +422,11 @@ namespace McTools.Xrm.Connection
                 detail.LastUsedOn = DateTime.Now;
 
                 SaveConnectionsFile();
+
+                if (ReuseConnections && !crmServices.ContainsKey(detail.ConnectionId ?? Guid.Empty))
+                {
+                    crmServices.Add(detail.ConnectionId.Value, service);
+                }
 
                 return service;
             }
