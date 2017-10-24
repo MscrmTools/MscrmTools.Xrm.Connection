@@ -1,6 +1,4 @@
 ﻿using McTools.Xrm.Connection.WinForms.Properties;
-using Microsoft.Xrm.Sdk.Discovery;
-using Microsoft.Xrm.Tooling.Connector;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,6 +9,8 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Windows.Forms;
+using Microsoft.Xrm.Tooling.Connector;
+using Microsoft.Xrm.Sdk.Discovery;
 
 namespace McTools.Xrm.Connection.WinForms
 {
@@ -510,7 +510,7 @@ namespace McTools.Xrm.Connection.WinForms
             var txt = (TextBox)sender;
             if (txt.ForeColor == SystemColors.GrayText)
             {
-                if (txt == txtDomain && txt.Text == DomainTip || 
+                if (txt == txtDomain && txt.Text == DomainTip ||
                     txt == txtUsername && txt.Text == UserTip)
                 {
                     txt.Text = string.Empty;
@@ -561,7 +561,7 @@ namespace McTools.Xrm.Connection.WinForms
             var productName = ((AssemblyProductAttribute)assembly.GetCustomAttribute(typeof(AssemblyProductAttribute))).Product;
             var version = assembly.GetName().Version.ToString();
 
-            var logFolder = string.Format("{0}\\{1}\\{2}\\{3}", 
+            var logFolder = string.Format("{0}\\{1}\\{2}\\{3}",
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 companyName,
                 productName,
