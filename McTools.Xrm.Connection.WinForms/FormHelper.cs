@@ -7,11 +7,11 @@ namespace McTools.Xrm.Connection.WinForms
 {
     public class FormHelper
     {
-        private readonly Form _innerAppForm;
+        private readonly Form innerAppForm;
 
         public FormHelper(Form innerAppForm)
         {
-            _innerAppForm = innerAppForm;
+            this.innerAppForm = innerAppForm;
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace McTools.Xrm.Connection.WinForms
                 StartPosition = FormStartPosition.CenterParent,
             };
 
-            if (cs.ShowDialog(_innerAppForm) == DialogResult.OK)
+            if (cs.ShowDialog(innerAppForm) == DialogResult.OK)
             {
                 var connectionDetail = cs.SelectedConnections.First();
                 if (!connectionDetail.UseConnectionString && connectionDetail.IsCustomAuth)
@@ -39,7 +39,7 @@ namespace McTools.Xrm.Connection.WinForms
                             UserDomain = connectionDetail.UserDomain,
                             UserLogin = connectionDetail.UserName
                         };
-                        if (pForm.ShowDialog(_innerAppForm) == DialogResult.OK)
+                        if (pForm.ShowDialog(innerAppForm) == DialogResult.OK)
                         {
                             connectionDetail.SetPassword(pForm.UserPassword);
                             connectionDetail.SavePassword = pForm.SavePassword;
@@ -51,10 +51,7 @@ namespace McTools.Xrm.Connection.WinForms
                     }
                 }
 
-                if (preConnectionRequestAction != null)
-                {
-                    preConnectionRequestAction();
-                }
+                preConnectionRequestAction?.Invoke();
 
                 ConnectionManager.Instance.ConnectToServer(connectionDetail, connectionParameter);
 
@@ -62,6 +59,43 @@ namespace McTools.Xrm.Connection.WinForms
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Asks this manager to select a Crm connection to use
+        /// </summary>
+        /// <param name="connectionDetail">The <see cref="ConnectionDetail"/> to use</param>
+        /// <param name="connectionParameter">The connection parameter.</param>
+        /// <param name="preConnectionRequestAction">The action to be performed before the async call to create the connection.  Useful to display a please wait message</param>
+        /// <returns></returns>
+        public bool AskForConnection(ConnectionDetail connectionDetail, object connectionParameter, Action preConnectionRequestAction)
+        {
+            if (!connectionDetail.UseConnectionString && connectionDetail.IsCustomAuth)
+            {
+                if (connectionDetail.PasswordIsEmpty)
+                {
+                    var pForm = new PasswordForm
+                    {
+                        UserDomain = connectionDetail.UserDomain,
+                        UserLogin = connectionDetail.UserName
+                    };
+                    if (pForm.ShowDialog(innerAppForm) == DialogResult.OK)
+                    {
+                        connectionDetail.SetPassword(pForm.UserPassword);
+                        connectionDetail.SavePassword = pForm.SavePassword;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            preConnectionRequestAction?.Invoke();
+
+            ConnectionManager.Instance.ConnectToServer(connectionDetail, connectionParameter);
+
+            return true;
         }
 
         /// <summary>
@@ -103,7 +137,7 @@ namespace McTools.Xrm.Connection.WinForms
         {
             var cForm = new ConnectionWizard(connectionToUpdate) { StartPosition = FormStartPosition.CenterParent };
 
-            if (cForm.ShowDialog(_innerAppForm) == DialogResult.OK)
+            if (cForm.ShowDialog(innerAppForm) == DialogResult.OK)
             {
                 if (isCreation)
                 {
@@ -184,7 +218,7 @@ namespace McTools.Xrm.Connection.WinForms
 
             MethodInvoker mi = delegate
             {
-                if (pForm.ShowDialog(_innerAppForm) == DialogResult.OK)
+                if (pForm.ShowDialog(innerAppForm) == DialogResult.OK)
                 {
                     detail.SetPassword(pForm.UserPassword);
                     detail.SavePassword = pForm.SavePassword;
@@ -192,9 +226,9 @@ namespace McTools.Xrm.Connection.WinForms
                 }
             };
 
-            if (_innerAppForm.InvokeRequired)
+            if (innerAppForm.InvokeRequired)
             {
-                _innerAppForm.Invoke(mi);
+                innerAppForm.Invoke(mi);
             }
             else
             {
@@ -211,7 +245,7 @@ namespace McTools.Xrm.Connection.WinForms
                 StartPosition = FormStartPosition.CenterParent,
             };
 
-            if (cs.ShowDialog(_innerAppForm) == DialogResult.OK)
+            if (cs.ShowDialog(innerAppForm) == DialogResult.OK)
             {
                 return cs.SelectedConnections;
             }
