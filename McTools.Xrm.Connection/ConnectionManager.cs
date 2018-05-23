@@ -10,7 +10,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
-using System.Xml;
 
 namespace McTools.Xrm.Connection
 {
@@ -110,8 +109,8 @@ namespace McTools.Xrm.Connection
 
         private static string configfile;
         private static ConnectionManager instance;
-        private FileSystemWatcher fsw;
         private Dictionary<Guid, CrmServiceClient> crmServices;
+        private FileSystemWatcher fsw;
 
         #region Constructor
 
@@ -189,7 +188,7 @@ namespace McTools.Xrm.Connection
                     if (existingFile == null)
                     {
                         CrmConnections newCc = CrmConnections.LoadFromFile(value);
-                        
+
                         Connection.ConnectionsList.Instance.Files.Add(new ConnectionFile(newCc) { Path = configfile, LastUsed = DateTime.Now });
                         Connection.ConnectionsList.Instance.Save();
                     }
@@ -358,10 +357,12 @@ namespace McTools.Xrm.Connection
         /// <returns>An exception or an IOrganizationService</returns>
         private object Connect(List<object> parameters)
         {
-            WebRequest.DefaultWebProxy = WebRequest.GetSystemWebProxy();
+            if (WebRequest.DefaultWebProxy == null)
+                WebRequest.DefaultWebProxy = WebRequest.GetSystemWebProxy();
+
             //Use default credentials if no proxy credentials
             if (WebRequest.DefaultWebProxy.Credentials == null)
-                WebRequest.DefaultWebProxy.Credentials = System.Net.CredentialCache.DefaultCredentials;
+                WebRequest.DefaultWebProxy.Credentials = CredentialCache.DefaultCredentials;
 
             var detail = (ConnectionDetail)parameters[0];
 
