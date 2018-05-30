@@ -199,7 +199,6 @@ namespace McTools.Xrm.Connection
                 return crmSvc;
             }
 
-            
             if (UseConnectionString)
             {
                 if (ConnectionString.IndexOf("RequireNewInstance=", StringComparison.Ordinal) < 0)
@@ -450,6 +449,7 @@ namespace McTools.Xrm.Connection
                 case "crm9":
                     region = "NorthAmerica2";
                     break;
+
                 case "crm11":
                     region = "UnitedKingdom";
                     break;
@@ -634,6 +634,45 @@ namespace McTools.Xrm.Connection
         public void CopyPasswordTo(ConnectionDetail detail)
         {
             detail.userPassword = userPassword;
+        }
+
+        public string GetConnectionString()
+        {
+            var csb = new DbConnectionStringBuilder();
+
+            switch (AuthType)
+            {
+                default:
+                    csb["AuthType"] = "AD";
+                    break;
+
+                case AuthenticationProviderType.OnlineFederation:
+                    csb["AuthType"] = "Office365";
+                    break;
+
+                case AuthenticationProviderType.Federation:
+                    csb["AuthType"] = "IFD";
+                    break;
+            }
+
+            csb["Url"] = WebApplicationUrl;
+
+            if (!string.IsNullOrEmpty(UserDomain))
+                csb["Domain"] = UserDomain;
+            csb["Username"] = UserName;
+            csb["Password"] = "********";
+
+            if (!string.IsNullOrEmpty(HomeRealmUrl))
+                csb["HomeRealmUri"] = HomeRealmUrl;
+
+            // TODO Enable Oauth later
+            //csb["AuthType"] = "OAuth";
+            //csb["AppId"] = "";
+            //csb["RedirectUri"] = "";
+            //csb["TokenCacheStorePath"] = "";
+            //csb["LoginPrompt"] = "";
+
+            return csb.ToString();
         }
 
         public bool IsConnectionBrokenWithUpdatedData(ConnectionDetail originalDetail)

@@ -263,6 +263,8 @@ namespace McTools.Xrm.Connection.WinForms
 
             // Display connections
             LoadConnectionFile();
+
+            lvConnections_SelectedIndexChanged(this, new EventArgs());
         }
 
         private ListViewGroup GetGroup(ConnectionDetail detail)
@@ -327,6 +329,15 @@ namespace McTools.Xrm.Connection.WinForms
         private void lvConnections_SelectedIndexChanged(object sender, EventArgs e)
         {
             bValidate.Enabled = lvConnections.SelectedItems.Count > 0;
+            tsbShowConnectionString.Visible = lvConnections.SelectedItems.Count == 1;
+            toolStripSeparator4.Visible = lvConnections.SelectedItems.Count == 1;
+
+            tsbUpdateConnection.Visible = lvConnections.SelectedItems.Count == 1;
+
+            tsbCloneConnection.Visible = lvConnections.SelectedItems.Count > 0;
+            tsbDeleteConnection.Visible = lvConnections.SelectedItems.Count > 0;
+            tsbUpdatePassword.Visible = lvConnections.SelectedItems.Count > 0;
+            toolStripSeparator3.Visible = lvConnections.SelectedItems.Count > 0;
         }
 
         private void tsb_UseMru_CheckedChanged(object sender, EventArgs e)
@@ -527,6 +538,19 @@ namespace McTools.Xrm.Connection.WinForms
                     ConnectionManager.Instance.ConnectionsList.Connections.Add(newConnection);
                     ConnectionManager.Instance.SaveConnectionsFile();
                 }
+            }
+        }
+
+        private void tsbShowConnectionString_Click(object sender, EventArgs e)
+        {
+            var connections = lvConnections.SelectedItems
+                .Cast<ListViewItem>().Select(lvi => (ConnectionDetail)lvi.Tag)
+                .ToList();
+
+            if (connections.Count == 1)
+            {
+                var csd = new ConnectionStringDialog(connections.First());
+                csd.ShowDialog(this);
             }
         }
 

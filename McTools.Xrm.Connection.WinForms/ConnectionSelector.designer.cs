@@ -43,6 +43,8 @@
             this.tsbDeleteConnection = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbUpdatePassword = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsbShowConnectionString = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tsb_UseMru = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -126,6 +128,7 @@
             // 
             // menu
             // 
+            this.menu.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.menu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsbNewConnection,
             this.tsbUpdateConnection,
@@ -133,6 +136,8 @@
             this.tsbDeleteConnection,
             this.toolStripSeparator3,
             this.tsbUpdatePassword,
+            this.toolStripSeparator4,
+            this.tsbShowConnectionString,
             this.toolStripSeparator1,
             this.tsb_UseMru,
             this.toolStripSeparator2,
@@ -201,6 +206,22 @@
             this.tsbUpdatePassword.Text = "Update password";
             this.tsbUpdatePassword.ToolTipText = "Update password for selected connection(s)";
             this.tsbUpdatePassword.Click += new System.EventHandler(this.tsbUpdatePassword_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 38);
+            // 
+            // tsbShowConnectionString
+            // 
+            this.tsbShowConnectionString.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbShowConnectionString.Image = global::McTools.Xrm.Connection.WinForms.Properties.Resources.database_link;
+            this.tsbShowConnectionString.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbShowConnectionString.Name = "tsbShowConnectionString";
+            this.tsbShowConnectionString.Size = new System.Drawing.Size(32, 35);
+            this.tsbShowConnectionString.Text = "Show connection string";
+            this.tsbShowConnectionString.ToolTipText = "Show connection string for this connection";
+            this.tsbShowConnectionString.Click += new System.EventHandler(this.tsbShowConnectionString_Click);
             // 
             // toolStripSeparator1
             // 
@@ -307,5 +328,7 @@
         private System.Windows.Forms.ToolStripDropDownButton tsbMoveToExistingFile;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripButton tsbUpdatePassword;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripButton tsbShowConnectionString;
     }
 }

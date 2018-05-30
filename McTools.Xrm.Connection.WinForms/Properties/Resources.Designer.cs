@@ -207,5 +207,15 @@ namespace McTools.Xrm.Connection.WinForms.Properties {
                 return ResourceManager.GetString("ConnectionWizard_WarningTitle", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap database_link {
+            get {
+                object obj = ResourceManager.GetObject("database_link", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }
