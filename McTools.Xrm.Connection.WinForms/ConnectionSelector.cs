@@ -324,6 +324,11 @@ namespace McTools.Xrm.Connection.WinForms
             BValidateClick(null, null);
         }
 
+        private void lvConnections_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            bValidate.Enabled = lvConnections.SelectedItems.Count > 0;
+        }
+
         private void tsb_UseMru_CheckedChanged(object sender, EventArgs e)
         {
             var tsb = (ToolStripButton)sender;
