@@ -1,4 +1,6 @@
 ﻿using McTools.Xrm.Connection.WinForms.Properties;
+using Microsoft.Xrm.Sdk.Discovery;
+using Microsoft.Xrm.Tooling.Connector;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,23 +11,20 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Windows.Forms;
-using Microsoft.Xrm.Tooling.Connector;
-using Microsoft.Xrm.Sdk.Discovery;
 
 namespace McTools.Xrm.Connection.WinForms
 {
     public partial class ConnectionWizard : Form
     {
-        private const string PasswordTip = "Please specify the password";
         private const string DomainTip = "Provide domain name, possibly not mandatory for IFD connection";
-        private const string UserTip = "Provide user name. For IFD connections, try domain\\username";
         private const string PasswordTemp = "@@PASSWORD@@";
-
+        private const string PasswordTip = "Please specify the password";
+        private const string UserTip = "Provide user name. For IFD connections, try domain\\username";
         private readonly ConnectionDetail originalDetail;
         private readonly List<string> visitedPath;
+        private string initialDomainText;
         private CrmServiceClient serviceClient;
         private ConnectionDetail updatedDetail;
-        private string initialDomainText;
 
         public ConnectionWizard(ConnectionDetail detail = null)
         {
@@ -50,14 +49,14 @@ namespace McTools.Xrm.Connection.WinForms
                     txtPassword.PasswordChar = (char)0;
                     txtPassword.UseSystemPasswordChar = false;
                     txtPassword.Text = PasswordTip;
-                    txtPassword.ForeColor = SystemColors.GrayText;
+                    txtPassword.ForeColor = Color.DarkGray;
                 }
                 else
                 {
                     txtPassword.PasswordChar = '•';
                     txtPassword.UseSystemPasswordChar = true;
                     txtPassword.Text = PasswordTemp;
-                    txtPassword.ForeColor = SystemColors.ActiveCaptionText;
+                    txtPassword.ForeColor = SystemColors.WindowText;
                 }
 
                 txtConnectionString.Text = detail.ConnectionString;
@@ -473,6 +472,32 @@ namespace McTools.Xrm.Connection.WinForms
             txtConnectionString.Focus();
         }
 
+        private void llOpenConnectionLog_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            // Log folder is defined by configuration file and follows Microsoft
+            // SDK tools configuration. It stores connection log file in path
+            // path\Company\Product\Version
+            var assembly = Assembly.GetEntryAssembly();
+            var companyName = ((AssemblyCompanyAttribute)assembly.GetCustomAttribute(typeof(AssemblyCompanyAttribute))).Company;
+            var productName = ((AssemblyProductAttribute)assembly.GetCustomAttribute(typeof(AssemblyProductAttribute))).Product;
+            var version = assembly.GetName().Version.ToString();
+
+            var logFolder = string.Format("{0}\\{1}\\{2}\\{3}",
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                companyName,
+                productName,
+                version);
+
+            if (string.IsNullOrEmpty(logFolder))
+            {
+                MessageBox.Show(this, "There is no connection log folder available currently!");
+            }
+            else
+            {
+                Process.Start(logFolder);
+            }
+        }
+
         private void llUseConnectionString_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             visitedPath.Add(pnlConnectWithConnectionString.Name);
@@ -497,18 +522,10 @@ namespace McTools.Xrm.Connection.WinForms
             }
         }
 
-        private void txtOrganizationUrl_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                btnGo_Click(null, null);
-            }
-        }
-
         private void txt_Enter(object sender, EventArgs e)
         {
             var txt = (TextBox)sender;
-            if (txt.ForeColor == SystemColors.GrayText)
+            if (txt.ForeColor == Color.DarkGray)
             {
                 if (txt == txtDomain && txt.Text == DomainTip ||
                     txt == txtUsername && txt.Text == UserTip)
@@ -516,7 +533,7 @@ namespace McTools.Xrm.Connection.WinForms
                     txt.Text = string.Empty;
                 }
 
-                txt.ForeColor = SystemColors.ActiveCaptionText;
+                txt.ForeColor = SystemColors.WindowText;
 
                 if (txt == txtPassword)
                 {
@@ -533,7 +550,7 @@ namespace McTools.Xrm.Connection.WinForms
 
             if (txt.Text.Length == 0)
             {
-                txt.ForeColor = SystemColors.GrayText;
+                txt.ForeColor = Color.DarkGray;
                 if (txt == txtDomain)
                 {
                     txt.Text = DomainTip;
@@ -551,29 +568,11 @@ namespace McTools.Xrm.Connection.WinForms
             }
         }
 
-        private void llOpenConnectionLog_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void txtOrganizationUrl_KeyDown(object sender, KeyEventArgs e)
         {
-            // Log folder is defined by configuration file and follows Microsoft
-            // SDK tools configuration. It stores connection log file in path
-            // path\Company\Product\Version
-            var assembly = Assembly.GetEntryAssembly();
-            var companyName = ((AssemblyCompanyAttribute)assembly.GetCustomAttribute(typeof(AssemblyCompanyAttribute))).Company;
-            var productName = ((AssemblyProductAttribute)assembly.GetCustomAttribute(typeof(AssemblyProductAttribute))).Product;
-            var version = assembly.GetName().Version.ToString();
-
-            var logFolder = string.Format("{0}\\{1}\\{2}\\{3}",
-                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                companyName,
-                productName,
-                version);
-
-            if (string.IsNullOrEmpty(logFolder))
+            if (e.KeyCode == Keys.Enter)
             {
-                MessageBox.Show(this, "There is no connection log folder available currently!");
-            }
-            else
-            {
-                Process.Start(logFolder);
+                btnGo_Click(null, null);
             }
         }
     }
