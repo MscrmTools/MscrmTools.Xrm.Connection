@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2037
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "McTools.Xrm.Connection", "McTools.Xrm.Connection\McTools.Xrm.Connection.csproj", "{C3824C2C-6E2E-4FDE-A2AA-229BBC7C3B1F}"
 EndProject
@@ -36,6 +36,7 @@ Global
 		{EEB5C09F-CEC6-4FB5-87B5-AE61AE89C9EB}.Release|x86.ActiveCfg = Release|Any CPU
 		{EEB5C09F-CEC6-4FB5-87B5-AE61AE89C9EB}.Release|x86.Build.0 = Release|Any CPU
 		{5093677C-F49B-4249-BEC1-E117E62255AD}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{5093677C-F49B-4249-BEC1-E117E62255AD}.Debug|Any CPU.Build.0 = Debug|x86
 		{5093677C-F49B-4249-BEC1-E117E62255AD}.Debug|x86.ActiveCfg = Debug|x86
 		{5093677C-F49B-4249-BEC1-E117E62255AD}.Debug|x86.Build.0 = Debug|x86
 		{5093677C-F49B-4249-BEC1-E117E62255AD}.Release|Any CPU.ActiveCfg = Release|x86
@@ -48,6 +49,9 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{C3824C2C-6E2E-4FDE-A2AA-229BBC7C3B1F} = {A3FFFB54-ACB9-41CC-83A8-3A2F87DADD71}
 		{EEB5C09F-CEC6-4FB5-87B5-AE61AE89C9EB} = {A3FFFB54-ACB9-41CC-83A8-3A2F87DADD71}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C1D2833A-693B-47BA-B637-789FC4C9E532}
 	EndGlobalSection
 	GlobalSection(AutomaticVersions) = postSolution
 		UpdateAssemblyVersion.Release|Any CPU = True
