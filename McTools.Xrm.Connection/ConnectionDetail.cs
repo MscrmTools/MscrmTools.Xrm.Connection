@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.Common;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -49,6 +50,10 @@ namespace McTools.Xrm.Connection
         /// </summary>
         public Dictionary<string, string> CustomInformation { get; set; }
 
+        public Color? EnvironmentColor { get; set; }
+        public string EnvironmentText { get; set; }
+        public Color? EnvironmentTextColor { get; set; }
+
         /// <summary>
         /// Gets or sets the Home realm url for ADFS authentication
         /// </summary>
@@ -59,6 +64,7 @@ namespace McTools.Xrm.Connection
         /// </summary>
         public bool IsCustomAuth { get; set; }
 
+        public bool IsEnvironmentHighlightSet { get; set; }
         public DateTime LastUsedOn { get; set; }
 
         /// <summary>
@@ -627,7 +633,11 @@ namespace McTools.Xrm.Connection
                 userPassword = userPassword,
                 WebApplicationUrl = WebApplicationUrl,
                 OriginalUrl = OriginalUrl,
-                Timeout = Timeout
+                Timeout = Timeout,
+                IsEnvironmentHighlightSet = IsEnvironmentHighlightSet,
+                EnvironmentText = EnvironmentText,
+                EnvironmentColor = EnvironmentColor,
+                EnvironmentTextColor = EnvironmentTextColor
             };
         }
 
@@ -747,6 +757,10 @@ namespace McTools.Xrm.Connection
                     new XElement("HomeRealmUrl", HomeRealmUrl),
                     new XElement("Timeout", TimeoutTicks),
                     new XElement("WebApplicationUrl", WebApplicationUrl),
+                    new XElement("IsEnvironmentHighlightSet", IsEnvironmentHighlightSet),
+                    new XElement("EnvironmentText", EnvironmentText),
+                    new XElement("EnvironmentColor", ColorTranslator.ToHtml(EnvironmentColor ?? Color.FromArgb(255, 255, 0, 255))),
+                    new XElement("EnvironmentTextColor", ColorTranslator.ToHtml(EnvironmentTextColor ?? Color.FromArgb(255, 255, 255, 255))),
                     new XElement("LastUsedOn", LastUsedOn.ToString(CultureInfo.InvariantCulture.DateTimeFormat)),
                     GetCustomInfoXElement());
         }

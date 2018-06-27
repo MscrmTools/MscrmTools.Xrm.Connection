@@ -2,12 +2,7 @@
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Windows.Forms;
-using Microsoft.Xrm.Tooling.Connector;
 
 namespace McTools.Xrm.Connection.TestWinForm
 {
@@ -41,6 +36,7 @@ namespace McTools.Xrm.Connection.TestWinForm
             InitializeComponent();
             // Create the connection manager with its events
             this.cManager = ConnectionManager.Instance;
+            this.cManager.FromXrmToolBox = true;
             this.cManager.ConnectionSucceed += new ConnectionManager.ConnectionSucceedEventHandler(cManager_ConnectionSucceed);
             this.cManager.ConnectionFailed += new ConnectionManager.ConnectionFailedEventHandler(cManager_ConnectionFailed);
             this.cManager.StepChanged += new ConnectionManager.StepChangedEventHandler(cManager_StepChanged);

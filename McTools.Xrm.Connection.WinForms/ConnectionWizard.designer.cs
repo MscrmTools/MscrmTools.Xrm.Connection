@@ -63,6 +63,9 @@
             this.label3 = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.pnlConnected = new System.Windows.Forms.Panel();
+            this.btnClearEnvHighlight = new System.Windows.Forms.Button();
+            this.btnSetEnvHighlight = new System.Windows.Forms.Button();
+            this.lblHighlight = new System.Windows.Forms.Label();
             this.btnFinish = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.txtConnectionName = new System.Windows.Forms.TextBox();
@@ -226,7 +229,7 @@
             this.chkSavePassword.AutoSize = true;
             this.chkSavePassword.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.chkSavePassword.Location = new System.Drawing.Point(444, 152);
-            this.chkSavePassword.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.chkSavePassword.Margin = new System.Windows.Forms.Padding(5);
             this.chkSavePassword.Name = "chkSavePassword";
             this.chkSavePassword.Size = new System.Drawing.Size(486, 29);
             this.chkSavePassword.TabIndex = 6;
@@ -458,6 +461,9 @@
             // 
             // pnlConnected
             // 
+            this.pnlConnected.Controls.Add(this.btnClearEnvHighlight);
+            this.pnlConnected.Controls.Add(this.btnSetEnvHighlight);
+            this.pnlConnected.Controls.Add(this.lblHighlight);
             this.pnlConnected.Controls.Add(this.btnFinish);
             this.pnlConnected.Controls.Add(this.label2);
             this.pnlConnected.Controls.Add(this.txtConnectionName);
@@ -467,6 +473,39 @@
             this.pnlConnected.Size = new System.Drawing.Size(985, 236);
             this.pnlConnected.TabIndex = 13;
             this.pnlConnected.Visible = false;
+            // 
+            // btnClearEnvHighlight
+            // 
+            this.btnClearEnvHighlight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnClearEnvHighlight.Location = new System.Drawing.Point(317, 169);
+            this.btnClearEnvHighlight.Name = "btnClearEnvHighlight";
+            this.btnClearEnvHighlight.Size = new System.Drawing.Size(283, 40);
+            this.btnClearEnvHighlight.TabIndex = 20;
+            this.btnClearEnvHighlight.Text = "Clear Environment Highlight";
+            this.btnClearEnvHighlight.UseVisualStyleBackColor = true;
+            this.btnClearEnvHighlight.Visible = false;
+            this.btnClearEnvHighlight.Click += new System.EventHandler(this.btnClearEnvHighlight_Click);
+            // 
+            // btnSetEnvHighlight
+            // 
+            this.btnSetEnvHighlight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSetEnvHighlight.Location = new System.Drawing.Point(28, 169);
+            this.btnSetEnvHighlight.Name = "btnSetEnvHighlight";
+            this.btnSetEnvHighlight.Size = new System.Drawing.Size(283, 40);
+            this.btnSetEnvHighlight.TabIndex = 19;
+            this.btnSetEnvHighlight.Text = "Set Environment Highlight";
+            this.btnSetEnvHighlight.UseVisualStyleBackColor = true;
+            this.btnSetEnvHighlight.Click += new System.EventHandler(this.btnSetEnvHighlight_Click);
+            // 
+            // lblHighlight
+            // 
+            this.lblHighlight.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblHighlight.Location = new System.Drawing.Point(23, 132);
+            this.lblHighlight.Name = "lblHighlight";
+            this.lblHighlight.Size = new System.Drawing.Size(948, 43);
+            this.lblHighlight.TabIndex = 18;
+            this.lblHighlight.Text = "You can also define an environment highlight for this connection";
             // 
             // btnFinish
             // 
@@ -482,7 +521,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(23, 101);
+            this.label2.Location = new System.Drawing.Point(23, 85);
             this.label2.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(62, 25);
@@ -492,7 +531,7 @@
             // txtConnectionName
             // 
             this.txtConnectionName.Location = new System.Drawing.Point(93, 82);
-            this.txtConnectionName.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.txtConnectionName.Margin = new System.Windows.Forms.Padding(5);
             this.txtConnectionName.Name = "txtConnectionName";
             this.txtConnectionName.Size = new System.Drawing.Size(861, 32);
             this.txtConnectionName.TabIndex = 16;
@@ -619,7 +658,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtConnectionString.Location = new System.Drawing.Point(5, 66);
-            this.txtConnectionString.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.txtConnectionString.Margin = new System.Windows.Forms.Padding(5);
             this.txtConnectionString.Multiline = true;
             this.txtConnectionString.Name = "txtConnectionString";
             this.txtConnectionString.Size = new System.Drawing.Size(972, 109);
@@ -664,13 +703,13 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(985, 371);
             this.Controls.Add(this.pnlHeader);
+            this.Controls.Add(this.pnlConnected);
+            this.Controls.Add(this.pnlWaiting);
+            this.Controls.Add(this.pnlConnectUrl);
             this.Controls.Add(this.pnlConnectAuthentication);
             this.Controls.Add(this.pnlConnectMoreActiveDirectoryInfo);
             this.Controls.Add(this.pnlConnectWithConnectionString);
             this.Controls.Add(this.pnlError);
-            this.Controls.Add(this.pnlConnected);
-            this.Controls.Add(this.pnlWaiting);
-            this.Controls.Add(this.pnlConnectUrl);
             this.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -750,6 +789,9 @@
         private System.Windows.Forms.Button btnBack2;
         private System.Windows.Forms.Button btnConnectWithConnectionString;
         private System.Windows.Forms.LinkLabel llOpenConnectionLog;
+        private System.Windows.Forms.Button btnSetEnvHighlight;
+        private System.Windows.Forms.Label lblHighlight;
+        private System.Windows.Forms.Button btnClearEnvHighlight;
     }
 }
 

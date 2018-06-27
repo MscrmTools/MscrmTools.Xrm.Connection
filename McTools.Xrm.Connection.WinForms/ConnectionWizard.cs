@@ -74,6 +74,13 @@ namespace McTools.Xrm.Connection.WinForms
                     llUseConnectionString_LinkClicked(null, null);
                 }
             }
+
+            if (!ConnectionManager.Instance.FromXrmToolBox)
+            {
+                lblHighlight.Visible = false;
+                btnClearEnvHighlight.Visible = false;
+                btnSetEnvHighlight.Visible = false;
+            }
         }
 
         public ConnectionDetail CrmConnectionDetail { get { return updatedDetail; } }
@@ -107,6 +114,16 @@ namespace McTools.Xrm.Connection.WinForms
                     pnl.Visible = pnl.Name == visitedPath.Last();
                 }
             }
+        }
+
+        private void btnClearEnvHighlight_Click(object sender, EventArgs e)
+        {
+            updatedDetail.IsEnvironmentHighlightSet = false;
+            updatedDetail.EnvironmentColor = null;
+            updatedDetail.EnvironmentTextColor = null;
+            updatedDetail.EnvironmentText = null;
+
+            btnClearEnvHighlight.Visible = false;
         }
 
         private void btnConnectWithConnectionString_Click(object sender, EventArgs e)
@@ -286,6 +303,20 @@ namespace McTools.Xrm.Connection.WinForms
             DisplayPanel(pnlConnectUrl, btnGo);
         }
 
+        private void btnSetEnvHighlight_Click(object sender, EventArgs e)
+        {
+            var dialog = new EnvHighlightDialog(updatedDetail);
+            if (dialog.ShowDialog(this) == DialogResult.OK)
+            {
+                updatedDetail.IsEnvironmentHighlightSet = true;
+                updatedDetail.EnvironmentColor = dialog.BackColorSelected;
+                updatedDetail.EnvironmentTextColor = dialog.TextColorSelected;
+                updatedDetail.EnvironmentText = dialog.TextSelected;
+
+                btnClearEnvHighlight.Visible = true;
+            }
+        }
+
         private void btnValidaIfdInfo_Click(object sender, EventArgs e)
         {
             if (rbIfdYes.Checked)
@@ -456,10 +487,14 @@ namespace McTools.Xrm.Connection.WinForms
         {
             foreach (var ctrl in Controls)
             {
-                var pnl = ctrl as Panel;
-                if (pnl != null && pnl != pnlHeader)
+                if (ctrl is Panel pnl && pnl != pnlHeader)
                 {
                     pnl.Visible = pnl == panel;
+
+                    if (pnl == pnlConnected && updatedDetail.IsEnvironmentHighlightSet && ConnectionManager.Instance.FromXrmToolBox)
+                    {
+                        btnClearEnvHighlight.Visible = true;
+                    }
                 }
             }
             AcceptButton = acceptButton;

@@ -218,6 +218,7 @@ namespace McTools.Xrm.Connection
         /// </summary>
         public CrmConnections ConnectionsList { get; set; }
 
+        public bool FromXrmToolBox { get; set; }
         public bool ReuseConnections { get; set; }
 
         #endregion Properties

@@ -138,6 +138,18 @@
     <Compile Include="ConnectionStringDialog.Designer.cs">
       <DependentUpon>ConnectionStringDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="EnvHighlightDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EnvHighlightDialog.Designer.cs">
+      <DependentUpon>EnvHighlightDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EnvHighlightSettingsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EnvHighlightSettingsDialog.Designer.cs">
+      <DependentUpon>EnvHighlightSettingsDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="UpdatePasswordForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -200,6 +212,12 @@
   <ItemGroup>
     <EmbeddedResource Include="ConnectionStringDialog.resx">
       <DependentUpon>ConnectionStringDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnvHighlightDialog.resx">
+      <DependentUpon>EnvHighlightDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnvHighlightSettingsDialog.resx">
+      <DependentUpon>EnvHighlightSettingsDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UpdatePasswordForm.resx">
       <DependentUpon>UpdatePasswordForm.cs</DependentUpon>
@@ -268,6 +286,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\database_link.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\XTB_HIGHLIGHT_PRODUCTION.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\XTB_HIGHLIGHT_UAT.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\XTB_HIGHLIGHT_CUSTOM.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

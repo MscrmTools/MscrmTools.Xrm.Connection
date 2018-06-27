@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xrm.Sdk.Client;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -272,6 +273,30 @@ namespace McTools.Xrm.Connection
                         cd.WebApplicationUrl = webApplicationUrlElement.Value;
                     }
 
+                    var isEnvironmentHighlightSetElt = elt.Element("IsEnvironmentHighlightSet");
+                    if (isEnvironmentHighlightSetElt != null)
+                    {
+                        cd.IsEnvironmentHighlightSet = isEnvironmentHighlightSetElt.Value == "true";
+                    }
+
+                    var environmentTextElt = elt.Element("EnvironmentText");
+                    if (environmentTextElt != null)
+                    {
+                        cd.EnvironmentText = environmentTextElt.Value;
+                    }
+
+                    var environmentColorElt = elt.Element("EnvironmentColor");
+                    if (environmentColorElt != null)
+                    {
+                        cd.EnvironmentColor = ColorTranslator.FromHtml(environmentColorElt.Value);
+                    }
+
+                    var environmentTextColorElt = elt.Element("EnvironmentTextColor");
+                    if (environmentTextColorElt != null)
+                    {
+                        cd.EnvironmentTextColor = ColorTranslator.FromHtml(environmentTextColorElt.Value);
+                    }
+
                     var lastUsedOnElt = elt.Element("LastUsedOn");
                     if (lastUsedOnElt != null)
                     {
@@ -293,6 +318,26 @@ namespace McTools.Xrm.Connection
             }
 
             return crmConnections;
+        }
+
+        public ConnectionDetail CloneConnection(ConnectionDetail detail)
+        {
+            var newDetail = (ConnectionDetail)detail.Clone();
+            newDetail.ConnectionId = Guid.NewGuid();
+
+            int cloneId = 0;
+            string newName;
+            do
+            {
+                cloneId++;
+                newName = string.Format("{0} ({1})", newDetail.ConnectionName, cloneId);
+            } while (Connections.Any(c => c.ConnectionName == newName));
+
+            newDetail.ConnectionName = newName;
+
+            Connections.Add(newDetail);
+
+            return newDetail;
         }
 
         public void SerializeToFile(string filePath)
@@ -332,26 +377,6 @@ namespace McTools.Xrm.Connection
         public override string ToString()
         {
             return Name;
-        }
-
-        public ConnectionDetail CloneConnection(ConnectionDetail detail)
-        {
-            var newDetail = (ConnectionDetail)detail.Clone();
-            newDetail.ConnectionId = Guid.NewGuid();
-
-            int cloneId = 0;
-            string newName;
-            do
-            {
-                cloneId++;
-                newName = string.Format("{0} ({1})", newDetail.ConnectionName, cloneId);
-            } while (Connections.Any(c => c.ConnectionName == newName));
-
-            newDetail.ConnectionName = newName;
-
-            Connections.Add(newDetail);
-
-            return newDetail;
         }
 
         #endregion methods

@@ -217,5 +217,35 @@ namespace McTools.Xrm.Connection.WinForms.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap XTB_HIGHLIGHT_CUSTOM {
+            get {
+                object obj = ResourceManager.GetObject("XTB_HIGHLIGHT_CUSTOM", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap XTB_HIGHLIGHT_PRODUCTION {
+            get {
+                object obj = ResourceManager.GetObject("XTB_HIGHLIGHT_PRODUCTION", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap XTB_HIGHLIGHT_UAT {
+            get {
+                object obj = ResourceManager.GetObject("XTB_HIGHLIGHT_UAT", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

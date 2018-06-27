@@ -567,6 +567,7 @@ namespace McTools.Xrm.Connection.WinForms
 
                 if (cForm.ShowDialog(this) == DialogResult.OK)
                 {
+                    item.Tag = cForm.CrmConnectionDetail;
                     item.SubItems[0].Text = cForm.CrmConnectionDetail.ConnectionName;
                     item.SubItems[1].Text = cForm.CrmConnectionDetail.ServerName;
                     item.SubItems[2].Text = cForm.CrmConnectionDetail.Organization;
