@@ -338,6 +338,9 @@ namespace McTools.Xrm.Connection.WinForms
             tsbDeleteConnection.Visible = lvConnections.SelectedItems.Count > 0;
             tsbUpdatePassword.Visible = lvConnections.SelectedItems.Count > 0;
             toolStripSeparator3.Visible = lvConnections.SelectedItems.Count > 0;
+
+            tsbMoveToExistingFile.Visible = lvConnections.SelectedItems.Count > 0;
+            tsbMoveToNewFile.Visible = lvConnections.SelectedItems.Count > 0;
         }
 
         private void tsb_UseMru_CheckedChanged(object sender, EventArgs e)
@@ -705,7 +708,7 @@ namespace McTools.Xrm.Connection.WinForms
 
         private void tsbRemoveConnectionList_Click(object sender, EventArgs e)
         {
-            var message = "Are you sure you want to delete this connections list file?";
+            var message = "Are you sure you want to remove this connections list file?\n\nThe file is not deleted physically but just removed from connections files list";
             if (MessageBox.Show(this, message, @"Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question) ==
                 DialogResult.No)
                 return;

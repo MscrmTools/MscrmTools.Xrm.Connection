@@ -231,10 +231,11 @@
             // tsb_UseMru
             // 
             this.tsb_UseMru.CheckOnClick = true;
+            this.tsb_UseMru.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.tsb_UseMru.Image = ((System.Drawing.Image)(resources.GetObject("tsb_UseMru.Image")));
             this.tsb_UseMru.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsb_UseMru.Name = "tsb_UseMru";
-            this.tsb_UseMru.Size = new System.Drawing.Size(205, 35);
+            this.tsb_UseMru.Size = new System.Drawing.Size(32, 35);
             this.tsb_UseMru.Text = "Display MRU first";
             this.tsb_UseMru.ToolTipText = "Display Most Recently Used connections first";
             // 
@@ -268,6 +269,7 @@
             this.tsbMoveToNewFile.Name = "tsbMoveToNewFile";
             this.tsbMoveToNewFile.Size = new System.Drawing.Size(32, 35);
             this.tsbMoveToNewFile.Text = "Move selected connections to a new file";
+            this.tsbMoveToNewFile.Visible = false;
             this.tsbMoveToNewFile.Click += new System.EventHandler(this.tsbMoveToNewFile_Click);
             // 
             // tsbMoveToExistingFile
@@ -278,6 +280,7 @@
             this.tsbMoveToExistingFile.Name = "tsbMoveToExistingFile";
             this.tsbMoveToExistingFile.Size = new System.Drawing.Size(49, 35);
             this.tsbMoveToExistingFile.Text = "Move selected connections to existing file";
+            this.tsbMoveToExistingFile.Visible = false;
             this.tsbMoveToExistingFile.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.tsbMoveToExistingFile_DropDownItemClicked);
             // 
             // ConnectionSelector
