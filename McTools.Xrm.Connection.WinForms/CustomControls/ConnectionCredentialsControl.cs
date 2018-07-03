@@ -23,7 +23,7 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
 
         public string Domain
         {
-            get => txtDomain.Text == DomainTip ? null : txtDomain.Text;
+            get => txtDomain.Text == DomainTip ? "" : txtDomain.Text;
             set
             {
                 if (value?.Length > 0)

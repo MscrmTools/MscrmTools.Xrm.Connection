@@ -521,7 +521,7 @@ namespace McTools.Xrm.Connection
                || originalDetail.ReplyUrl != ReplyUrl
                || originalDetail.UserDomain?.ToLower() != UserDomain?.ToLower()
                || originalDetail.UserName?.ToLower() != UserName?.ToLower()
-               || (SavePassword && !string.IsNullOrEmpty(userPassword) && originalDetail.userPassword != userPassword))
+               || SavePassword && !string.IsNullOrEmpty(userPassword) && originalDetail.userPassword != userPassword)
             {
                 return true;
             }
