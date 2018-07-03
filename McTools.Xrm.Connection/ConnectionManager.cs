@@ -17,6 +17,7 @@ namespace McTools.Xrm.Connection
 
     public class ConnectionFailedEventArgs : EventArgs
     {
+        public ConnectionDetail ConnectionDetail { get; set; }
         public string FailureReason { get; set; }
         public object Parameter { get; set; }
     }
@@ -228,26 +229,29 @@ namespace McTools.Xrm.Connection
         /// <summary>
         /// Launch the Crm connection process
         /// </summary>
-        /// <param name="detail">Details of the Crm connection</param>
+        /// <param name="details">Details of the Crm connection</param>
         /// <param name="connectionParameter">A parameter to retrieve after connection</param>
-        public void ConnectToServer(ConnectionDetail detail, object connectionParameter)
+        public void ConnectToServer(List<ConnectionDetail> details, object connectionParameter)
         {
-            var parameters = new List<object> { detail, connectionParameter };
+            foreach (var detail in details)
+            {
+                var parameters = new List<object> { detail, connectionParameter };
 
-            // Runs the connection asynchronously
-            var worker = new BackgroundWorker();
-            worker.DoWork += WorkerDoWork;
-            worker.RunWorkerCompleted += WorkerRunWorkerCompleted;
-            worker.RunWorkerAsync(parameters);
+                // Runs the connection asynchronously
+                var worker = new BackgroundWorker();
+                worker.DoWork += WorkerDoWork;
+                worker.RunWorkerCompleted += WorkerRunWorkerCompleted;
+                worker.RunWorkerAsync(parameters);
+            }
         }
 
         /// <summary>
         /// Launch the Crm connection process
         /// </summary>
-        /// <param name="detail">Details of the Crm connection</param>
-        public void ConnectToServer(ConnectionDetail detail)
+        /// <param name="details">Details of the Crm connection</param>
+        public void ConnectToServer(List<ConnectionDetail> details)
         {
-            ConnectToServer(detail, null);
+            ConnectToServer(details, null);
         }
 
         /// <summary>
@@ -459,7 +463,7 @@ namespace McTools.Xrm.Connection
                 var error = parameters[2] as Exception;
                 if (error != null)
                 {
-                    SendFailureMessage(CrmExceptionHelper.GetErrorMessage(error, false), parameters[1]);
+                    SendFailureMessage(parameters[0] as ConnectionDetail, CrmExceptionHelper.GetErrorMessage(error, false), parameters[1]);
                 }
                 else
                 {
@@ -472,7 +476,7 @@ namespace McTools.Xrm.Connection
                             ios = service.OrganizationWebProxyClient;
                             if (ios == null)
                             {
-                                SendFailureMessage("Unable to find an instanciated service", parameters[1]);
+                                SendFailureMessage(parameters[0] as ConnectionDetail, "Unable to find an instanciated service", parameters[1]);
                             }
                         }
 
@@ -490,14 +494,15 @@ namespace McTools.Xrm.Connection
         /// Sends a connection failure message
         /// </summary>
         /// <param name="failureReason">Reason of the failure</param>
-        private void SendFailureMessage(string failureReason, object parameter)
+        private void SendFailureMessage(ConnectionDetail detail, string failureReason, object parameter)
         {
             if (ConnectionFailed != null)
             {
                 var args = new ConnectionFailedEventArgs
                 {
                     FailureReason = failureReason,
-                    Parameter = parameter
+                    Parameter = parameter,
+                    ConnectionDetail = detail
                 };
 
                 ConnectionFailed(this, args);

@@ -16,12 +16,12 @@ namespace McTools.Xrm.Connection.WinForms
 
         private readonly FormHelper _formHelper;
 
-        private bool mergeConnectionFiles;
-
         /// <summary>
         /// Resources manager
         /// </summary>
         private readonly System.ComponentModel.ComponentResourceManager resources;
+
+        private bool mergeConnectionFiles;
 
         #endregion Variables
 
@@ -182,7 +182,7 @@ namespace McTools.Xrm.Connection.WinForms
                 CrmConnections cc = new CrmConnections("Default");
                 cc.SerializeToFile(defaultFilePath);
 
-                ConnectionsList.Instance.Files.Add(new ConnectionFile(cc) { Path = defaultFilePath, LastUsed = DateTime.Now});
+                ConnectionsList.Instance.Files.Add(new ConnectionFile(cc) { Path = defaultFilePath, LastUsed = DateTime.Now });
                 ConnectionsList.Instance.Save();
             }
 
@@ -248,8 +248,6 @@ namespace McTools.Xrm.Connection.WinForms
                     }
                 }
 
-                
-
                 var newConnectionItem = new ToolStripMenuItem();
                 newConnectionItem.Text = "Create new connection";
                 newConnectionItem.Image = (Image)resources.GetObject("server_add");
@@ -300,7 +298,7 @@ namespace McTools.Xrm.Connection.WinForms
             ToolStripMenuItem cItem = new ToolStripMenuItem();
             cItem.Click += actionItem_Click;
             cItem.Text = "Connect";
-            cItem.Image = (Image) resources.GetObject("server_connect");
+            cItem.Image = (Image)resources.GetObject("server_connect");
             item.DropDownItems.Add(cItem);
 
             ToolStripMenuItem eItem = new ToolStripMenuItem();
@@ -349,12 +347,12 @@ namespace McTools.Xrm.Connection.WinForms
                     {
                         if (_formHelper.RequestPassword(currentConnection))
                         {
-                            ConnectionManager.Instance.ConnectToServer(currentConnection);
+                            ConnectionManager.Instance.ConnectToServer(new List<ConnectionDetail> { currentConnection });
                         }
                     }
                     else
                     {
-                        ConnectionManager.Instance.ConnectToServer(currentConnection);
+                        ConnectionManager.Instance.ConnectToServer(new List<ConnectionDetail> { currentConnection });
                     }
                     break;
 
@@ -395,7 +393,7 @@ namespace McTools.Xrm.Connection.WinForms
 
         private void newConnectionItem_Click(object sender, EventArgs e)
         {
-            var actionMenu = (ToolStripMenuItem) sender;
+            var actionMenu = (ToolStripMenuItem)sender;
             ToolStripDropDownItem parentItem = (ToolStripDropDownItem)actionMenu.OwnerItem;
             var connectionFile = (ConnectionFile)parentItem.Tag;
 
@@ -434,7 +432,6 @@ namespace McTools.Xrm.Connection.WinForms
 
                 BuildActionItems(item);
 
-               
                 if (parentItem.DropDownItems.Count == 1)
                 {
                     parentItem.DropDownItems.Insert(0, new ToolStripSeparator());

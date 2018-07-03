@@ -1,5 +1,4 @@
-﻿using McTools.Xrm.Connection.Utils;
-using Microsoft.Xrm.Sdk.Client;
+﻿using Microsoft.Xrm.Sdk.Client;
 using Microsoft.Xrm.Sdk.Discovery;
 using Microsoft.Xrm.Tooling.Connector;
 using System;
@@ -8,10 +7,9 @@ using System.ComponentModel;
 using System.Data.Common;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
-using System.ServiceModel.Description;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace McTools.Xrm.Connection
@@ -27,6 +25,7 @@ namespace McTools.Xrm.Connection
 
         private CrmServiceClient crmSvc;
         public AuthenticationProviderType AuthType { get; set; }
+        public Guid AzureAdAppId { get; set; }
 
         /// <summary>
         /// Gets or sets the connection unique identifier
@@ -113,6 +112,8 @@ namespace McTools.Xrm.Connection
         /// </summary>
         public bool PasswordIsEmpty { get { return string.IsNullOrEmpty(userPassword); } }
 
+        public string ReplyUrl { get; set; }
+
         /// <summary>
         /// Gets or sets the information if the password must be saved
         /// </summary>
@@ -149,6 +150,11 @@ namespace McTools.Xrm.Connection
         /// Get or set flag to know if we use IFD
         /// </summary>
         public bool UseIfd { get; set; }
+
+        /// <summary>
+        /// Get or set flag to know if we use Multi Factor Authentication
+        /// </summary>
+        public bool UseMfa { get; set; }
 
         /// <summary>
         /// Get or set flag to know if we use CRM Online
@@ -268,30 +274,7 @@ namespace McTools.Xrm.Connection
 
             if (UseOnline)
             {
-                var tasks = new List<Task<CrmServiceClient>>
-                {
-                    Task<CrmServiceClient>.Factory.StartNew(() => ConnectOnline(UseOsdp, true)),
-                    Task<CrmServiceClient>.Factory.StartNew(() => ConnectOnline(UseOsdp, false))
-                };
-
-                tasks[0].Wait();
-                tasks[1].Wait();
-
-                crmSvc = tasks.FirstOrDefault(t => t.Result.IsReady)?.Result;
-                if (crmSvc == null)
-                {
-                    var uniqueName = ResolveCrmOnlineUniqueOrg();
-
-                    crmSvc = ConnectOnline(UseOsdp, true, uniqueName);
-
-                    if (crmSvc == null)
-                    {
-                        // None of the attempts above were successful, so get a failed one to be able to display correct error message
-                        crmSvc = tasks.FirstOrDefault(t => t.Result != null).Result;
-                    }
-                }
-
-                // crmSvc = ConnectOnline(UseOsdp);
+                crmSvc = ConnectOnline();
 
                 AuthType = AuthenticationProviderType.OnlineFederation;
             }
@@ -396,9 +379,16 @@ namespace McTools.Xrm.Connection
             UseSsl = editedConnection.UseSsl;
             HomeRealmUrl = editedConnection.HomeRealmUrl;
             Timeout = editedConnection.Timeout;
+            UseMfa = editedConnection.UseMfa;
+            UseMfa = editedConnection.UseMfa;
+            AzureAdAppId = editedConnection.AzureAdAppId;
+            IsEnvironmentHighlightSet = editedConnection.IsEnvironmentHighlightSet;
+            EnvironmentText = editedConnection.EnvironmentText;
+            EnvironmentColor = editedConnection.EnvironmentColor;
+            EnvironmentTextColor = editedConnection.EnvironmentTextColor;
         }
 
-        private CrmServiceClient ConnectOnline(bool isOffice365, bool useSsl, string expliciteOrgName = null)
+        private CrmServiceClient ConnectOnline()
         {
             var password = CryptoManager.Decrypt(userPassword, ConnectionManager.CryptoPassPhrase,
                  ConnectionManager.CryptoSaltValue,
@@ -406,198 +396,17 @@ namespace McTools.Xrm.Connection
                  ConnectionManager.CryptoPasswordIterations,
                  ConnectionManager.CryptoInitVector,
                  ConnectionManager.CryptoKeySize);
-            string region, orgName;
-            bool isOnPrem;
-            Utilities.GetOrgnameAndOnlineRegionFromServiceUri(new Uri(OriginalUrl), out region, out orgName, out isOnPrem);
 
-            //return new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password), GetOnlineRegion(ServerName), expliciteOrgName ?? OrganizationUrlName, true, useSsl, isOffice365: isOffice365);
-            return new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password), region, orgName, true, useSsl, isOffice365: isOffice365);
-        }
+            Utilities.GetOrgnameAndOnlineRegionFromServiceUri(new Uri(OriginalUrl), out var region, out var orgName, out _);
 
-        private string GetOnlineRegion(string hostname)
-        {
-            var prefix = hostname.Split('.')[1];
-            var region = string.Empty;
-            switch (prefix)
+            if (UseMfa)
             {
-                case "crm":
-                    region = "NorthAmerica";
-                    break;
+                var path = Path.Combine(Path.GetTempPath(), ConnectionId.Value.ToString("B"), "oauth-cache.txt");
 
-                case "crm2":
-                    region = "SouthAmerica";
-                    break;
-
-                case "crm3":
-                    region = "Canada";
-                    break;
-
-                case "crm4":
-                    region = "EMEA";
-                    break;
-
-                case "crm5":
-                    region = "APAC";
-                    break;
-
-                case "crm6":
-                    region = "Oceania";
-                    break;
-
-                case "crm7":
-                    region = "Japan";
-                    break;
-
-                case "crm8":
-                    region = "India";
-                    break;
-
-                case "crm9":
-                    region = "NorthAmerica2";
-                    break;
-
-                case "crm11":
-                    region = "UnitedKingdom";
-                    break;
+                return new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password), region, orgName, false, null, null, AzureAdAppId.ToString(), new Uri(ReplyUrl), path, null);
             }
 
-            return region;
-        }
-
-        private string GetOrganizationCrmConnectionString()
-        {
-            DbConnectionStringBuilder dbcb = new DbConnectionStringBuilder();
-            //dbcb.Add("Url", OrganizationServiceUrl.Replace("/XRMServices/2011/Organization.svc", ""));
-            dbcb.Add("Url", !string.IsNullOrEmpty(OriginalUrl) ? OriginalUrl : WebApplicationUrl);
-
-            if (IsCustomAuth)
-            {
-                if (!UseIfd)
-                {
-                    if (!string.IsNullOrEmpty(UserDomain))
-                    {
-                        dbcb.Add("Domain", UserDomain);
-                    }
-                }
-
-                string username = UserName;
-                if (UseIfd)
-                {
-                    if (!string.IsNullOrEmpty(UserDomain))
-                    {
-                        username = string.Format("{0}\\{1}", UserDomain, UserName);
-                    }
-                }
-
-                if (string.IsNullOrEmpty(userPassword))
-                {
-                    throw new Exception("User password cannot be null. If the user password is not stored in configuration file, you should request it from the end user");
-                }
-
-                var decryptedPassword = CryptoManager.Decrypt(userPassword, ConnectionManager.CryptoPassPhrase,
-                   ConnectionManager.CryptoSaltValue,
-                   ConnectionManager.CryptoHashAlgorythm,
-                   ConnectionManager.CryptoPasswordIterations,
-                   ConnectionManager.CryptoInitVector,
-                   ConnectionManager.CryptoKeySize);
-
-                dbcb.Add("Username", username);
-                dbcb.Add("Password", decryptedPassword);
-            }
-
-            if (UseIfd && !string.IsNullOrEmpty(HomeRealmUrl))
-            {
-                dbcb.Add("HomeRealmUri", HomeRealmUrl);
-            }
-
-            //append timeout in seconds to connectionstring
-            dbcb.Add("Timeout", Timeout.ToString(@"hh\:mm\:ss"));
-
-            //dbcb.Add("AuthType", "OAuth");
-            //dbcb.Add("ClientId", "eec38f99-9962-4bb3-99fa-5e04f4bb0ea5");
-            //dbcb.Add("LoginPrompt", "Auto");
-            //dbcb.Add("RedirectUri", "http://localhost/TOTO");
-            //dbcb.Add("TokenCacheStorePath", "c:\\temp");
-
-            //dbcb.Add("AuthType", UseOsdp ? "Office365" : (UseIfd ? "IFD" : "AD"));
-
-            return dbcb.ToString();
-        }
-
-        private TProxy GetProxy<TService, TProxy>(Uri discoveryUri)
-         where TService : class
-         where TProxy : ServiceProxy<TService>
-        {
-            // Get appropriate Uri from Configuration.
-            Uri serviceUri = discoveryUri;
-
-            // Set service management for either organization service Uri or discovery service Uri.
-            // For organization service Uri, if service management exists
-            // then use it from cache. Otherwise create new service management for current organization.
-            IServiceManagement<TService> serviceManagement = ServiceConfigurationFactory.CreateManagement<TService>(
-                serviceUri);
-
-            var decryptedPassword = CryptoManager.Decrypt(userPassword, ConnectionManager.CryptoPassPhrase,
-                 ConnectionManager.CryptoSaltValue,
-                 ConnectionManager.CryptoHashAlgorythm,
-                 ConnectionManager.CryptoPasswordIterations,
-                 ConnectionManager.CryptoInitVector,
-                 ConnectionManager.CryptoKeySize);
-
-            var credentials = new ClientCredentials();
-            credentials.UserName.UserName = UserName;
-            credentials.UserName.Password = decryptedPassword;
-
-            // Set the credentials.
-            AuthenticationCredentials authCredentials = new AuthenticationCredentials();
-            authCredentials.ClientCredentials = credentials;
-
-            Type classType;
-
-            // Obtain discovery/organization service proxy for Federated,
-            // Microsoft account and OnlineFederated environments.
-
-            AuthenticationCredentials tokenCredentials =
-                serviceManagement.Authenticate(
-                    authCredentials);
-
-            // Set classType to ManagedTokenDiscoveryServiceProxy.
-            classType = typeof(ManagedTokenDiscoveryServiceProxy);
-
-            // Invokes ManagedTokenOrganizationServiceProxy or ManagedTokenDiscoveryServiceProxy
-            // (IServiceManagement<TService>, SecurityTokenResponse) constructor.
-            var obj = (TProxy)classType
-                .GetConstructor(new Type[]
-                {
-                    typeof (IServiceManagement<TService>),
-                    typeof (SecurityTokenResponse)
-                })
-                .Invoke(new object[]
-                {
-                    serviceManagement,
-                    tokenCredentials.SecurityTokenResponse
-                });
-
-            return obj;
-        }
-
-        private string ResolveCrmOnlineUniqueOrg()
-        {
-            string endpointUri = string.Format("https://disco.{0}/XrmServices/2011/Discovery.svc", ServerName.Remove(0, ServerName.IndexOf('.') + 1));
-
-            DiscoveryServiceProxy discoveryProxy = GetProxy<IDiscoveryService, DiscoveryServiceProxy>(new Uri(endpointUri));
-            discoveryProxy.Execute(new RetrieveOrganizationsRequest());
-
-            RetrieveOrganizationsRequest orgRequest = new RetrieveOrganizationsRequest();
-            RetrieveOrganizationsResponse orgResponse = (RetrieveOrganizationsResponse)discoveryProxy.Execute(orgRequest);
-
-            var org = orgResponse.Details.FirstOrDefault(d => d.UrlName == OrganizationUrlName);
-            if (org == null)
-            {
-                throw new Exception("Unable to find the organization based on its url name");
-            }
-
-            return org.UniqueName;
+            return new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password), region, orgName, true, true, null, true);
         }
 
         #endregion Méthodes
@@ -634,6 +443,9 @@ namespace McTools.Xrm.Connection
                 WebApplicationUrl = WebApplicationUrl,
                 OriginalUrl = OriginalUrl,
                 Timeout = Timeout,
+                UseMfa = UseMfa,
+                AzureAdAppId = AzureAdAppId,
+                ReplyUrl = ReplyUrl,
                 IsEnvironmentHighlightSet = IsEnvironmentHighlightSet,
                 EnvironmentText = EnvironmentText,
                 EnvironmentColor = EnvironmentColor,
@@ -675,12 +487,14 @@ namespace McTools.Xrm.Connection
             if (!string.IsNullOrEmpty(HomeRealmUrl))
                 csb["HomeRealmUri"] = HomeRealmUrl;
 
-            // TODO Enable Oauth later
-            //csb["AuthType"] = "OAuth";
-            //csb["AppId"] = "";
-            //csb["RedirectUri"] = "";
-            //csb["TokenCacheStorePath"] = "";
-            //csb["LoginPrompt"] = "";
+            if (UseMfa)
+            {
+                csb["AuthType"] = "OAuth";
+                csb["ClientId"] = AzureAdAppId.ToString("B");
+                csb["LoginPrompt"] = "Auto";
+                csb["RedirectUri"] = ReplyUrl;
+                csb["TokenCacheStorePath"] = Path.Combine(Path.GetTempPath(), ConnectionId.Value.ToString("B"), "oauth-cache.txt");
+            }
 
             return csb.ToString();
         }
@@ -702,6 +516,9 @@ namespace McTools.Xrm.Connection
                || originalDetail.UseOnline != UseOnline
                || originalDetail.UseOsdp != UseOsdp
                || originalDetail.UseSsl != UseSsl
+               || originalDetail.UseMfa != UseMfa
+               || originalDetail.AzureAdAppId != AzureAdAppId
+               || originalDetail.ReplyUrl != ReplyUrl
                || originalDetail.UserDomain?.ToLower() != UserDomain?.ToLower()
                || originalDetail.UserName?.ToLower() != UserName?.ToLower()
                || (SavePassword && !string.IsNullOrEmpty(userPassword) && originalDetail.userPassword != userPassword))
@@ -737,7 +554,7 @@ namespace McTools.Xrm.Connection
                     new XElement("ConnectionString", ConnectionString),
                     new XElement("UseConnectionString", UseConnectionString),
                     new XElement("IsCustomAuth", IsCustomAuth),
-                    new XElement("UseIfd", UseIfd),
+                    new XElement("UseMfa", UseMfa), new XElement("UseIfd", UseIfd),
                     new XElement("UseOnline", UseOnline),
                     new XElement("UseOsdp", UseOsdp),
                     new XElement("UserDomain", UserDomain),
@@ -745,6 +562,9 @@ namespace McTools.Xrm.Connection
                     new XElement("UserPassword", SavePassword ? userPassword : string.Empty),
                     new XElement("SavePassword", SavePassword),
                     new XElement("UseSsl", UseSsl),
+                    new XElement("AzureAdAppId", AzureAdAppId),
+                    new XElement("ReplyUrl", ReplyUrl),
+                    new XElement("UseIfd", UseIfd),
                     new XElement("ServerName", ServerName),
                     new XElement("ServerPort", ServerPort),
                     new XElement("OriginalUrl", OriginalUrl),

@@ -99,6 +99,8 @@ namespace McTools.Xrm.Connection.TestWinForm
                     WhoAmI();
                 }
             }
+
+            MessageBox.Show($"Connected to {e.ConnectionDetail.ConnectionName}");
         }
 
         /// <summary>

@@ -16,7 +16,6 @@ namespace McTools.Xrm.Connection.WinForms
     {
         #region Variables
 
-        private readonly bool allowMultipleSelection;
         private readonly bool isConnectionSelection;
         private int currentIndex;
         private bool hadCreatedNewConnection;
@@ -29,10 +28,7 @@ namespace McTools.Xrm.Connection.WinForms
         /// <summary>
         /// Obtient la connexion sélectionnée
         /// </summary>
-        public List<ConnectionDetail> SelectedConnections
-        {
-            get { return selectedConnections; }
-        }
+        public List<ConnectionDetail> SelectedConnections => selectedConnections;
 
         #endregion Variables
 
@@ -41,12 +37,11 @@ namespace McTools.Xrm.Connection.WinForms
         /// <summary>
         /// Créé une nouvelle instance de la classe ConnectionSelector
         /// </summary>
-        public ConnectionSelector(bool allowMultipleSelection = false, bool isConnectionSelection = true)
+        public ConnectionSelector(bool isConnectionSelection = true)
         {
             InitializeComponent();
 
             this.isConnectionSelection = isConnectionSelection;
-            this.allowMultipleSelection = allowMultipleSelection;
 
             if (isConnectionSelection)
             {
@@ -61,8 +56,6 @@ namespace McTools.Xrm.Connection.WinForms
 
             ConnectionManager.Instance.ConnectionsList.Connections.Sort();
 
-            lvConnections.MultiSelect = allowMultipleSelection;
-
             LoadImages();
 
             var details = ConnectionManager.Instance.ConnectionsList.Connections;
@@ -76,6 +69,7 @@ namespace McTools.Xrm.Connection.WinForms
                 var item = new ListViewItem(detail.ConnectionName);
                 item.SubItems.Add(detail.ServerName);
                 item.SubItems.Add(detail.Organization);
+                item.SubItems.Add(string.IsNullOrEmpty(detail.UserDomain) ? detail.UserName : $"{detail.UserDomain}\\{detail.UserName}");
                 item.SubItems.Add(detail.OrganizationVersion);
                 item.Tag = detail;
                 item.ImageIndex = GetImageIndex(detail);
@@ -271,13 +265,9 @@ namespace McTools.Xrm.Connection.WinForms
         {
             string groupName;
 
-            if (detail.UseOsdp)
+            if (detail.UseOsdp || detail.UseOnline)
             {
-                groupName = "CRM Online - Office 365";
-            }
-            else if (detail.UseOnline)
-            {
-                groupName = "CRM Online - CTP";
+                groupName = "Online";
             }
             else if (detail.UseIfd)
             {
@@ -504,7 +494,7 @@ namespace McTools.Xrm.Connection.WinForms
 
         private void tsbNewConnection_Click(object sender, EventArgs e)
         {
-            var cForm = new ConnectionWizard
+            var cForm = new ConnectionWizard2
             {
                 StartPosition = FormStartPosition.CenterParent
             };
@@ -563,7 +553,7 @@ namespace McTools.Xrm.Connection.WinForms
             {
                 ListViewItem item = lvConnections.SelectedItems[0];
 
-                var cForm = new ConnectionWizard((ConnectionDetail)item.Tag)
+                var cForm = new ConnectionWizard2((ConnectionDetail)item.Tag)
                 {
                     StartPosition = FormStartPosition.CenterParent
                 };

@@ -32,10 +32,11 @@
             this.bValidate = new System.Windows.Forms.Button();
             this.bCancel = new System.Windows.Forms.Button();
             this.lvConnections = new System.Windows.Forms.ListView();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chServer = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chOrganization = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chVersion = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chUser = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.menu = new System.Windows.Forms.ToolStrip();
             this.tsbNewConnection = new System.Windows.Forms.ToolStripButton();
             this.tsbUpdateConnection = new System.Windows.Forms.ToolStripButton();
@@ -52,13 +53,17 @@
             this.tsbRemoveConnectionList = new System.Windows.Forms.ToolStripButton();
             this.tsbMoveToNewFile = new System.Windows.Forms.ToolStripButton();
             this.tsbMoveToExistingFile = new System.Windows.Forms.ToolStripDropDownButton();
+            this.pnlFooter = new System.Windows.Forms.Panel();
+            this.pnlMain = new System.Windows.Forms.Panel();
             this.menu.SuspendLayout();
+            this.pnlFooter.SuspendLayout();
+            this.pnlMain.SuspendLayout();
             this.SuspendLayout();
             // 
             // bValidate
             // 
             this.bValidate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.bValidate.Location = new System.Drawing.Point(887, 692);
+            this.bValidate.Location = new System.Drawing.Point(895, 6);
             this.bValidate.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.bValidate.Name = "bValidate";
             this.bValidate.Size = new System.Drawing.Size(137, 42);
@@ -71,7 +76,7 @@
             // 
             this.bCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.bCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.bCancel.Location = new System.Drawing.Point(1036, 692);
+            this.bCancel.Location = new System.Drawing.Point(1044, 6);
             this.bCancel.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.bCancel.Name = "bCancel";
             this.bCancel.Size = new System.Drawing.Size(137, 42);
@@ -82,21 +87,20 @@
             // 
             // lvConnections
             // 
-            this.lvConnections.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.lvConnections.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
-            this.columnHeader3,
-            this.columnHeader2,
-            this.columnHeader4});
+            this.chName,
+            this.chServer,
+            this.chOrganization,
+            this.chUser,
+            this.chVersion});
+            this.lvConnections.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvConnections.FullRowSelect = true;
             this.lvConnections.GridLines = true;
             this.lvConnections.LabelEdit = true;
-            this.lvConnections.Location = new System.Drawing.Point(22, 52);
+            this.lvConnections.Location = new System.Drawing.Point(8, 8);
             this.lvConnections.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.lvConnections.Name = "lvConnections";
-            this.lvConnections.Size = new System.Drawing.Size(1148, 626);
+            this.lvConnections.Size = new System.Drawing.Size(1179, 643);
             this.lvConnections.TabIndex = 2;
             this.lvConnections.UseCompatibleStateImageBehavior = false;
             this.lvConnections.View = System.Windows.Forms.View.Details;
@@ -106,25 +110,30 @@
             this.lvConnections.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvConnections_KeyDown);
             this.lvConnections.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.LvConnectionsMouseDoubleClick);
             // 
-            // columnHeader1
+            // chName
             // 
-            this.columnHeader1.Text = "Name";
-            this.columnHeader1.Width = 180;
+            this.chName.Text = "Name";
+            this.chName.Width = 180;
             // 
-            // columnHeader3
+            // chServer
             // 
-            this.columnHeader3.Text = "Server";
-            this.columnHeader3.Width = 120;
+            this.chServer.Text = "Server";
+            this.chServer.Width = 120;
             // 
-            // columnHeader2
+            // chOrganization
             // 
-            this.columnHeader2.Text = "Organization";
-            this.columnHeader2.Width = 100;
+            this.chOrganization.Text = "Organization";
+            this.chOrganization.Width = 80;
             // 
-            // columnHeader4
+            // chVersion
             // 
-            this.columnHeader4.Text = "Version";
-            this.columnHeader4.Width = 100;
+            this.chVersion.Text = "Version";
+            this.chVersion.Width = 90;
+            // 
+            // chUser
+            // 
+            this.chUser.Text = "User";
+            this.chUser.Width = 150;
             // 
             // menu
             // 
@@ -283,16 +292,35 @@
             this.tsbMoveToExistingFile.Visible = false;
             this.tsbMoveToExistingFile.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.tsbMoveToExistingFile_DropDownItemClicked);
             // 
+            // pnlFooter
+            // 
+            this.pnlFooter.Controls.Add(this.bCancel);
+            this.pnlFooter.Controls.Add(this.bValidate);
+            this.pnlFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlFooter.Location = new System.Drawing.Point(0, 697);
+            this.pnlFooter.Name = "pnlFooter";
+            this.pnlFooter.Size = new System.Drawing.Size(1195, 60);
+            this.pnlFooter.TabIndex = 5;
+            // 
+            // pnlMain
+            // 
+            this.pnlMain.Controls.Add(this.lvConnections);
+            this.pnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlMain.Location = new System.Drawing.Point(0, 38);
+            this.pnlMain.Name = "pnlMain";
+            this.pnlMain.Padding = new System.Windows.Forms.Padding(8);
+            this.pnlMain.Size = new System.Drawing.Size(1195, 659);
+            this.pnlMain.TabIndex = 6;
+            // 
             // ConnectionSelector
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.bCancel;
             this.ClientSize = new System.Drawing.Size(1195, 757);
+            this.Controls.Add(this.pnlMain);
+            this.Controls.Add(this.pnlFooter);
             this.Controls.Add(this.menu);
-            this.Controls.Add(this.bValidate);
-            this.Controls.Add(this.bCancel);
-            this.Controls.Add(this.lvConnections);
             this.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.Name = "ConnectionSelector";
             this.ShowIcon = false;
@@ -301,6 +329,8 @@
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ConnectionSelector_KeyDown);
             this.menu.ResumeLayout(false);
             this.menu.PerformLayout();
+            this.pnlFooter.ResumeLayout(false);
+            this.pnlMain.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -313,10 +343,10 @@
         private System.Windows.Forms.Button bValidate;
         private System.Windows.Forms.Button bCancel;
         private System.Windows.Forms.ListView lvConnections;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.ColumnHeader columnHeader3;
-        private System.Windows.Forms.ColumnHeader columnHeader4;
+        private System.Windows.Forms.ColumnHeader chName;
+        private System.Windows.Forms.ColumnHeader chOrganization;
+        private System.Windows.Forms.ColumnHeader chServer;
+        private System.Windows.Forms.ColumnHeader chVersion;
         private System.Windows.Forms.ToolStrip menu;
         private System.Windows.Forms.ToolStripButton tsbNewConnection;
         private System.Windows.Forms.ToolStripButton tsbUpdateConnection;
@@ -333,5 +363,8 @@
         private System.Windows.Forms.ToolStripButton tsbUpdatePassword;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripButton tsbShowConnectionString;
+        private System.Windows.Forms.Panel pnlFooter;
+        private System.Windows.Forms.Panel pnlMain;
+        private System.Windows.Forms.ColumnHeader chUser;
     }
 }

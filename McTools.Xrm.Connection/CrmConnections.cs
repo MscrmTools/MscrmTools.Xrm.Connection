@@ -248,6 +248,8 @@ namespace McTools.Xrm.Connection
                     cd.UseOsdp = useOsdpElement != null && useOsdpElement.Value == "true";
                     var useSslElement = elt.Element("UseSsl");
                     cd.UseSsl = useSslElement != null && useSslElement.Value == "true";
+                    var useMfaElement = elt.Element("UseMfa");
+                    cd.UseMfa = useMfaElement != null && useMfaElement.Value == "true";
 
                     var userDomainElement = elt.Element("UserDomain");
                     if (timeOutElement != null)
@@ -271,6 +273,18 @@ namespace McTools.Xrm.Connection
                     if (webApplicationUrlElement != null)
                     {
                         cd.WebApplicationUrl = webApplicationUrlElement.Value;
+                    }
+
+                    var azureAdApIdElt = elt.Element("AzureAdAppId");
+                    if (azureAdApIdElt != null)
+                    {
+                        cd.AzureAdAppId = new Guid(azureAdApIdElt.Value);
+                    }
+
+                    var replyUrlElt = elt.Element("ReplyUrl");
+                    if (replyUrlElt != null)
+                    {
+                        cd.ReplyUrl = replyUrlElt.Value;
                     }
 
                     var isEnvironmentHighlightSetElt = elt.Element("IsEnvironmentHighlightSet");

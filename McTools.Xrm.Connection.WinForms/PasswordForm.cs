@@ -33,9 +33,11 @@ namespace McTools.Xrm.Connection.WinForms
         /// <summary>
         /// Créé une nouvelle instance de la classe PasswordForm
         /// </summary>
-        public PasswordForm()
+        public PasswordForm(ConnectionDetail detail)
         {
             InitializeComponent();
+
+            lblConnectionName.Text = detail.ConnectionName;
         }
 
         #endregion Constructeur

@@ -138,6 +138,61 @@
     <Compile Include="ConnectionStringDialog.Designer.cs">
       <DependentUpon>ConnectionStringDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="ConnectionWizard2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConnectionWizard2.designer.cs">
+      <DependentUpon>ConnectionWizard2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\ConnectionCredentialsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControls\ConnectionCredentialsControl.Designer.cs">
+      <DependentUpon>ConnectionCredentialsControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\ConnectionFailedControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControls\ConnectionFailedControl.Designer.cs">
+      <DependentUpon>ConnectionFailedControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\ConnectionFirstStepControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControls\ConnectionFirstStepControl.Designer.cs">
+      <DependentUpon>ConnectionFirstStepControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\ConnectionIfdControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControls\ConnectionIfdControl.Designer.cs">
+      <DependentUpon>ConnectionIfdControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\ConnectionLoadingControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControls\ConnectionLoadingControl.Designer.cs">
+      <DependentUpon>ConnectionLoadingControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\ConnectionOauthControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControls\ConnectionOauthControl.Designer.cs">
+      <DependentUpon>ConnectionOauthControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\ConnectionStringControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControls\ConnectionStringControl.Designer.cs">
+      <DependentUpon>ConnectionStringControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\ConnectionSucceededControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControls\ConnectionSucceededControl.Designer.cs">
+      <DependentUpon>ConnectionSucceededControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\IConnectionWizardControl.cs" />
     <Compile Include="EnvHighlightDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -213,6 +268,33 @@
     <EmbeddedResource Include="ConnectionStringDialog.resx">
       <DependentUpon>ConnectionStringDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ConnectionWizard2.resx">
+      <DependentUpon>ConnectionWizard2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControls\ConnectionCredentialsControl.resx">
+      <DependentUpon>ConnectionCredentialsControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControls\ConnectionFailedControl.resx">
+      <DependentUpon>ConnectionFailedControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControls\ConnectionFirstStepControl.resx">
+      <DependentUpon>ConnectionFirstStepControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControls\ConnectionIfdControl.resx">
+      <DependentUpon>ConnectionIfdControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControls\ConnectionLoadingControl.resx">
+      <DependentUpon>ConnectionLoadingControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControls\ConnectionOauthControl.resx">
+      <DependentUpon>ConnectionOauthControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControls\ConnectionStringControl.resx">
+      <DependentUpon>ConnectionStringControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControls\ConnectionSucceededControl.resx">
+      <DependentUpon>ConnectionSucceededControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="EnvHighlightDialog.resx">
       <DependentUpon>EnvHighlightDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -241,6 +323,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="NewConnectionFileDialog.resx">
       <DependentUpon>NewConnectionFileDialog.cs</DependentUpon>

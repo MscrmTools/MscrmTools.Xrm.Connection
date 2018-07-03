@@ -29,31 +29,33 @@ namespace McTools.Xrm.Connection.WinForms
 
             if (cs.ShowDialog(innerAppForm) == DialogResult.OK)
             {
-                var connectionDetail = cs.SelectedConnections.First();
-                if (!connectionDetail.UseConnectionString && connectionDetail.IsCustomAuth)
+                foreach (var connectionDetail in cs.SelectedConnections)
                 {
-                    if (connectionDetail.PasswordIsEmpty)
+                    if (!connectionDetail.UseConnectionString && connectionDetail.IsCustomAuth)
                     {
-                        var pForm = new PasswordForm()
+                        if (connectionDetail.PasswordIsEmpty)
                         {
-                            UserDomain = connectionDetail.UserDomain,
-                            UserLogin = connectionDetail.UserName
-                        };
-                        if (pForm.ShowDialog(innerAppForm) == DialogResult.OK)
-                        {
-                            connectionDetail.SetPassword(pForm.UserPassword);
-                            connectionDetail.SavePassword = pForm.SavePassword;
-                        }
-                        else
-                        {
-                            return false;
+                            var pForm = new PasswordForm(connectionDetail)
+                            {
+                                UserDomain = connectionDetail.UserDomain,
+                                UserLogin = connectionDetail.UserName
+                            };
+                            if (pForm.ShowDialog(innerAppForm) == DialogResult.OK)
+                            {
+                                connectionDetail.SetPassword(pForm.UserPassword);
+                                connectionDetail.SavePassword = pForm.SavePassword;
+                            }
+                            else
+                            {
+                                return false;
+                            }
                         }
                     }
                 }
 
                 preConnectionRequestAction?.Invoke();
 
-                ConnectionManager.Instance.ConnectToServer(connectionDetail, connectionParameter);
+                ConnectionManager.Instance.ConnectToServer(cs.SelectedConnections, connectionParameter);
 
                 return true;
             }
@@ -74,7 +76,7 @@ namespace McTools.Xrm.Connection.WinForms
             {
                 if (connectionDetail.PasswordIsEmpty)
                 {
-                    var pForm = new PasswordForm
+                    var pForm = new PasswordForm(connectionDetail)
                     {
                         UserDomain = connectionDetail.UserDomain,
                         UserLogin = connectionDetail.UserName
@@ -93,7 +95,7 @@ namespace McTools.Xrm.Connection.WinForms
 
             preConnectionRequestAction?.Invoke();
 
-            ConnectionManager.Instance.ConnectToServer(connectionDetail, connectionParameter);
+            ConnectionManager.Instance.ConnectToServer(new List<ConnectionDetail> { connectionDetail }, connectionParameter);
 
             return true;
         }
@@ -118,7 +120,7 @@ namespace McTools.Xrm.Connection.WinForms
 
         public void DisplayConnectionsList(Form form)
         {
-            var cs = new ConnectionSelector(true, false)
+            var cs = new ConnectionSelector(false)
             {
                 StartPosition = FormStartPosition.CenterParent,
             };
@@ -135,7 +137,7 @@ namespace McTools.Xrm.Connection.WinForms
         /// <returns>Created or updated connection</returns>
         public ConnectionDetail EditConnection(bool isCreation, ConnectionDetail connectionToUpdate, ConnectionFile connectionFile = null)
         {
-            var cForm = new ConnectionWizard(connectionToUpdate) { StartPosition = FormStartPosition.CenterParent };
+            var cForm = new ConnectionWizard2(connectionToUpdate) { StartPosition = FormStartPosition.CenterParent };
 
             if (cForm.ShowDialog(innerAppForm) == DialogResult.OK)
             {
@@ -210,7 +212,7 @@ namespace McTools.Xrm.Connection.WinForms
 
             bool returnValue = false;
 
-            var pForm = new PasswordForm
+            var pForm = new PasswordForm(detail)
             {
                 UserLogin = detail.UserName,
                 UserDomain = detail.UserDomain,
@@ -240,7 +242,7 @@ namespace McTools.Xrm.Connection.WinForms
 
         public List<ConnectionDetail> SelectMultipleConnectionDetails()
         {
-            var cs = new ConnectionSelector(true)
+            var cs = new ConnectionSelector
             {
                 StartPosition = FormStartPosition.CenterParent,
             };
