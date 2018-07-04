@@ -43,7 +43,7 @@
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 300F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 320F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.Controls.Add(this.lblUrl, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.txtOrganizationUrl, 1, 0);
@@ -71,7 +71,7 @@
             this.lblUrl.Location = new System.Drawing.Point(4, 0);
             this.lblUrl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblUrl.Name = "lblUrl";
-            this.lblUrl.Size = new System.Drawing.Size(292, 50);
+            this.lblUrl.Size = new System.Drawing.Size(312, 50);
             this.lblUrl.TabIndex = 11;
             this.lblUrl.Text = "Organization url";
             this.lblUrl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -79,10 +79,10 @@
             // txtOrganizationUrl
             // 
             this.txtOrganizationUrl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtOrganizationUrl.Location = new System.Drawing.Point(304, 10);
+            this.txtOrganizationUrl.Location = new System.Drawing.Point(324, 10);
             this.txtOrganizationUrl.Margin = new System.Windows.Forms.Padding(4, 10, 4, 4);
             this.txtOrganizationUrl.Name = "txtOrganizationUrl";
-            this.txtOrganizationUrl.Size = new System.Drawing.Size(592, 29);
+            this.txtOrganizationUrl.Size = new System.Drawing.Size(572, 29);
             this.txtOrganizationUrl.TabIndex = 13;
             // 
             // lblWindowsAuth
@@ -91,7 +91,7 @@
             this.lblWindowsAuth.Location = new System.Drawing.Point(4, 50);
             this.lblWindowsAuth.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblWindowsAuth.Name = "lblWindowsAuth";
-            this.lblWindowsAuth.Size = new System.Drawing.Size(292, 50);
+            this.lblWindowsAuth.Size = new System.Drawing.Size(312, 50);
             this.lblWindowsAuth.TabIndex = 14;
             this.lblWindowsAuth.Text = "Use your current credentials";
             this.lblWindowsAuth.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -100,10 +100,10 @@
             // 
             this.chkUseIntegratedAuthentication.AutoSize = true;
             this.chkUseIntegratedAuthentication.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkUseIntegratedAuthentication.Location = new System.Drawing.Point(304, 54);
+            this.chkUseIntegratedAuthentication.Location = new System.Drawing.Point(324, 54);
             this.chkUseIntegratedAuthentication.Margin = new System.Windows.Forms.Padding(4);
             this.chkUseIntegratedAuthentication.Name = "chkUseIntegratedAuthentication";
-            this.chkUseIntegratedAuthentication.Size = new System.Drawing.Size(592, 42);
+            this.chkUseIntegratedAuthentication.Size = new System.Drawing.Size(572, 42);
             this.chkUseIntegratedAuthentication.TabIndex = 15;
             this.chkUseIntegratedAuthentication.UseVisualStyleBackColor = true;
             // 
@@ -113,7 +113,7 @@
             this.lblUseMfa.Location = new System.Drawing.Point(4, 100);
             this.lblUseMfa.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblUseMfa.Name = "lblUseMfa";
-            this.lblUseMfa.Size = new System.Drawing.Size(292, 50);
+            this.lblUseMfa.Size = new System.Drawing.Size(312, 50);
             this.lblUseMfa.TabIndex = 16;
             this.lblUseMfa.Text = "Use Multi Factor Authentication";
             this.lblUseMfa.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -122,10 +122,10 @@
             // 
             this.chkUseMfa.AutoSize = true;
             this.chkUseMfa.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkUseMfa.Location = new System.Drawing.Point(304, 104);
+            this.chkUseMfa.Location = new System.Drawing.Point(324, 104);
             this.chkUseMfa.Margin = new System.Windows.Forms.Padding(4);
             this.chkUseMfa.Name = "chkUseMfa";
-            this.chkUseMfa.Size = new System.Drawing.Size(592, 42);
+            this.chkUseMfa.Size = new System.Drawing.Size(572, 42);
             this.chkUseMfa.TabIndex = 17;
             this.chkUseMfa.Text = "(CRM online only - preview)";
             this.chkUseMfa.UseVisualStyleBackColor = true;
@@ -137,7 +137,7 @@
             this.label4.Location = new System.Drawing.Point(4, 150);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(292, 50);
+            this.label4.Size = new System.Drawing.Size(312, 50);
             this.label4.TabIndex = 18;
             this.label4.Text = "Service timeout";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -145,7 +145,7 @@
             // txtTimeout
             // 
             this.txtTimeout.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtTimeout.Location = new System.Drawing.Point(304, 160);
+            this.txtTimeout.Location = new System.Drawing.Point(324, 160);
             this.txtTimeout.Margin = new System.Windows.Forms.Padding(4, 10, 4, 4);
             this.txtTimeout.Name = "txtTimeout";
             this.txtTimeout.Size = new System.Drawing.Size(84, 29);

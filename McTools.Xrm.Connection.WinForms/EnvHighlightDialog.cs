@@ -6,6 +6,7 @@ namespace McTools.Xrm.Connection.WinForms
 {
     public partial class EnvHighlightDialog : Form
     {
+        private readonly ConnectionDetail detail;
         private readonly Image template;
         private Color backColor = Color.FromArgb(255, 255, 0, 255);
         private string text;
@@ -16,6 +17,7 @@ namespace McTools.Xrm.Connection.WinForms
             InitializeComponent();
 
             template = pbCustom.Image;
+            this.detail = detail;
 
             if (detail.IsEnvironmentHighlightSet)
             {
@@ -28,8 +30,8 @@ namespace McTools.Xrm.Connection.WinForms
                 {
                     Dialog_OnTemplateSettingsChanged(null, new TemplateChangeEventArgs
                     {
-                        BackColor = detail.EnvironmentColor.Value,
-                        TextColor = detail.EnvironmentTextColor.Value,
+                        BackColor = detail.EnvironmentColor ?? backColor,
+                        TextColor = detail.EnvironmentTextColor ?? textColor,
                         Text = detail.EnvironmentText
                     });
                 }
@@ -148,7 +150,7 @@ namespace McTools.Xrm.Connection.WinForms
 
         private void rdbCustom_MouseClick(object sender, MouseEventArgs e)
         {
-            var dialog = new EnvHighlightSettingsDialog(null, null, "");
+            var dialog = new EnvHighlightSettingsDialog(null, null, "", detail);
             dialog.OnTemplateSettingsChanged += Dialog_OnTemplateSettingsChanged;
             dialog.ShowDialog(this);
         }

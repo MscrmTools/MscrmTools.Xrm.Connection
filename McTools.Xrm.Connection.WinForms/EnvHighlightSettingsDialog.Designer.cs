@@ -36,6 +36,7 @@
             this.btnBackColor = new System.Windows.Forms.Button();
             this.txtText = new System.Windows.Forms.TextBox();
             this.btnClose = new System.Windows.Forms.Button();
+            this.btnUseOrgTheme = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -134,11 +135,23 @@
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
+            // btnUseOrgTheme
+            // 
+            this.btnUseOrgTheme.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnUseOrgTheme.Location = new System.Drawing.Point(370, 152);
+            this.btnUseOrgTheme.Name = "btnUseOrgTheme";
+            this.btnUseOrgTheme.Size = new System.Drawing.Size(272, 40);
+            this.btnUseOrgTheme.TabIndex = 21;
+            this.btnUseOrgTheme.Text = "Use organization theme";
+            this.btnUseOrgTheme.UseVisualStyleBackColor = true;
+            this.btnUseOrgTheme.Click += new System.EventHandler(this.btnUseOrgTheme_Click);
+            // 
             // EnvHighlightSettingsDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 204);
+            this.Controls.Add(this.btnUseOrgTheme);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.tableLayoutPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -164,5 +177,6 @@
         private System.Windows.Forms.Button btnBackColor;
         private System.Windows.Forms.TextBox txtText;
         private System.Windows.Forms.Button btnClose;
+        private System.Windows.Forms.Button btnUseOrgTheme;
     }
 }
