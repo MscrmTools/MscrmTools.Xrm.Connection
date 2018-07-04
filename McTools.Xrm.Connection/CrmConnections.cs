@@ -17,6 +17,7 @@ namespace McTools.Xrm.Connection
     {
         #region Variables
 
+        private static readonly object _fileAccess = new object();
         private string _password;
         private string _proxyAddress;
 
@@ -356,35 +357,38 @@ namespace McTools.Xrm.Connection
 
         public void SerializeToFile(string filePath)
         {
-            var listElement = new XElement("Connections",
-                new XElement("Proxy",
-                    new XElement("UseCustomProxy", _useCustomProxy),
-                    new XElement("UseInternetExplorerProxy", UseInternetExplorerProxy),
-                    new XElement("Address", _proxyAddress),
-                    new XElement("Username", _userName),
-                    new XElement("Password", _password),
-                    new XElement("UseDefaultCredentials", UseDefaultCredentials),
-                    new XElement("ByPassProxyOnLocal", ByPassProxyOnLocal)),
-                new XElement("UseMruDisplay", UseMruDisplay),
-                new XElement("Name", Name));
-
-            foreach (var connection in Connections)
+            lock (_fileAccess)
             {
-                listElement.Add(connection.GetXElement());
-            }
+                var listElement = new XElement("Connections",
+                    new XElement("Proxy",
+                        new XElement("UseCustomProxy", _useCustomProxy),
+                        new XElement("UseInternetExplorerProxy", UseInternetExplorerProxy),
+                        new XElement("Address", _proxyAddress),
+                        new XElement("Username", _userName),
+                        new XElement("Password", _password),
+                        new XElement("UseDefaultCredentials", UseDefaultCredentials),
+                        new XElement("ByPassProxyOnLocal", ByPassProxyOnLocal)),
+                    new XElement("UseMruDisplay", UseMruDisplay),
+                    new XElement("Name", Name));
 
-            var doc = new XDocument(new XElement("CrmConnections", listElement));
+                foreach (var connection in Connections)
+                {
+                    listElement.Add(connection.GetXElement());
+                }
 
-            using (var fStream = File.Open(filePath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite))
-            {
-                fStream.SetLength(0);
-            }
+                var doc = new XDocument(new XElement("CrmConnections", listElement));
 
-            using (var fStream = File.Open(filePath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite))
-            {
-                XmlWriter writer = XmlWriter.Create(fStream, new XmlWriterSettings { Indent = true });
-                doc.WriteTo(writer);
-                writer.Close();
+                using (var fStream = File.Open(filePath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite))
+                {
+                    fStream.SetLength(0);
+                }
+
+                using (var fStream = File.Open(filePath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite))
+                {
+                    XmlWriter writer = XmlWriter.Create(fStream, new XmlWriterSettings { Indent = true });
+                    doc.WriteTo(writer);
+                    writer.Close();
+                }
             }
         }
 
