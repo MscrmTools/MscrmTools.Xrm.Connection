@@ -105,6 +105,7 @@
             this.chkUseIntegratedAuthentication.Name = "chkUseIntegratedAuthentication";
             this.chkUseIntegratedAuthentication.Size = new System.Drawing.Size(592, 42);
             this.chkUseIntegratedAuthentication.TabIndex = 15;
+            this.chkUseIntegratedAuthentication.Text = "(AD and IFD instances only)";
             this.chkUseIntegratedAuthentication.UseVisualStyleBackColor = true;
             // 
             // lblUseMfa
