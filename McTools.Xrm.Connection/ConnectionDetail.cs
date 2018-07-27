@@ -379,32 +379,58 @@ namespace McTools.Xrm.Connection
             {
                 var path = Path.Combine(Path.GetTempPath(), ConnectionId.Value.ToString("B"), "oauth-cache.txt");
 
-                return new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password), region, orgName, false, null, null, AzureAdAppId.ToString(), new Uri(ReplyUrl), path, null);
+                return new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password), 
+                    region, 
+                    orgName, 
+                    false, 
+                    null, 
+                    null, 
+                    AzureAdAppId.ToString(), 
+                    new Uri(ReplyUrl), 
+                    path, 
+                    null);
             }
 
-            return new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password), region, orgName, true, true, null, true);
+            return new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password), 
+                region, 
+                orgName, 
+                true, 
+                true, 
+                null, 
+                true);
         }
 
 
         private CrmServiceClient ConnectIfd()
         {
-            var password = CryptoManager.Decrypt(userPassword, ConnectionManager.CryptoPassPhrase,
-                ConnectionManager.CryptoSaltValue,
-                ConnectionManager.CryptoHashAlgorythm,
-                ConnectionManager.CryptoPasswordIterations,
-                ConnectionManager.CryptoInitVector,
-                ConnectionManager.CryptoKeySize);
+            if (!IsCustomAuth)
+            {
+                return new CrmServiceClient(CredentialCache.DefaultNetworkCredentials,
+                    AuthenticationType.IFD,
+                    ServerName,
+                    ServerPort.ToString(),
+                    OrganizationUrlName,
+                    true,
+                    UseSsl);
+            }
+            else
+            {
+                var password = CryptoManager.Decrypt(userPassword, ConnectionManager.CryptoPassPhrase,
+                    ConnectionManager.CryptoSaltValue,
+                    ConnectionManager.CryptoHashAlgorythm,
+                    ConnectionManager.CryptoPasswordIterations,
+                    ConnectionManager.CryptoInitVector,
+                    ConnectionManager.CryptoKeySize);
 
-            return new CrmServiceClient(
-                UserName, 
-                CrmServiceClient.MakeSecureString(password), 
-                UserDomain, 
-                HomeRealmUrl,
-                ServerName, 
-                ServerPort.ToString(), 
-                OrganizationUrlName, 
-                true, 
-                UseSsl);
+                return new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password), UserDomain,
+                    HomeRealmUrl,
+                    ServerName,
+                    ServerPort.ToString(),
+                    OrganizationUrlName,
+                    true,
+                    UseSsl);
+
+            }
         }
 
         private CrmServiceClient ConnectOnprem()
@@ -426,8 +452,7 @@ namespace McTools.Xrm.Connection
                 credential = new NetworkCredential(UserName, password, UserDomain);
             }
 
-            return new CrmServiceClient(
-                credential, 
+            return new CrmServiceClient(credential, 
                 AuthenticationType.AD, 
                 ServerName, 
                 ServerPort.ToString(), 
