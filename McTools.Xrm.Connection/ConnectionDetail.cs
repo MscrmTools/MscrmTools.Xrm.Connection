@@ -280,15 +280,7 @@ namespace McTools.Xrm.Connection
             }
             else if (UseIfd)
             {
-                var password = CryptoManager.Decrypt(userPassword, ConnectionManager.CryptoPassPhrase,
-                   ConnectionManager.CryptoSaltValue,
-                   ConnectionManager.CryptoHashAlgorythm,
-                   ConnectionManager.CryptoPasswordIterations,
-                   ConnectionManager.CryptoInitVector,
-                   ConnectionManager.CryptoKeySize);
-
-                crmSvc = new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password), UserDomain, HomeRealmUrl,
-                    ServerName, ServerPort.ToString(), OrganizationUrlName, true, UseSsl);
+                crmSvc = ConnectIfd();
 
                 AuthType = AuthenticationProviderType.Federation;
             }
@@ -408,6 +400,29 @@ namespace McTools.Xrm.Connection
 
             return new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password), region, orgName, true, true, null, true);
         }
+
+
+        private CrmServiceClient ConnectIfd()
+        {
+            var password = CryptoManager.Decrypt(userPassword, ConnectionManager.CryptoPassPhrase,
+                ConnectionManager.CryptoSaltValue,
+                ConnectionManager.CryptoHashAlgorythm,
+                ConnectionManager.CryptoPasswordIterations,
+                ConnectionManager.CryptoInitVector,
+                ConnectionManager.CryptoKeySize);
+
+            return new CrmServiceClient(
+                UserName, 
+                CrmServiceClient.MakeSecureString(password), 
+                UserDomain, 
+                HomeRealmUrl,
+                ServerName, 
+                ServerPort.ToString(), 
+                OrganizationUrlName, 
+                true, 
+                UseSsl);
+        }
+
 
         #endregion Méthodes
 
