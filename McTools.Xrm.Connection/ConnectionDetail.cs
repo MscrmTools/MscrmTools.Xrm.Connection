@@ -274,21 +274,15 @@ namespace McTools.Xrm.Connection
 
             if (UseOnline)
             {
-                crmSvc = ConnectOnline();
-
-                AuthType = AuthenticationProviderType.OnlineFederation;
+                ConnectOnline();
             }
             else if (UseIfd)
             {
-                crmSvc = ConnectIfd();
-
-                AuthType = AuthenticationProviderType.Federation;
+                ConnectIfd();
             }
             else
             {
-                crmSvc = ConnectOnprem();
-
-                AuthType = AuthenticationProviderType.ActiveDirectory;
+                ConnectOnprem();
             }
 
             if (!crmSvc.IsReady)
@@ -364,8 +358,10 @@ namespace McTools.Xrm.Connection
             EnvironmentTextColor = editedConnection.EnvironmentTextColor;
         }
 
-        private CrmServiceClient ConnectOnline()
+        private void ConnectOnline()
         {
+            AuthType = AuthenticationProviderType.OnlineFederation;
+
             var password = CryptoManager.Decrypt(userPassword, ConnectionManager.CryptoPassPhrase,
                  ConnectionManager.CryptoSaltValue,
                  ConnectionManager.CryptoHashAlgorythm,
@@ -379,7 +375,7 @@ namespace McTools.Xrm.Connection
             {
                 var path = Path.Combine(Path.GetTempPath(), ConnectionId.Value.ToString("B"), "oauth-cache.txt");
 
-                return new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password), 
+                crmSvc = new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password), 
                     region, 
                     orgName, 
                     false, 
@@ -391,7 +387,7 @@ namespace McTools.Xrm.Connection
                     null);
             }
 
-            return new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password), 
+            crmSvc = new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password), 
                 region, 
                 orgName, 
                 true, 
@@ -401,11 +397,13 @@ namespace McTools.Xrm.Connection
         }
 
 
-        private CrmServiceClient ConnectIfd()
+        private void ConnectIfd()
         {
+            AuthType = AuthenticationProviderType.Federation;
+
             if (!IsCustomAuth)
             {
-                return new CrmServiceClient(CredentialCache.DefaultNetworkCredentials,
+                crmSvc = new CrmServiceClient(CredentialCache.DefaultNetworkCredentials,
                     AuthenticationType.IFD,
                     ServerName,
                     ServerPort.ToString(),
@@ -422,7 +420,7 @@ namespace McTools.Xrm.Connection
                     ConnectionManager.CryptoInitVector,
                     ConnectionManager.CryptoKeySize);
 
-                return new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password), UserDomain,
+                crmSvc = new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password), UserDomain,
                     HomeRealmUrl,
                     ServerName,
                     ServerPort.ToString(),
@@ -433,8 +431,10 @@ namespace McTools.Xrm.Connection
             }
         }
 
-        private CrmServiceClient ConnectOnprem()
+        private void ConnectOnprem()
         {
+            AuthType = AuthenticationProviderType.ActiveDirectory;
+
             NetworkCredential credential;
             if (!IsCustomAuth)
             {
@@ -452,7 +452,7 @@ namespace McTools.Xrm.Connection
                 credential = new NetworkCredential(UserName, password, UserDomain);
             }
 
-            return new CrmServiceClient(credential, 
+            crmSvc = new CrmServiceClient(credential, 
                 AuthenticationType.AD, 
                 ServerName, 
                 ServerPort.ToString(), 
