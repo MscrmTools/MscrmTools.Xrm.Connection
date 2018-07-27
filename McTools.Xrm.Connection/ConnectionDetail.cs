@@ -286,23 +286,7 @@ namespace McTools.Xrm.Connection
             }
             else
             {
-                NetworkCredential credential;
-                if (!IsCustomAuth)
-                {
-                    credential = CredentialCache.DefaultNetworkCredentials;
-                }
-                else
-                {
-                    var password = CryptoManager.Decrypt(userPassword, ConnectionManager.CryptoPassPhrase,
-                  ConnectionManager.CryptoSaltValue,
-                  ConnectionManager.CryptoHashAlgorythm,
-                  ConnectionManager.CryptoPasswordIterations,
-                  ConnectionManager.CryptoInitVector,
-                  ConnectionManager.CryptoKeySize);
-
-                    credential = new NetworkCredential(UserName, password, UserDomain);
-                }
-                crmSvc = new CrmServiceClient(credential, AuthenticationType.AD, ServerName, ServerPort.ToString(), OrganizationUrlName, true, UseSsl);
+                crmSvc = ConnectOnprem();
 
                 AuthType = AuthenticationProviderType.ActiveDirectory;
             }
@@ -423,6 +407,34 @@ namespace McTools.Xrm.Connection
                 UseSsl);
         }
 
+        private CrmServiceClient ConnectOnprem()
+        {
+            NetworkCredential credential;
+            if (!IsCustomAuth)
+            {
+                credential = CredentialCache.DefaultNetworkCredentials;
+            }
+            else
+            {
+                var password = CryptoManager.Decrypt(userPassword, ConnectionManager.CryptoPassPhrase,
+                    ConnectionManager.CryptoSaltValue,
+                    ConnectionManager.CryptoHashAlgorythm,
+                    ConnectionManager.CryptoPasswordIterations,
+                    ConnectionManager.CryptoInitVector,
+                    ConnectionManager.CryptoKeySize);
+
+                credential = new NetworkCredential(UserName, password, UserDomain);
+            }
+
+            return new CrmServiceClient(
+                credential, 
+                AuthenticationType.AD, 
+                ServerName, 
+                ServerPort.ToString(), 
+                OrganizationUrlName, 
+                true, 
+                UseSsl);
+        }
 
         #endregion Méthodes
 
