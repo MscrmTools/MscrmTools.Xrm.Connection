@@ -211,7 +211,7 @@ namespace McTools.Xrm.Connection
                 return crmSvc;
             }
 
-            if (UseConnectionString)
+            if (UseConnectionString || !string.IsNullOrEmpty(ConnectionString))
             {
                 if (ConnectionString.IndexOf("RequireNewInstance=", StringComparison.Ordinal) < 0)
                 {
