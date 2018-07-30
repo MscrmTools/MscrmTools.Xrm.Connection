@@ -103,19 +103,22 @@ namespace McTools.Xrm.Connection.WinForms
         /// <summary>
         /// Asks this manager to select a Crm connection to use
         /// </summary>
-        public bool AskForConnection(object connectionParameter)
-        {
-            return AskForConnection(connectionParameter, null);
-        }
+        public bool AskForConnection(object connectionParameter) =>
+            AskForConnection(connectionParameter, null);
 
         /// <summary>
         /// Deletes a Crm connection from the connections list
         /// </summary>
         /// <param name="connectionToDelete">Details of the connection to delete</param>
-        public void DeleteConnection(ConnectionDetail connectionToDelete)
+        public void DeleteConnection(Guid? connectionId)
         {
-            ConnectionManager.Instance.ConnectionsList.Connections.Remove(connectionToDelete);
-            ConnectionManager.Instance.SaveConnectionsFile();
+            var connection = ConnectionManager.Instance.ConnectionsList.Connections.Where(x => x.ConnectionId == connectionId).FirstOrDefault();
+
+            if (connection != null)
+            {
+                ConnectionManager.Instance.ConnectionsList.Connections.Remove(connection);
+                ConnectionManager.Instance.SaveConnectionsFile();
+            }
         }
 
         public void DisplayConnectionsList(Form form)
