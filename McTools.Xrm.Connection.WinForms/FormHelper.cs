@@ -207,6 +207,9 @@ namespace McTools.Xrm.Connection.WinForms
         /// <returns>True if password defined</returns>
         public bool RequestPassword(ConnectionDetail detail)
         {
+            if (!string.IsNullOrEmpty(detail.ConnectionString))
+                return true;
+
             if (!detail.PasswordIsEmpty)
                 return true;
 
