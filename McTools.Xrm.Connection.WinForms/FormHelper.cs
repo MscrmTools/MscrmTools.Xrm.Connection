@@ -169,13 +169,10 @@ namespace McTools.Xrm.Connection.WinForms
                 {
                     if (connectionFile == null)
                     {
-                        foreach (ConnectionDetail detail in ConnectionManager.Instance.ConnectionsList.Connections)
-                        {
-                            if (detail.ConnectionId == cForm.CrmConnectionDetail.ConnectionId)
-                            {
-                                detail.UpdateAfterEdit(cForm.CrmConnectionDetail);
-                            }
-                        }
+                        ConnectionManager.Instance.ConnectionsList.Connections
+                            .Where(x => x.ConnectionId == cForm.CrmConnectionDetail.ConnectionId)
+                            .ToList()
+                            .ForEach(x => x.UpdateAfterEdit(cForm.CrmConnectionDetail));
 
                         ConnectionManager.Instance.SaveConnectionsFile();
                     }
