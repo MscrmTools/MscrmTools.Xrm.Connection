@@ -19,12 +19,14 @@ namespace McTools.Xrm.Connection
     {
         public ConnectionDetail ConnectionDetail { get; set; }
         public string FailureReason { get; set; }
+        public int NumberOfConnectionsRequested { get; set; }
         public object Parameter { get; set; }
     }
 
     public class ConnectionSucceedEventArgs : EventArgs
     {
         public ConnectionDetail ConnectionDetail { get; set; }
+        public int NumberOfConnectionsRequested { get; set; }
         public IOrganizationService OrganizationService { get; set; }
         public object Parameter { get; set; }
     }
@@ -235,7 +237,7 @@ namespace McTools.Xrm.Connection
         {
             foreach (var detail in details)
             {
-                var parameters = new List<object> { detail, connectionParameter };
+                var parameters = new List<object> { detail, connectionParameter, details.Count };
 
                 // Runs the connection asynchronously
                 var worker = new BackgroundWorker();
@@ -431,7 +433,7 @@ namespace McTools.Xrm.Connection
 
                 if (ReuseConnections && !crmServices.ContainsKey(detail.ConnectionId ?? Guid.Empty))
                 {
-                    crmServices.Add(detail.ConnectionId.Value, service);
+                    crmServices.Add(detail.ConnectionId ?? Guid.Empty, service);
                 }
 
                 return service;
@@ -458,17 +460,15 @@ namespace McTools.Xrm.Connection
         {
             var parameters = (List<object>)e.Result;
 
-            if (parameters.Count == 3)
+            if (parameters.Count == 4)
             {
-                var error = parameters[2] as Exception;
-                if (error != null)
+                if (parameters[3] is Exception error)
                 {
-                    SendFailureMessage(parameters[0] as ConnectionDetail, CrmExceptionHelper.GetErrorMessage(error, false), parameters[1]);
+                    SendFailureMessage(parameters, CrmExceptionHelper.GetErrorMessage(error, false));
                 }
                 else
                 {
-                    var service = parameters[2] as CrmServiceClient;
-                    if (service != null)
+                    if (parameters[3] is CrmServiceClient service)
                     {
                         IOrganizationService ios = service.OrganizationServiceProxy;
                         if (ios == null)
@@ -476,7 +476,7 @@ namespace McTools.Xrm.Connection
                             ios = service.OrganizationWebProxyClient;
                             if (ios == null)
                             {
-                                SendFailureMessage(parameters[0] as ConnectionDetail, "Unable to find an instanciated service", parameters[1]);
+                                SendFailureMessage(parameters, "Unable to find an instanciated service");
                             }
                         }
 
@@ -494,15 +494,17 @@ namespace McTools.Xrm.Connection
         /// Sends a connection failure message
         /// </summary>
         /// <param name="failureReason">Reason of the failure</param>
-        private void SendFailureMessage(ConnectionDetail detail, string failureReason, object parameter)
+        /// <param name="parameters">Connection returned parameters</param>
+        private void SendFailureMessage(List<object> parameters, string failureReason)
         {
             if (ConnectionFailed != null)
             {
                 var args = new ConnectionFailedEventArgs
                 {
                     FailureReason = failureReason,
-                    Parameter = parameter,
-                    ConnectionDetail = detail
+                    ConnectionDetail = (ConnectionDetail)parameters[0],
+                    Parameter = parameters[1],
+                    NumberOfConnectionsRequested = (int)parameters[2]
                 };
 
                 ConnectionFailed(this, args);
@@ -520,10 +522,7 @@ namespace McTools.Xrm.Connection
                 CurrentStep = step
             };
 
-            if (StepChanged != null)
-            {
-                StepChanged(this, args);
-            }
+            StepChanged?.Invoke(this, args);
         }
 
         /// <summary>
@@ -539,7 +538,8 @@ namespace McTools.Xrm.Connection
                 {
                     OrganizationService = service,
                     ConnectionDetail = (ConnectionDetail)parameters[0],
-                    Parameter = parameters[1]
+                    Parameter = parameters[1],
+                    NumberOfConnectionsRequested = (int)parameters[2]
                 };
 
                 ConnectionSucceed(this, args);

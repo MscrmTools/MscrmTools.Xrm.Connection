@@ -20,6 +20,7 @@ namespace McTools.Xrm.Connection.TestWinForm
         /// </summary>
         private ConnectionManager cManager;
 
+        private int connectionCount = 0;
         private FormHelper formHelper;
 
         /// <summary>
@@ -80,6 +81,7 @@ namespace McTools.Xrm.Connection.TestWinForm
         /// <param name="e"></param>
         private void cManager_ConnectionSucceed(object sender, ConnectionSucceedEventArgs e)
         {
+            connectionCount++;
             ccsb.RebuildConnectionList();
 
             // Store connection Organization Service
@@ -101,6 +103,11 @@ namespace McTools.Xrm.Connection.TestWinForm
             }
 
             MessageBox.Show($"Connected to {e.ConnectionDetail.ConnectionName}");
+
+            if (connectionCount == e.NumberOfConnectionsRequested)
+            {
+                MessageBox.Show("All connections done!");
+            }
         }
 
         /// <summary>
