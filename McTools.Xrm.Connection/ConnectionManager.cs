@@ -155,12 +155,18 @@ namespace McTools.Xrm.Connection
                 fsw.Changed -= fsw_Changed;
                 fsw.Dispose();
             }
-            fsw = new FileSystemWatcher(new FileInfo(ConfigurationFile).Directory.FullName, Path.GetFileName(ConfigurationFile))
+
+            var path = new FileInfo(ConfigurationFile).Directory.FullName;
+
+            if (Directory.Exists(path))
             {
-                NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size,
-                EnableRaisingEvents = true
-            };
-            fsw.Changed += fsw_Changed;
+                fsw = new FileSystemWatcher(path, Path.GetFileName(ConfigurationFile))
+                {
+                    NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size,
+                    EnableRaisingEvents = true
+                };
+                fsw.Changed += fsw_Changed;
+            }
         }
 
         #endregion Constructor
