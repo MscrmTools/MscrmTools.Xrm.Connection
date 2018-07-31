@@ -332,6 +332,7 @@ namespace McTools.Xrm.Connection
         public void UpdateAfterEdit(ConnectionDetail editedConnection)
         {
             ConnectionName = editedConnection.ConnectionName;
+            ConnectionString = editedConnection.ConnectionString;
             OrganizationServiceUrl = editedConnection.OrganizationServiceUrl;
             OrganizationDataServiceUrl = editedConnection.OrganizationDataServiceUrl;
             CrmTicket = editedConnection.CrmTicket;

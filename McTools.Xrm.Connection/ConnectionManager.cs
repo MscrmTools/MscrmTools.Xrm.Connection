@@ -109,7 +109,7 @@ namespace McTools.Xrm.Connection
         #endregion Constants
 
         private static string configfile;
-        private static ConnectionManager instance;
+        private static Lazy<ConnectionManager> instance = new Lazy<ConnectionManager>(() => new ConnectionManager());
         private Dictionary<Guid, CrmServiceClient> crmServices;
         private FileSystemWatcher fsw;
 
@@ -202,33 +202,39 @@ namespace McTools.Xrm.Connection
                         Connection.ConnectionsList.Instance.Save();
                     }
 
-                    instance.ConnectionsList = instance.LoadConnectionsList();
-                    instance.SetupFileSystemWatcher();
-                    instance.ConnectionListUpdated?.Invoke(null, new EventArgs());
+                    Instance.ConnectionsList = Instance.LoadConnectionsList();
+                    Instance.SetupFileSystemWatcher();
+                    Instance.ConnectionListUpdated?.Invoke(null, new EventArgs());
                 }
             }
         }
 
         public static ConnectionManager Instance
         {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new ConnectionManager();
-                }
-
-                return instance;
-            }
+            get =>
+                instance.Value;
         }
 
         /// <summary>
         /// List of Crm connections
         /// </summary>
-        public CrmConnections ConnectionsList { get; set; }
+        public CrmConnections ConnectionsList
+        {
+            get;
+            set;
+        }
 
-        public bool FromXrmToolBox { get; set; }
-        public bool ReuseConnections { get; set; }
+        public bool FromXrmToolBox
+        {
+            get;
+            set;
+        }
+
+        public bool ReuseConnections
+        {
+            get;
+            set;
+        }
 
         #endregion Properties
 
@@ -257,10 +263,8 @@ namespace McTools.Xrm.Connection
         /// Launch the Crm connection process
         /// </summary>
         /// <param name="details">Details of the Crm connection</param>
-        public void ConnectToServer(List<ConnectionDetail> details)
-        {
+        public void ConnectToServer(List<ConnectionDetail> details) =>
             ConnectToServer(details, null);
-        }
 
         /// <summary>
         /// Restore Crm connections list from the file
