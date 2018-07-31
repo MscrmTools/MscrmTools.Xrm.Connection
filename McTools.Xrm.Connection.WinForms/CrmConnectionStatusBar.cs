@@ -378,7 +378,7 @@ namespace McTools.Xrm.Connection.WinForms
                         connexionManager.DropDownItems.RemoveAt(0);
                     }
 
-                    _formHelper.DeleteConnection(currentConnection);
+                    _formHelper.DeleteConnection(currentConnection.ConnectionId);
 
                     break;
             }

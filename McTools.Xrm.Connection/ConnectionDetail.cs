@@ -211,7 +211,7 @@ namespace McTools.Xrm.Connection
                 return crmSvc;
             }
 
-            if (UseConnectionString)
+            if (UseConnectionString || !string.IsNullOrEmpty(ConnectionString))
             {
                 if (ConnectionString.IndexOf("RequireNewInstance=", StringComparison.Ordinal) < 0)
                 {
@@ -274,45 +274,15 @@ namespace McTools.Xrm.Connection
 
             if (UseOnline)
             {
-                crmSvc = ConnectOnline();
-
-                AuthType = AuthenticationProviderType.OnlineFederation;
+                ConnectOnline();
             }
             else if (UseIfd)
             {
-                var password = CryptoManager.Decrypt(userPassword, ConnectionManager.CryptoPassPhrase,
-                   ConnectionManager.CryptoSaltValue,
-                   ConnectionManager.CryptoHashAlgorythm,
-                   ConnectionManager.CryptoPasswordIterations,
-                   ConnectionManager.CryptoInitVector,
-                   ConnectionManager.CryptoKeySize);
-
-                crmSvc = new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password), UserDomain, HomeRealmUrl,
-                    ServerName, ServerPort.ToString(), OrganizationUrlName, true, UseSsl);
-
-                AuthType = AuthenticationProviderType.Federation;
+                ConnectIfd();
             }
             else
             {
-                NetworkCredential credential;
-                if (!IsCustomAuth)
-                {
-                    credential = CredentialCache.DefaultNetworkCredentials;
-                }
-                else
-                {
-                    var password = CryptoManager.Decrypt(userPassword, ConnectionManager.CryptoPassPhrase,
-                  ConnectionManager.CryptoSaltValue,
-                  ConnectionManager.CryptoHashAlgorythm,
-                  ConnectionManager.CryptoPasswordIterations,
-                  ConnectionManager.CryptoInitVector,
-                  ConnectionManager.CryptoKeySize);
-
-                    credential = new NetworkCredential(UserName, password, UserDomain);
-                }
-                crmSvc = new CrmServiceClient(credential, AuthenticationType.AD, ServerName, ServerPort.ToString(), OrganizationUrlName, true, UseSsl);
-
-                AuthType = AuthenticationProviderType.ActiveDirectory;
+                ConnectOnprem();
             }
 
             if (!crmSvc.IsReady)
@@ -362,6 +332,7 @@ namespace McTools.Xrm.Connection
         public void UpdateAfterEdit(ConnectionDetail editedConnection)
         {
             ConnectionName = editedConnection.ConnectionName;
+            ConnectionString = editedConnection.ConnectionString;
             OrganizationServiceUrl = editedConnection.OrganizationServiceUrl;
             OrganizationDataServiceUrl = editedConnection.OrganizationDataServiceUrl;
             CrmTicket = editedConnection.CrmTicket;
@@ -388,8 +359,10 @@ namespace McTools.Xrm.Connection
             EnvironmentTextColor = editedConnection.EnvironmentTextColor;
         }
 
-        private CrmServiceClient ConnectOnline()
+        private void ConnectOnline()
         {
+            AuthType = AuthenticationProviderType.OnlineFederation;
+
             var password = CryptoManager.Decrypt(userPassword, ConnectionManager.CryptoPassPhrase,
                  ConnectionManager.CryptoSaltValue,
                  ConnectionManager.CryptoHashAlgorythm,
@@ -403,10 +376,90 @@ namespace McTools.Xrm.Connection
             {
                 var path = Path.Combine(Path.GetTempPath(), ConnectionId.Value.ToString("B"), "oauth-cache.txt");
 
-                return new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password), region, orgName, false, null, null, AzureAdAppId.ToString(), new Uri(ReplyUrl), path, null);
+                crmSvc = new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password), 
+                    region, 
+                    orgName, 
+                    false, 
+                    null, 
+                    null, 
+                    AzureAdAppId.ToString(), 
+                    new Uri(ReplyUrl), 
+                    path, 
+                    null);
             }
 
-            return new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password), region, orgName, true, true, null, true);
+            crmSvc = new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password), 
+                region, 
+                orgName, 
+                true, 
+                true, 
+                null, 
+                true);
+        }
+
+
+        private void ConnectIfd()
+        {
+            AuthType = AuthenticationProviderType.Federation;
+
+            if (!IsCustomAuth)
+            {
+                crmSvc = new CrmServiceClient(CredentialCache.DefaultNetworkCredentials,
+                    AuthenticationType.IFD,
+                    ServerName,
+                    ServerPort.ToString(),
+                    OrganizationUrlName,
+                    true,
+                    UseSsl);
+            }
+            else
+            {
+                var password = CryptoManager.Decrypt(userPassword, ConnectionManager.CryptoPassPhrase,
+                    ConnectionManager.CryptoSaltValue,
+                    ConnectionManager.CryptoHashAlgorythm,
+                    ConnectionManager.CryptoPasswordIterations,
+                    ConnectionManager.CryptoInitVector,
+                    ConnectionManager.CryptoKeySize);
+
+                crmSvc = new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password), UserDomain,
+                    HomeRealmUrl,
+                    ServerName,
+                    ServerPort.ToString(),
+                    OrganizationUrlName,
+                    true,
+                    UseSsl);
+
+            }
+        }
+
+        private void ConnectOnprem()
+        {
+            AuthType = AuthenticationProviderType.ActiveDirectory;
+
+            NetworkCredential credential;
+            if (!IsCustomAuth)
+            {
+                credential = CredentialCache.DefaultNetworkCredentials;
+            }
+            else
+            {
+                var password = CryptoManager.Decrypt(userPassword, ConnectionManager.CryptoPassPhrase,
+                    ConnectionManager.CryptoSaltValue,
+                    ConnectionManager.CryptoHashAlgorythm,
+                    ConnectionManager.CryptoPasswordIterations,
+                    ConnectionManager.CryptoInitVector,
+                    ConnectionManager.CryptoKeySize);
+
+                credential = new NetworkCredential(UserName, password, UserDomain);
+            }
+
+            crmSvc = new CrmServiceClient(credential, 
+                AuthenticationType.AD, 
+                ServerName, 
+                ServerPort.ToString(), 
+                OrganizationUrlName, 
+                true, 
+                UseSsl);
         }
 
         #endregion Méthodes
