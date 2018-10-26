@@ -19,6 +19,9 @@ namespace McTools.Xrm.Connection.WinForms
         private readonly bool isConnectionSelection;
         private int currentIndex;
         private bool hadCreatedNewConnection;
+     
+        private int? lastSortColumnIndex = null;
+        private SortOrder? lastSortOrder = null;
 
         /// <summary>
         /// Connexion sélectionnée
@@ -49,7 +52,7 @@ namespace McTools.Xrm.Connection.WinForms
             }
         }
 
-        private void DisplayConnections()
+        private void DisplayConnections(string filter)
         {
             lvConnections.Items.Clear();
             lvConnections.Groups.Clear();
@@ -59,29 +62,37 @@ namespace McTools.Xrm.Connection.WinForms
             LoadImages();
 
             var details = ConnectionManager.Instance.ConnectionsList.Connections;
-            if (ConnectionManager.Instance.ConnectionsList.UseMruDisplay)
+
+            if (ConnectionManager.Instance.ConnectionsList.UseMruDisplay && lastSortColumnIndex == null)
             {
                 details = ConnectionManager.Instance.ConnectionsList.Connections.OrderByDescending(c => c.LastUsedOn).ThenBy(c => c.ConnectionName).ToList();
+            }
+            else
+            {
+                details = TrySortAsPreviously(details);
             }
 
             foreach (ConnectionDetail detail in details)
             {
-                var item = new ListViewItem(detail.ConnectionName);
-                item.SubItems.Add(detail.ServerName);
-                item.SubItems.Add(detail.Organization);
-                item.SubItems.Add(string.IsNullOrEmpty(detail.UserDomain) ? detail.UserName : $"{detail.UserDomain}\\{detail.UserName}");
-                item.SubItems.Add(detail.OrganizationVersion);
-                item.Tag = detail;
-                item.ImageIndex = GetImageIndex(detail);
+                if(IsDisplayed(detail, filter))
+                { 
+                    var item = new ListViewItem(detail.ConnectionName);
+                    item.SubItems.Add(detail.ServerName);
+                    item.SubItems.Add(detail.Organization);
+                    item.SubItems.Add(string.IsNullOrEmpty(detail.UserDomain) ? detail.UserName : $"{detail.UserDomain}\\{detail.UserName}");
+                    item.SubItems.Add(detail.OrganizationVersion);
+                    item.Tag = detail;
+                    item.ImageIndex = GetImageIndex(detail);
 
-                if (!ConnectionManager.Instance.ConnectionsList.UseMruDisplay)
-                {
-                    item.Group = GetGroup(detail);
+                    if (!ConnectionManager.Instance.ConnectionsList.UseMruDisplay)
+                    {
+                        item.Group = GetGroup(detail);
+                    }
+
+                    lvConnections.Items.Add(item);
                 }
-
-                lvConnections.Items.Add(item);
             }
-
+           
             if (!ConnectionManager.Instance.ConnectionsList.UseMruDisplay)
             {
                 var groups = new ListViewGroup[lvConnections.Groups.Count];
@@ -95,6 +106,42 @@ namespace McTools.Xrm.Connection.WinForms
                 lvConnections.Groups.AddRange(groups);
                 lvConnections.EndUpdate();
             }
+        }
+
+        private List<ConnectionDetail> TrySortAsPreviously(List<ConnectionDetail> list)
+        {
+            if(lastSortOrder == null || lastSortColumnIndex == null)
+            { 
+                return list;
+            }           
+
+            // Might be some smarter way of doing this...but this works.. The comparer didn't really.
+            switch(lastSortColumnIndex.Value)
+            {
+                case 0:
+                    if (lastSortOrder.Value == SortOrder.Ascending) { return list.OrderBy(l => l.ConnectionName).ToList(); }
+                    else { return list.OrderByDescending(l => l.ConnectionName).ToList(); }
+                case 1:
+                    if (lastSortOrder.Value == SortOrder.Ascending) { return list.OrderBy(l => l.ServerName).ToList(); }
+                    else { return list.OrderByDescending(l => l.ServerName).ToList(); }
+                case 2:
+                    if (lastSortOrder.Value == SortOrder.Ascending) { return list.OrderBy(l => l.UserDomain).ThenBy(l => l.UserName).ToList(); }
+                    else { return list.OrderByDescending(l => l.UserDomain).ThenByDescending(l => l.UserName).ToList(); }
+                case 3:
+                    if (lastSortOrder.Value == SortOrder.Ascending) { return list.OrderBy(l => l.OrganizationVersion).ToList(); }
+                    else { return list.OrderByDescending(l => l.OrganizationVersion).ToList(); }
+                default:
+                    return list;
+            }            
+        }
+      
+
+        private bool IsDisplayed(ConnectionDetail detail, string filter)
+        {
+            return detail.ServerName?.Contains(filter) == true
+                   || detail.Organization?.Contains(filter) == true
+                   || detail.UserDomain?.Contains(filter) == true
+                   || detail.UserName?.Contains(filter) == true;
         }
 
         private void LoadConnectionFile()
@@ -123,7 +170,7 @@ namespace McTools.Xrm.Connection.WinForms
                 bValidate.Visible = false;
             }
 
-            DisplayConnections();
+            DisplayConnections(tbFilter.Text);
         }
 
         private void LoadImages()
@@ -171,7 +218,8 @@ namespace McTools.Xrm.Connection.WinForms
 
         private void LvConnectionsColumnClick(object sender, ColumnClickEventArgs e)
         {
-            lvConnections.Sorting = lvConnections.Sorting == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
+            lastSortOrder = lvConnections.Sorting = lvConnections.Sorting == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
+            lastSortColumnIndex = e.Column;
             lvConnections.ListViewItemSorter = new ListViewItemComparer(e.Column, lvConnections.Sorting);
         }
 
@@ -338,7 +386,15 @@ namespace McTools.Xrm.Connection.WinForms
             var tsb = (ToolStripButton)sender;
             ConnectionManager.Instance.ConnectionsList.UseMruDisplay = tsb.Checked;
 
-            DisplayConnections();
+            ClearCurrentSort();
+
+            DisplayConnections(tbFilter.Text);
+        }
+
+        private void ClearCurrentSort()
+        {
+            lastSortColumnIndex = null;
+            lastSortOrder = null;
         }
 
         private void tscbbConnectionsFile_SelectedIndexChanged(object sender, EventArgs e)
@@ -713,5 +769,17 @@ namespace McTools.Xrm.Connection.WinForms
         }
 
         #endregion Connection file actions
+
+        #region Filtering
+        private void tbFilter_TextChanged(object sender, EventArgs e)
+        {
+            DisplayConnections(tbFilter.Text);
+        }
+
+        private void bClearFilter_Click(object sender, EventArgs e)
+        {
+            tbFilter.Text = "";
+        }
+        #endregion
     }
 }
