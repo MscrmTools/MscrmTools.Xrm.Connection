@@ -158,6 +158,9 @@ namespace McTools.Xrm.Connection
                 fsw.Dispose();
             }
 
+            if (Uri.IsWellFormedUriString(ConfigurationFile, UriKind.Absolute))
+                return;
+
             var path = new FileInfo(ConfigurationFile).Directory.FullName;
 
             if (Directory.Exists(path))
@@ -277,7 +280,7 @@ namespace McTools.Xrm.Connection
             try
             {
                 CrmConnections crmConnections;
-                if (File.Exists(ConfigurationFile))
+                if (FileExists(ConfigurationFile))
                 {
                     crmConnections = CrmConnections.LoadFromFile(ConfigurationFile);
 
@@ -330,6 +333,33 @@ namespace McTools.Xrm.Connection
                 throw new Exception("Error while deserializing configuration file. Details: " + error.Message);
             }
         }
+
+        /// <summary>
+        /// Checks if a configuration file exists
+        /// </summary>
+        /// <param name="path">The file to check for</param>
+        /// <returns><c>true</c> if the <paramref name="path"/> exists, or <c>false</c> otherwise</returns>
+        public static bool FileExists(string path)
+        {
+            if (Uri.IsWellFormedUriString(path, UriKind.Absolute))
+            {
+                try
+                {
+                    var req = WebRequest.Create(path);
+                    using (req.GetResponse())
+                    {
+                        return true;
+                    }
+                }
+                catch (WebException)
+                {
+                    return false;
+                }
+            }
+
+            return File.Exists(path);
+        }
+
 
         /// <summary>
         /// Saves Crm connections list to file

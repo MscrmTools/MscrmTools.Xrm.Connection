@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -73,6 +74,11 @@ namespace McTools.Xrm.Connection
             set { _userName = value; }
         }
 
+        /// <summary>
+        /// Indicates if this connection list can be updated
+        /// </summary>
+        public bool IsReadOnly { get; private set; }
+
         #endregion Propriétés
 
         #region methods
@@ -81,14 +87,16 @@ namespace McTools.Xrm.Connection
         {
             var crmConnections = new CrmConnections("Default");
 
-            if (!File.Exists(filePath))
+            if (!Uri.IsWellFormedUriString(filePath, UriKind.Absolute) && !File.Exists(filePath))
             {
                 return crmConnections;
             }
 
-            using (var fStream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (var fStream = OpenStream(filePath))
             {
-                if (fStream.Length == 0)
+                crmConnections.IsReadOnly = Uri.IsWellFormedUriString(filePath, UriKind.Absolute);
+
+                if (fStream.CanSeek && fStream.Length == 0)
                 {
                     return crmConnections;
                 }
@@ -335,6 +343,18 @@ namespace McTools.Xrm.Connection
             return crmConnections;
         }
 
+        private static Stream OpenStream(string filePath)
+        {
+            if (Uri.IsWellFormedUriString(filePath, UriKind.Absolute))
+            {
+                var req = WebRequest.Create(filePath);
+                var resp = req.GetResponse();
+                return resp.GetResponseStream();
+            }
+
+            return File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        }
+
         public ConnectionDetail CloneConnection(ConnectionDetail detail)
         {
             var newDetail = (ConnectionDetail)detail.Clone();
@@ -357,6 +377,9 @@ namespace McTools.Xrm.Connection
 
         public void SerializeToFile(string filePath)
         {
+            if (Uri.IsWellFormedUriString(filePath, UriKind.Absolute))
+                return;
+
             lock (_fileAccess)
             {
                 var listElement = new XElement("Connections",
