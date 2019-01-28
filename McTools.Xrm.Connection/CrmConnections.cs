@@ -318,6 +318,24 @@ namespace McTools.Xrm.Connection
                         cd.LastUsedOn = DateTime.Parse(lastUsedOnElt.Value, CultureInfo.InvariantCulture.DateTimeFormat);
                     }
 
+                    var refreshTokenElt = elt.Element("RefreshToken");
+                    if (refreshTokenElt != null)
+                    {
+                        cd.RefreshToken = refreshTokenElt.Value;
+                    }
+
+                    var s2sClientIdElt = elt.Element("S2SClientId");
+                    if (s2sClientIdElt != null)
+                    {
+                        cd.S2SClientId = s2sClientIdElt.Value;
+                    }
+
+                    var s2sClientSecretElt = elt.Element("S2SClientSecret");
+                    if (s2sClientSecretElt != null)
+                    {
+                        cd.S2SClientSecret = s2sClientSecretElt.Value;
+                    }
+
                     var customInfo = elt.Element("CustomInformation");
                     if (customInfo != null)
                     {

@@ -183,6 +183,21 @@ namespace McTools.Xrm.Connection
 
         public string WebApplicationUrl { get; set; }
 
+        /// <summary>
+        /// OAuth Refresh Token
+        /// </summary>
+        public string RefreshToken { get; set; }
+
+        /// <summary>
+        /// Client ID used for S2S Auth
+        /// </summary>
+        public string S2SClientId { get; set; }
+
+        /// <summary>
+        /// Client Secret used for S2S Auth
+        /// </summary>
+        public string S2SClientSecret { get; set; }
+
         #endregion Propriétés
 
         #region Constructeur
@@ -502,7 +517,10 @@ namespace McTools.Xrm.Connection
                 IsEnvironmentHighlightSet = IsEnvironmentHighlightSet,
                 EnvironmentText = EnvironmentText,
                 EnvironmentColor = EnvironmentColor,
-                EnvironmentTextColor = EnvironmentTextColor
+                EnvironmentTextColor = EnvironmentTextColor,
+                RefreshToken = RefreshToken,
+                S2SClientId = S2SClientId,
+                S2SClientSecret = S2SClientSecret
             };
         }
 
@@ -635,6 +653,9 @@ namespace McTools.Xrm.Connection
                     new XElement("EnvironmentColor", ColorTranslator.ToHtml(EnvironmentColor ?? Color.FromArgb(255, 255, 0, 255))),
                     new XElement("EnvironmentTextColor", ColorTranslator.ToHtml(EnvironmentTextColor ?? Color.FromArgb(255, 255, 255, 255))),
                     new XElement("LastUsedOn", LastUsedOn.ToString(CultureInfo.InvariantCulture.DateTimeFormat)),
+                    new XElement("RefreshToken", RefreshToken),
+                    new XElement("S2SClientId", S2SClientId),
+                    new XElement("S2SClientSecret", S2SClientSecret),
                     GetCustomInfoXElement());
         }
 
