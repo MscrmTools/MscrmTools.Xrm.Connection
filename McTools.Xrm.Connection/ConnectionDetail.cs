@@ -291,8 +291,16 @@ namespace McTools.Xrm.Connection
 
                 return crmSvc;
             }
-
-            if (UseOnline)
+            
+            if (!String.IsNullOrEmpty(RefreshToken))
+            {
+                ConnectRefreshToken();
+            }
+            else if (!String.IsNullOrEmpty(S2SClientId))
+            {
+                ConnectS2S();
+            }
+            else if (UseOnline)
             {
                 ConnectOnline();
             }
@@ -377,6 +385,16 @@ namespace McTools.Xrm.Connection
             EnvironmentText = editedConnection.EnvironmentText;
             EnvironmentColor = editedConnection.EnvironmentColor;
             EnvironmentTextColor = editedConnection.EnvironmentTextColor;
+        }
+
+        private void ConnectRefreshToken()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ConnectS2S()
+        {
+            throw new NotImplementedException();
         }
 
         private void ConnectOnline()
