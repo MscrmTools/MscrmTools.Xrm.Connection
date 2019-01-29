@@ -273,7 +273,16 @@ Note that this is required to validate this wizard",
                     return;
                 }
 
-                DisplayControl<ConnectionCredentialsControl>();
+                if (!String.IsNullOrEmpty(CrmConnectionDetail.S2SClientSecret))
+                {
+                    CrmConnectionDetail.IsCustomAuth = false;
+                    DisplayControl<ConnectionLoadingControl>();
+                    Connect();
+                }
+                else
+                {
+                    DisplayControl<ConnectionCredentialsControl>();
+                }
             }
             else if (ctrl is ConnectionStringControl csc)
             {
