@@ -197,11 +197,6 @@ namespace McTools.Xrm.Connection
         /// </summary>
         public string S2SClientSecret { get; set; }
 
-        /// <summary>
-        /// AAD Tenant ID for Org used for S2S Auth
-        /// </summary>
-        public string TenantId { get; set; }
-
         #endregion Propriétés
 
         #region Constructeur
@@ -538,7 +533,6 @@ namespace McTools.Xrm.Connection
                 EnvironmentTextColor = EnvironmentTextColor,
                 RefreshToken = RefreshToken,
                 S2SClientSecret = S2SClientSecret,
-                TenantId = TenantId,
                 IsFromSdkLoginCtrl = IsFromSdkLoginCtrl
             };
         }
@@ -675,7 +669,6 @@ namespace McTools.Xrm.Connection
                     new XElement("LastUsedOn", LastUsedOn.ToString(CultureInfo.InvariantCulture.DateTimeFormat)),
                     new XElement("RefreshToken", RefreshToken),
                     new XElement("S2SClientSecret", S2SClientSecret),
-                    new XElement("TenantId", TenantId),
                     GetCustomInfoXElement());
         }
 

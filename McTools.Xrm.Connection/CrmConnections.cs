@@ -330,12 +330,6 @@ namespace McTools.Xrm.Connection
                         cd.S2SClientSecret = s2sClientSecretElt.Value;
                     }
 
-                    var tenantIdElt = elt.Element("TenantId");
-                    if (tenantIdElt != null)
-                    {
-                        cd.TenantId = tenantIdElt.Value;
-                    }
-
                     var isFromSdkLoginCtrlElt = elt.Element("IsFromSdkLoginCtrl");
                     if (isFromSdkLoginCtrlElt != null)
                     {
