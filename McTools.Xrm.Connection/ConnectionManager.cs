@@ -1,6 +1,6 @@
 ﻿using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Discovery;
+using Microsoft.Xrm.Sdk.Organization;
 using Microsoft.Xrm.Tooling.Connector;
 using System;
 using System.Collections.Generic;
@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
+using EndpointCollection = Microsoft.Xrm.Sdk.Organization.EndpointCollection;
 
 namespace McTools.Xrm.Connection
 {
@@ -415,7 +416,7 @@ namespace McTools.Xrm.Connection
                     // When the configuration seems to be wrong, endpoints are available
                     // so we can check if there is a difference between what the user
                     // specified for connection.
-                    var returnedWebAppUrl = service.ConnectedOrgPublishedEndpoints[EndpointType.WebApplication];
+                    var returnedWebAppUrl = service.ConnectedOrgPublishedEndpoints[Microsoft.Xrm.Sdk.Discovery.EndpointType.WebApplication];
                     if (detail.OriginalUrl.ToLower().IndexOf(returnedWebAppUrl.ToLower(), StringComparison.Ordinal) < 0)
                     {
                         string message =
@@ -425,8 +426,17 @@ namespace McTools.Xrm.Connection
                     }
                 }
 
-                detail.WebApplicationUrl = service.ConnectedOrgPublishedEndpoints[EndpointType.WebApplication];
-                detail.OrganizationDataServiceUrl = service.ConnectedOrgPublishedEndpoints[EndpointType.OrganizationDataService];
+                var endpoints = service.ConnectedOrgPublishedEndpoints != null ? EndpointCollection.FromDiscovery(service.ConnectedOrgPublishedEndpoints) : null;
+
+                if (endpoints == null)
+                {
+                    // Some connection methods do not automatically retrieve the endpoints - get them now
+                    var orgDetails = (RetrieveCurrentOrganizationResponse) service.Execute(new RetrieveCurrentOrganizationRequest());
+                    endpoints = orgDetails.Detail.Endpoints;
+                }
+
+                detail.WebApplicationUrl = endpoints[EndpointType.WebApplication];
+                detail.OrganizationDataServiceUrl = endpoints[EndpointType.OrganizationDataService];
                 detail.OrganizationVersion = service.ConnectedOrgVersion.ToString();
 
                 var currentConnection = ConnectionsList.Connections.FirstOrDefault(x => x.ConnectionId == detail.ConnectionId);
