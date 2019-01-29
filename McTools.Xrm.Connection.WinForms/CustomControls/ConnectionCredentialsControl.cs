@@ -88,6 +88,8 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
             {
                 txtPassword.UseSystemPasswordChar = false;
             }
+
+            txtDomain.Focus();
         }
 
         private void txt_Enter(object sender, System.EventArgs e)

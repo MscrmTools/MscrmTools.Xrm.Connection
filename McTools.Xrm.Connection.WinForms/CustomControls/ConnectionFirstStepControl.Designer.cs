@@ -83,7 +83,7 @@
             this.txtOrganizationUrl.Margin = new System.Windows.Forms.Padding(4, 10, 4, 4);
             this.txtOrganizationUrl.Name = "txtOrganizationUrl";
             this.txtOrganizationUrl.Size = new System.Drawing.Size(572, 29);
-            this.txtOrganizationUrl.TabIndex = 13;
+            this.txtOrganizationUrl.TabIndex = 1;
             // 
             // lblWindowsAuth
             // 
@@ -104,7 +104,7 @@
             this.chkUseIntegratedAuthentication.Margin = new System.Windows.Forms.Padding(4);
             this.chkUseIntegratedAuthentication.Name = "chkUseIntegratedAuthentication";
             this.chkUseIntegratedAuthentication.Size = new System.Drawing.Size(572, 42);
-            this.chkUseIntegratedAuthentication.TabIndex = 15;
+            this.chkUseIntegratedAuthentication.TabIndex = 2;
             this.chkUseIntegratedAuthentication.Text = "(AD and IFD instances only)";
             this.chkUseIntegratedAuthentication.UseVisualStyleBackColor = true;
             // 
@@ -127,7 +127,7 @@
             this.chkUseMfa.Margin = new System.Windows.Forms.Padding(4);
             this.chkUseMfa.Name = "chkUseMfa";
             this.chkUseMfa.Size = new System.Drawing.Size(572, 42);
-            this.chkUseMfa.TabIndex = 17;
+            this.chkUseMfa.TabIndex = 3;
             this.chkUseMfa.Text = "(CRM online only - preview)";
             this.chkUseMfa.UseVisualStyleBackColor = true;
             // 
@@ -150,7 +150,7 @@
             this.txtTimeout.Margin = new System.Windows.Forms.Padding(4, 10, 4, 4);
             this.txtTimeout.Name = "txtTimeout";
             this.txtTimeout.Size = new System.Drawing.Size(84, 29);
-            this.txtTimeout.TabIndex = 19;
+            this.txtTimeout.TabIndex = 4;
             this.txtTimeout.Text = "00:02:00";
             // 
             // ConnectionFirstStepControl
@@ -160,6 +160,7 @@
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "ConnectionFirstStepControl";
             this.Size = new System.Drawing.Size(900, 274);
+            this.Load += new System.EventHandler(this.ConnectionFirstStepControl_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);

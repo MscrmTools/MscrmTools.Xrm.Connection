@@ -342,6 +342,12 @@ namespace McTools.Xrm.Connection
                         cd.TenantId = tenantIdElt.Value;
                     }
 
+                    var isFromSdkLoginCtrlElt = elt.Element("IsFromSdkLoginCtrl");
+                    if (isFromSdkLoginCtrlElt != null)
+                    {
+                        cd.IsFromSdkLoginCtrl = isFromSdkLoginCtrlElt.Value == "true";
+                    }
+
                     var customInfo = elt.Element("CustomInformation");
                     if (customInfo != null)
                     {

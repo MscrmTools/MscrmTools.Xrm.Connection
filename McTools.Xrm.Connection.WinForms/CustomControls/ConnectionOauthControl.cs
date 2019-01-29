@@ -35,6 +35,11 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
             set => txtReplyUrl.Text = value;
         }
 
+        private void ConnectionOauthControl_Load(object sender, EventArgs e)
+        {
+            txtAzureAdAppId.Focus();
+        }
+
         private void llMoreInfo_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             // todo Trouver une url d'explication

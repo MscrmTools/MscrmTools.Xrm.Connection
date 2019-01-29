@@ -81,7 +81,7 @@
             this.txtDomain.Margin = new System.Windows.Forms.Padding(4, 10, 4, 4);
             this.txtDomain.Name = "txtDomain";
             this.txtDomain.Size = new System.Drawing.Size(592, 29);
-            this.txtDomain.TabIndex = 13;
+            this.txtDomain.TabIndex = 1;
             this.txtDomain.TextChanged += new System.EventHandler(this.txt_TextChanged);
             this.txtDomain.Enter += new System.EventHandler(this.txt_Enter);
             this.txtDomain.Leave += new System.EventHandler(this.txt_Leave);
@@ -115,7 +115,7 @@
             this.txtUsername.Margin = new System.Windows.Forms.Padding(4, 10, 4, 4);
             this.txtUsername.Name = "txtUsername";
             this.txtUsername.Size = new System.Drawing.Size(592, 29);
-            this.txtUsername.TabIndex = 20;
+            this.txtUsername.TabIndex = 2;
             this.txtUsername.TextChanged += new System.EventHandler(this.txt_TextChanged);
             this.txtUsername.Enter += new System.EventHandler(this.txt_Enter);
             this.txtUsername.Leave += new System.EventHandler(this.txt_Leave);
@@ -127,7 +127,7 @@
             this.txtPassword.Margin = new System.Windows.Forms.Padding(4, 10, 4, 4);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.Size = new System.Drawing.Size(592, 29);
-            this.txtPassword.TabIndex = 21;
+            this.txtPassword.TabIndex = 3;
             this.txtPassword.UseSystemPasswordChar = true;
             this.txtPassword.TextChanged += new System.EventHandler(this.txt_TextChanged);
             this.txtPassword.Enter += new System.EventHandler(this.txt_Enter);
@@ -142,7 +142,7 @@
             this.chkSavePassword.Margin = new System.Windows.Forms.Padding(5);
             this.chkSavePassword.Name = "chkSavePassword";
             this.chkSavePassword.Size = new System.Drawing.Size(590, 40);
-            this.chkSavePassword.TabIndex = 22;
+            this.chkSavePassword.TabIndex = 4;
             this.chkSavePassword.Text = "Save password as encrypted string in connections file";
             this.chkSavePassword.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.chkSavePassword.UseVisualStyleBackColor = true;

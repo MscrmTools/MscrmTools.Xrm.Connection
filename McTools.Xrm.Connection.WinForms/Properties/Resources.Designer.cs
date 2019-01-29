@@ -61,6 +61,16 @@ namespace McTools.Xrm.Connection.WinForms.Properties {
         }
         
         /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ConnectionStringImage1 {
+            get {
+                object obj = ResourceManager.GetObject("ConnectionStringImage1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Please wait while the wizard is trying to connect to your Microsoft Dynamics CRM organization.
         /// </summary>
         internal static string ConnectionWizard_ConnectingHeaderDescription {
@@ -214,6 +224,36 @@ namespace McTools.Xrm.Connection.WinForms.Properties {
         internal static System.Drawing.Bitmap database_link {
             get {
                 object obj = ResourceManager.GetObject("database_link", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap logo_0100 {
+            get {
+                object obj = ResourceManager.GetObject("logo_0100", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap logo_0200 {
+            get {
+                object obj = ResourceManager.GetObject("logo_0200", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap LogoDyn365 {
+            get {
+                object obj = ResourceManager.GetObject("LogoDyn365", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

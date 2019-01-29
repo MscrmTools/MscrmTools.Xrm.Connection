@@ -65,7 +65,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Crm.Sdk.Proxy, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.3\lib\net452\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
+      <HintPath>..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.5\lib\net452\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.IdentityModel, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.IdentityModel.6.1.7600.16394\lib\net35\Microsoft.IdentityModel.dll</HintPath>
@@ -78,23 +78,31 @@
       <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.2.29.0\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Rest.ClientRuntime, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CrmSdk.XrmTooling.CoreAssembly.9.0.2.3\lib\net452\Microsoft.Rest.ClientRuntime.dll</HintPath>
+      <HintPath>..\packages\Microsoft.CrmSdk.XrmTooling.CoreAssembly.9.0.2.7\lib\net452\Microsoft.Rest.ClientRuntime.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xrm.Sdk, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.3\lib\net452\Microsoft.Xrm.Sdk.dll</HintPath>
+      <HintPath>..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.5\lib\net452\Microsoft.Xrm.Sdk.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xrm.Sdk.Deployment, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CrmSdk.Deployment.9.0.2.3\lib\net452\Microsoft.Xrm.Sdk.Deployment.dll</HintPath>
+      <HintPath>..\packages\Microsoft.CrmSdk.Deployment.9.0.2.5\lib\net452\Microsoft.Xrm.Sdk.Deployment.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xrm.Sdk.Workflow, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CrmSdk.Workflow.9.0.2.3\lib\net452\Microsoft.Xrm.Sdk.Workflow.dll</HintPath>
+      <HintPath>..\packages\Microsoft.CrmSdk.Workflow.9.0.2.4\lib\net452\Microsoft.Xrm.Sdk.Workflow.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xrm.Tooling.Connector, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CrmSdk.XrmTooling.CoreAssembly.9.0.2.3\lib\net452\Microsoft.Xrm.Tooling.Connector.dll</HintPath>
+      <HintPath>..\packages\Microsoft.CrmSdk.XrmTooling.CoreAssembly.9.0.2.7\lib\net452\Microsoft.Xrm.Tooling.Connector.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Tooling.CrmConnectControl, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CrmSdk.XrmTooling.WpfControls.9.0.2.7\lib\net452\Microsoft.Xrm.Tooling.CrmConnectControl.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Tooling.Ui.Styles, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CrmSdk.XrmTooling.WpfControls.9.0.2.7\lib\net452\Microsoft.Xrm.Tooling.Ui.Styles.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Tooling.WebResourceUtility, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CrmSdk.XrmTooling.WpfControls.9.0.2.7\lib\net452\Microsoft.Xrm.Tooling.WebResourceUtility.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CrmSdk.XrmTooling.CoreAssembly.9.0.2.3\lib\net452\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -124,6 +132,7 @@
     <Reference Include="System.Workflow.Activities" />
     <Reference Include="System.Workflow.ComponentModel" />
     <Reference Include="System.Workflow.Runtime" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -143,6 +152,9 @@
     </Compile>
     <Compile Include="ConnectionWizard2.designer.cs">
       <DependentUpon>ConnectionWizard2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CRMLoginForm1.xaml.cs">
+      <DependentUpon>CRMLoginForm1.xaml</DependentUpon>
     </Compile>
     <Compile Include="CustomControls\ConnectionCredentialsControl.cs">
       <SubType>UserControl</SubType>
@@ -179,6 +191,18 @@
     </Compile>
     <Compile Include="CustomControls\ConnectionOauthControl.Designer.cs">
       <DependentUpon>ConnectionOauthControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\StartPageControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControls\StartPageControl.Designer.cs">
+      <DependentUpon>StartPageControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\SdkLoginControlControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControls\SdkLoginControlControl.Designer.cs">
+      <DependentUpon>SdkLoginControlControl.cs</DependentUpon>
     </Compile>
     <Compile Include="CustomControls\ConnectionStringControl.cs">
       <SubType>UserControl</SubType>
@@ -223,12 +247,6 @@
     </Compile>
     <Compile Include="CrmConnectionStatusBar.designer.cs">
       <DependentUpon>CrmConnectionStatusBar.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ConnectionWizard.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ConnectionWizard.designer.cs">
-      <DependentUpon>ConnectionWizard.cs</DependentUpon>
     </Compile>
     <Compile Include="ListViewItemComparer.cs" />
     <Compile Include="AddConnectionFileDialog.cs">
@@ -289,6 +307,12 @@
     <EmbeddedResource Include="CustomControls\ConnectionOauthControl.resx">
       <DependentUpon>ConnectionOauthControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="CustomControls\StartPageControl.resx">
+      <DependentUpon>StartPageControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControls\SdkLoginControlControl.resx">
+      <DependentUpon>SdkLoginControlControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CustomControls\ConnectionStringControl.resx">
       <DependentUpon>ConnectionStringControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -306,9 +330,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ConnectionSelector.resx">
       <DependentUpon>ConnectionSelector.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ConnectionWizard.resx">
-      <DependentUpon>ConnectionWizard.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CrmConnectionStatusBar.resx">
       <DependentUpon>CrmConnectionStatusBar.cs</DependentUpon>
@@ -378,6 +399,24 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\XTB_HIGHLIGHT_CUSTOM.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="CRMLoginForm1.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\logo_0200.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\logo_0100.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LogoDyn365.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ConnectionStringImage1.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

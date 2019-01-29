@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xrm.Sdk.Discovery;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -553,7 +554,44 @@ namespace McTools.Xrm.Connection.WinForms
             {
                 ListViewItem item = lvConnections.SelectedItems[0];
 
-                var cForm = new ConnectionWizard2((ConnectionDetail)item.Tag)
+                var cd = (ConnectionDetail)item.Tag;
+
+                if (cd.IsFromSdkLoginCtrl)
+                {
+                    var ctrl = new CRMLoginForm1(cd.ConnectionId.Value, true);
+                    ctrl.ShowDialog();
+
+                    if (ctrl.CrmConnectionMgr.CrmSvc?.IsReady ?? false)
+                    {
+                        cd.Organization = ctrl.CrmConnectionMgr.ConnectedOrgUniqueName;
+                        cd.OrganizationFriendlyName = ctrl.CrmConnectionMgr.ConnectedOrgFriendlyName;
+                        cd.OrganizationDataServiceUrl =
+                            ctrl.CrmConnectionMgr.ConnectedOrgPublishedEndpoints[EndpointType.OrganizationDataService];
+                        cd.OrganizationServiceUrl =
+                            ctrl.CrmConnectionMgr.ConnectedOrgPublishedEndpoints[EndpointType.OrganizationService];
+                        cd.WebApplicationUrl =
+                            ctrl.CrmConnectionMgr.ConnectedOrgPublishedEndpoints[EndpointType.WebApplication];
+                        cd.ServerName = new Uri(cd.WebApplicationUrl).Host;
+                        cd.OrganizationVersion = ctrl.CrmConnectionMgr.CrmSvc.ConnectedOrgVersion.ToString();
+
+                        item.Tag = cd;
+                        lvConnections.Items.Remove(item);
+                        lvConnections.Items.Add(item);
+                        lvConnections.Refresh();//RedrawItems(0, lvConnections.Items.Count - 1, false);
+
+                        var updatedConnectionDetail = ConnectionManager.Instance.ConnectionsList.Connections.FirstOrDefault(
+                            c => c.ConnectionId == cd.ConnectionId);
+
+                        ConnectionManager.Instance.ConnectionsList.Connections.Remove(updatedConnectionDetail);
+                        ConnectionManager.Instance.ConnectionsList.Connections.Add(cd);
+
+                        ConnectionManager.Instance.SaveConnectionsFile();
+                    }
+
+                    return;
+                }
+
+                var cForm = new ConnectionWizard2(cd)
                 {
                     StartPosition = FormStartPosition.CenterParent
                 };

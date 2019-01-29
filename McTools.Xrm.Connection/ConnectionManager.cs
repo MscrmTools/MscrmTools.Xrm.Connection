@@ -569,5 +569,19 @@ namespace McTools.Xrm.Connection
         }
 
         #endregion Send Events
+
+        public void ConnectToServerWithSdkLoginCtrl(ConnectionDetail detail, CrmServiceClient crmSvc, object connectionParameter)
+        {
+            var parameters = new List<object> { detail, connectionParameter, 1 };
+
+            if (crmSvc.IsReady)
+            {
+                SendSuccessMessage(crmSvc, parameters);
+            }
+            else
+            {
+                SendFailureMessage(parameters, crmSvc.LastCrmError);
+            }
+        }
     }
 }

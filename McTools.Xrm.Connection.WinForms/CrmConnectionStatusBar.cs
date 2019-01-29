@@ -352,7 +352,24 @@ namespace McTools.Xrm.Connection.WinForms
                     }
                     else
                     {
-                        ConnectionManager.Instance.ConnectToServer(new List<ConnectionDetail> { currentConnection });
+                        if (currentConnection.IsFromSdkLoginCtrl)
+                        {
+                            var ctrl = new CRMLoginForm1(currentConnection.ConnectionId.Value);
+                            if (currentConnection.AzureAdAppId != Guid.Empty)
+                            {
+                                ctrl.AppId = currentConnection.AzureAdAppId.ToString();
+                                ctrl.RedirectUri = new Uri(currentConnection.ReplyUrl);
+                            }
+
+                            ctrl.ShowDialog();
+
+                            ConnectionManager.Instance.ConnectToServerWithSdkLoginCtrl(currentConnection, ctrl.CrmConnectionMgr.CrmSvc,
+                                null);
+                        }
+                        else
+                        {
+                            ConnectionManager.Instance.ConnectToServer(new List<ConnectionDetail> { currentConnection });
+                        }
                     }
                     break;
 
