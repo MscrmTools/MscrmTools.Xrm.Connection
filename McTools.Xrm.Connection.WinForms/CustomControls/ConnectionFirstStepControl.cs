@@ -138,5 +138,10 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
         }
 
         public bool UseSsl => Url.StartsWith("https://");
+
+        private void ConnectionFirstStepControl_Load(object sender, EventArgs e)
+        {
+            txtOrganizationUrl.Focus();
+        }
     }
 }

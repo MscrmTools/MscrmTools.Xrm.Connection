@@ -29,6 +29,14 @@ namespace McTools.Xrm.Connection.WinForms
 
             if (cs.ShowDialog(innerAppForm) == DialogResult.OK)
             {
+                if (cs.SelectedConnections.Any(c => c.IsFromSdkLoginCtrl)
+                    && cs.SelectedConnections.Count > 1)
+                {
+                    MessageBox.Show(innerAppForm, @"You cannot select multiple connections that used SDK Login control",
+                        @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+
                 foreach (var connectionDetail in cs.SelectedConnections)
                 {
                     if (!connectionDetail.UseConnectionString && connectionDetail.IsCustomAuth)
@@ -55,7 +63,26 @@ namespace McTools.Xrm.Connection.WinForms
 
                 preConnectionRequestAction?.Invoke();
 
-                ConnectionManager.Instance.ConnectToServer(cs.SelectedConnections, connectionParameter);
+                if (cs.SelectedConnections.First().IsFromSdkLoginCtrl)
+                {
+                    var cd = cs.SelectedConnections.First();
+
+                    var ctrl = new CRMLoginForm1(cd.ConnectionId.Value);
+                    if (cd.AzureAdAppId != Guid.Empty)
+                    {
+                        ctrl.AppId = cd.AzureAdAppId.ToString();
+                        ctrl.RedirectUri = new Uri(cd.ReplyUrl);
+                    }
+
+                    ctrl.ShowDialog();
+
+                    ConnectionManager.Instance.ConnectToServerWithSdkLoginCtrl(cd, ctrl.CrmConnectionMgr.CrmSvc,
+                        connectionParameter);
+                }
+                else
+                {
+                    ConnectionManager.Instance.ConnectToServer(cs.SelectedConnections, connectionParameter);
+                }
 
                 return true;
             }

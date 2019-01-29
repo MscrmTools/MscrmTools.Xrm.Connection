@@ -24,6 +24,7 @@ namespace McTools.Xrm.Connection
         #region Propriétés
 
         private CrmServiceClient crmSvc;
+
         public AuthenticationProviderType AuthType { get; set; }
         public Guid AzureAdAppId { get; set; }
 
@@ -64,6 +65,8 @@ namespace McTools.Xrm.Connection
         public bool IsCustomAuth { get; set; }
 
         public bool IsEnvironmentHighlightSet { get; set; }
+        public bool IsFromSdkLoginCtrl { get; set; }
+
         public DateTime LastUsedOn { get; set; }
 
         /// <summary>
@@ -359,45 +362,6 @@ namespace McTools.Xrm.Connection
             EnvironmentTextColor = editedConnection.EnvironmentTextColor;
         }
 
-        private void ConnectOnline()
-        {
-            AuthType = AuthenticationProviderType.OnlineFederation;
-
-            var password = CryptoManager.Decrypt(userPassword, ConnectionManager.CryptoPassPhrase,
-                 ConnectionManager.CryptoSaltValue,
-                 ConnectionManager.CryptoHashAlgorythm,
-                 ConnectionManager.CryptoPasswordIterations,
-                 ConnectionManager.CryptoInitVector,
-                 ConnectionManager.CryptoKeySize);
-
-            Utilities.GetOrgnameAndOnlineRegionFromServiceUri(new Uri(OriginalUrl), out var region, out var orgName, out _);
-
-            if (UseMfa)
-            {
-                var path = Path.Combine(Path.GetTempPath(), ConnectionId.Value.ToString("B"), "oauth-cache.txt");
-
-                crmSvc = new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password), 
-                    region, 
-                    orgName, 
-                    false, 
-                    null, 
-                    null, 
-                    AzureAdAppId.ToString(), 
-                    new Uri(ReplyUrl), 
-                    path, 
-                    null);
-            }
-
-            crmSvc = new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password), 
-                region, 
-                orgName, 
-                true, 
-                true, 
-                null, 
-                true);
-        }
-
-
         private void ConnectIfd()
         {
             AuthType = AuthenticationProviderType.Federation;
@@ -428,8 +392,45 @@ namespace McTools.Xrm.Connection
                     OrganizationUrlName,
                     true,
                     UseSsl);
-
             }
+        }
+
+        private void ConnectOnline()
+        {
+            AuthType = AuthenticationProviderType.OnlineFederation;
+
+            var password = CryptoManager.Decrypt(userPassword, ConnectionManager.CryptoPassPhrase,
+                 ConnectionManager.CryptoSaltValue,
+                 ConnectionManager.CryptoHashAlgorythm,
+                 ConnectionManager.CryptoPasswordIterations,
+                 ConnectionManager.CryptoInitVector,
+                 ConnectionManager.CryptoKeySize);
+
+            Utilities.GetOrgnameAndOnlineRegionFromServiceUri(new Uri(OriginalUrl), out var region, out var orgName, out _);
+
+            if (UseMfa)
+            {
+                var path = Path.Combine(Path.GetTempPath(), ConnectionId.Value.ToString("B"), "oauth-cache.txt");
+
+                crmSvc = new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password),
+                    region,
+                    orgName,
+                    false,
+                    null,
+                    null,
+                    AzureAdAppId.ToString(),
+                    new Uri(ReplyUrl),
+                    path,
+                    null);
+            }
+
+            crmSvc = new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password),
+                region,
+                orgName,
+                true,
+                true,
+                null,
+                true);
         }
 
         private void ConnectOnprem()
@@ -453,12 +454,12 @@ namespace McTools.Xrm.Connection
                 credential = new NetworkCredential(UserName, password, UserDomain);
             }
 
-            crmSvc = new CrmServiceClient(credential, 
-                AuthenticationType.AD, 
-                ServerName, 
-                ServerPort.ToString(), 
-                OrganizationUrlName, 
-                true, 
+            crmSvc = new CrmServiceClient(credential,
+                AuthenticationType.AD,
+                ServerName,
+                ServerPort.ToString(),
+                OrganizationUrlName,
+                true,
                 UseSsl);
         }
 
@@ -469,7 +470,7 @@ namespace McTools.Xrm.Connection
             return new ConnectionDetail
             {
                 AuthType = AuthType,
-                ConnectionId = ConnectionId,
+                ConnectionId = Guid.NewGuid(),
                 ConnectionName = ConnectionName,
                 ConnectionString = ConnectionString,
                 UseConnectionString = UseConnectionString,
@@ -502,7 +503,8 @@ namespace McTools.Xrm.Connection
                 IsEnvironmentHighlightSet = IsEnvironmentHighlightSet,
                 EnvironmentText = EnvironmentText,
                 EnvironmentColor = EnvironmentColor,
-                EnvironmentTextColor = EnvironmentTextColor
+                EnvironmentTextColor = EnvironmentTextColor,
+                IsFromSdkLoginCtrl = IsFromSdkLoginCtrl
             };
         }
 
@@ -634,6 +636,7 @@ namespace McTools.Xrm.Connection
                     new XElement("EnvironmentText", EnvironmentText),
                     new XElement("EnvironmentColor", ColorTranslator.ToHtml(EnvironmentColor ?? Color.FromArgb(255, 255, 0, 255))),
                     new XElement("EnvironmentTextColor", ColorTranslator.ToHtml(EnvironmentTextColor ?? Color.FromArgb(255, 255, 255, 255))),
+                    new XElement("IsFromSdkLoginCtrl", IsFromSdkLoginCtrl),
                     new XElement("LastUsedOn", LastUsedOn.ToString(CultureInfo.InvariantCulture.DateTimeFormat)),
                     GetCustomInfoXElement());
         }

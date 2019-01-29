@@ -1,4 +1,5 @@
 ﻿using McTools.Xrm.Connection.WinForms.CustomControls;
+using Microsoft.Xrm.Sdk.Client;
 using Microsoft.Xrm.Sdk.Discovery;
 using Microsoft.Xrm.Tooling.Connector;
 using System;
@@ -13,11 +14,10 @@ namespace McTools.Xrm.Connection.WinForms
     public partial class ConnectionWizard2 : Form
     {
         private readonly bool isNew;
-        private readonly List<Type> navigationHistory = new List<Type> { typeof(ConnectionFirstStepControl) };
+        private readonly List<Type> navigationHistory = new List<Type>();
         private IConnectionWizardControl ctrl;
         private string lastError;
         private ConnectionDetail originalDetail;
-        private ConnectionDetail updatedDetail;
 
         public ConnectionWizard2(ConnectionDetail detail = null)
         {
@@ -25,21 +25,15 @@ namespace McTools.Xrm.Connection.WinForms
 
             isNew = detail == null;
             originalDetail = (ConnectionDetail)detail?.Clone();
-            updatedDetail = detail ?? new ConnectionDetail(true);
+            CrmConnectionDetail = detail ?? new ConnectionDetail(true);
 
             Text = originalDetail == null ? "New connection" : "Update connection";
-
-            if (originalDetail != null && originalDetail.ConnectionString.Length > 0)
-            {
-                llConnectionString_LinkClicked(null, null);
-                return;
-            }
 
             btnBack.Visible = false;
             btnReset.Visible = false;
         }
 
-        public ConnectionDetail CrmConnectionDetail => updatedDetail;
+        public ConnectionDetail CrmConnectionDetail { get; private set; }
 
         public sealed override string Text
         {
@@ -51,7 +45,9 @@ namespace McTools.Xrm.Connection.WinForms
 
         private void btnBack_Click(object sender, EventArgs e)
         {
+            navigationHistory.RemoveAt(navigationHistory.Count - 1);
             var type = navigationHistory.Last();
+            navigationHistory.RemoveAt(navigationHistory.Count - 1);
 
             if (type == typeof(ConnectionFirstStepControl))
                 DisplayControl<ConnectionFirstStepControl>();
@@ -69,46 +65,46 @@ namespace McTools.Xrm.Connection.WinForms
                 DisplayControl<ConnectionStringControl>();
             else if (type == typeof(ConnectionSucceededControl))
                 DisplayControl<ConnectionSucceededControl>();
-
-            navigationHistory.RemoveAt(navigationHistory.Count - 1);
+            else if (type == typeof(SdkLoginControlControl))
+                DisplayControl<SdkLoginControlControl>();
+            else if (type == typeof(StartPageControl))
+                DisplayControl<StartPageControl>();
         }
 
         private void btnNext_Click(object sender, EventArgs e)
         {
             if (ctrl is ConnectionFirstStepControl cfsc)
             {
-                navigationHistory.Add(cfsc.GetType());
+                CrmConnectionDetail.OriginalUrl = cfsc.Url;
+                CrmConnectionDetail.IsCustomAuth = !cfsc.UseIntegratedAuth;
+                CrmConnectionDetail.UseMfa = cfsc.UseMfa;
+                CrmConnectionDetail.UseSsl = cfsc.UseSsl;
+                CrmConnectionDetail.ServerName = cfsc.HostName;
+                CrmConnectionDetail.ServerPort = cfsc.HostPort;
+                CrmConnectionDetail.OrganizationUrlName = cfsc.OrganizationUrlName;
+                CrmConnectionDetail.UseOnline = CrmConnectionDetail.OriginalUrl.ToLower().Contains(".dynamics.com");
+                CrmConnectionDetail.UseOsdp = CrmConnectionDetail.UseOnline;
+                CrmConnectionDetail.Timeout = cfsc.Timeout;
 
-                updatedDetail.OriginalUrl = cfsc.Url;
-                updatedDetail.IsCustomAuth = !cfsc.UseIntegratedAuth;
-                updatedDetail.UseMfa = cfsc.UseMfa;
-                updatedDetail.UseSsl = cfsc.UseSsl;
-                updatedDetail.ServerName = cfsc.HostName;
-                updatedDetail.ServerPort = cfsc.HostPort;
-                updatedDetail.OrganizationUrlName = cfsc.OrganizationUrlName;
-                updatedDetail.UseOnline = updatedDetail.OriginalUrl.ToLower().Contains(".dynamics.com");
-                updatedDetail.UseOsdp = updatedDetail.UseOnline;
-                updatedDetail.Timeout = cfsc.Timeout;
+                if (CrmConnectionDetail.Timeout.Ticks == 0 || CrmConnectionDetail.ServerName == null) return;
 
-                if (updatedDetail.Timeout.Ticks == 0 || updatedDetail.ServerName == null) return;
-
-                if (updatedDetail.OrganizationUrlName == null)
+                if (CrmConnectionDetail.OrganizationUrlName == null)
                 {
-                    if (!IPAddress.TryParse(updatedDetail.ServerName, out _))
+                    if (!IPAddress.TryParse(CrmConnectionDetail.ServerName, out _))
                     {
-                        if (updatedDetail.ServerName.Split('.').Length > 1)
-                            updatedDetail.OrganizationUrlName = updatedDetail.ServerName.Split('.')[0];
+                        if (CrmConnectionDetail.ServerName.Split('.').Length > 1)
+                            CrmConnectionDetail.OrganizationUrlName = CrmConnectionDetail.ServerName.Split('.')[0];
                     }
 
-                    if (updatedDetail.UseOnline)
+                    if (CrmConnectionDetail.UseOnline)
                     {
-                        if (updatedDetail.IsCustomAuth)
+                        if (CrmConnectionDetail.IsCustomAuth)
                         {
-                            if (updatedDetail.UseMfa)
+                            if (CrmConnectionDetail.UseMfa)
                             {
                                 DisplayControl<ConnectionOauthControl>();
                             }
-                            else if (!updatedDetail.UseOnline && updatedDetail.OriginalUrl.Split('.').Length > 1)
+                            else if (!CrmConnectionDetail.UseOnline && CrmConnectionDetail.OriginalUrl.Split('.').Length > 1)
                             {
                                 DisplayControl<ConnectionIfdControl>();
                             }
@@ -130,13 +126,13 @@ namespace McTools.Xrm.Connection.WinForms
                 }
                 else
                 {
-                    if (updatedDetail.IsCustomAuth)
+                    if (CrmConnectionDetail.IsCustomAuth)
                     {
-                        if (updatedDetail.UseMfa)
+                        if (CrmConnectionDetail.UseMfa)
                         {
                             DisplayControl<ConnectionOauthControl>();
                         }
-                        else if (!updatedDetail.UseOnline && updatedDetail.OriginalUrl.Split('.').Length > 1)
+                        else if (!CrmConnectionDetail.UseOnline && CrmConnectionDetail.OriginalUrl.Split('.').Length > 1)
                         {
                             DisplayControl<ConnectionIfdControl>();
                         }
@@ -154,19 +150,17 @@ namespace McTools.Xrm.Connection.WinForms
             }
             else if (ctrl is ConnectionCredentialsControl ccc)
             {
-                navigationHistory.Add(ccc.GetType());
-
-                updatedDetail.UserDomain = ccc.Domain;
-                updatedDetail.UserName = ccc.Username;
-                updatedDetail.SavePassword = ccc.SavePassword;
+                CrmConnectionDetail.UserDomain = ccc.Domain;
+                CrmConnectionDetail.UserName = ccc.Username;
+                CrmConnectionDetail.SavePassword = ccc.SavePassword;
 
                 if (ccc.PasswordChanged)
                 {
-                    updatedDetail.SetPassword(ccc.Password);
+                    CrmConnectionDetail.SetPassword(ccc.Password);
                 }
 
-                if (string.IsNullOrEmpty(updatedDetail.UserName)
-                    || updatedDetail.PasswordIsEmpty)
+                if (string.IsNullOrEmpty(CrmConnectionDetail.UserName)
+                    || CrmConnectionDetail.PasswordIsEmpty)
                 {
                     MessageBox.Show(this,
                         @"Please enter your credentials before trying to connect",
@@ -182,7 +176,7 @@ namespace McTools.Xrm.Connection.WinForms
                     DisplayControl<ConnectionLoadingControl>();
                     Connect();
                 }
-                else if (updatedDetail.IsConnectionBrokenWithUpdatedData(originalDetail))
+                else if (CrmConnectionDetail.IsConnectionBrokenWithUpdatedData(originalDetail))
                 {
                     if (DialogResult.Yes == MessageBox.Show(this, @"You changed some values that require to test the connection. Would you like to test it now?
 
@@ -200,14 +194,12 @@ Note that this is required to validate this wizard",
             }
             else if (ctrl is ConnectionIfdControl cic)
             {
-                navigationHistory.Add(cic.GetType());
+                CrmConnectionDetail.UseIfd = cic.IsIfd;
+                CrmConnectionDetail.HomeRealmUrl = cic.HomeRealmUrl;
 
-                updatedDetail.UseIfd = cic.IsIfd;
-                updatedDetail.HomeRealmUrl = cic.HomeRealmUrl;
-
-                if (updatedDetail.OrganizationUrlName == null)
+                if (CrmConnectionDetail.OrganizationUrlName == null)
                 {
-                    if (!updatedDetail.UseIfd)
+                    if (!CrmConnectionDetail.UseIfd)
                     {
                         MessageBox.Show(this,
                             @"We were unable to determine the organization name based on the information you specified. Please complete the url to add the organization name inside",
@@ -219,9 +211,9 @@ Note that this is required to validate this wizard",
                         return;
                     }
 
-                    updatedDetail.OrganizationUrlName = updatedDetail.ServerName.Split('.')[0];
+                    CrmConnectionDetail.OrganizationUrlName = CrmConnectionDetail.ServerName.Split('.')[0];
 
-                    if (updatedDetail.OrganizationUrlName == updatedDetail.ServerName)
+                    if (CrmConnectionDetail.OrganizationUrlName == CrmConnectionDetail.ServerName)
                     {
                         MessageBox.Show(this,
                             @"The url you specified does not look like a valid url for an IFD deployment. Please correct the url",
@@ -234,7 +226,7 @@ Note that this is required to validate this wizard",
                     }
                 }
 
-                if (updatedDetail.IsCustomAuth)
+                if (CrmConnectionDetail.IsCustomAuth)
                 {
                     DisplayControl<ConnectionCredentialsControl>();
                 }
@@ -245,7 +237,7 @@ Note that this is required to validate this wizard",
                 }
                 else
                 {
-                    if (updatedDetail.IsConnectionBrokenWithUpdatedData(originalDetail))
+                    if (CrmConnectionDetail.IsConnectionBrokenWithUpdatedData(originalDetail))
                     {
                         if (DialogResult.Yes == MessageBox.Show(this, @"You changed some values that require to test the connection. Would you like to test it now?
 
@@ -264,13 +256,11 @@ Note that this is required to validate this wizard",
             }
             else if (ctrl is ConnectionOauthControl coc)
             {
-                navigationHistory.Add(coc.GetType());
+                CrmConnectionDetail.AzureAdAppId = coc.AzureAdAppId;
+                CrmConnectionDetail.ReplyUrl = coc.ReplyUrl;
 
-                updatedDetail.AzureAdAppId = coc.AzureAdAppId;
-                updatedDetail.ReplyUrl = coc.ReplyUrl;
-
-                if (updatedDetail.AzureAdAppId == Guid.Empty
-                    || string.IsNullOrEmpty(updatedDetail.ReplyUrl))
+                if (CrmConnectionDetail.AzureAdAppId == Guid.Empty
+                    || string.IsNullOrEmpty(CrmConnectionDetail.ReplyUrl))
                 {
                     MessageBox.Show(this,
                         @"Please provide all information for OAuth authentication",
@@ -285,28 +275,62 @@ Note that this is required to validate this wizard",
             }
             else if (ctrl is ConnectionStringControl csc)
             {
-                navigationHistory.Add(csc.GetType());
-
-                updatedDetail.ConnectionString = csc.ConnectionString;
+                CrmConnectionDetail.ConnectionString = csc.ConnectionString;
 
                 DisplayControl<ConnectionLoadingControl>();
                 Connect();
             }
             else if (ctrl is ConnectionSucceededControl cokc)
             {
-                navigationHistory.Add(cokc.GetType());
-
-                updatedDetail.ConnectionName = cokc.ConnectionName;
+                CrmConnectionDetail.ConnectionName = cokc.ConnectionName;
 
                 DialogResult = DialogResult.OK;
                 Close();
+            }
+            else if (ctrl is SdkLoginControlControl slcc)
+            {
+                CrmConnectionDetail.IsFromSdkLoginCtrl = true;
+                CrmConnectionDetail.AuthType = slcc.AuthType;
+                CrmConnectionDetail.UseOnline = slcc.AuthType == AuthenticationProviderType.OnlineFederation;
+                CrmConnectionDetail.UseIfd = slcc.AuthType == AuthenticationProviderType.Federation;
+                CrmConnectionDetail.Organization = slcc.ConnectionManager.ConnectedOrgUniqueName;
+                CrmConnectionDetail.OrganizationFriendlyName = slcc.ConnectionManager.ConnectedOrgFriendlyName;
+                CrmConnectionDetail.OrganizationDataServiceUrl =
+                    slcc.ConnectionManager.ConnectedOrgPublishedEndpoints[EndpointType.OrganizationDataService];
+                CrmConnectionDetail.OrganizationServiceUrl =
+                    slcc.ConnectionManager.ConnectedOrgPublishedEndpoints[EndpointType.OrganizationService];
+                CrmConnectionDetail.WebApplicationUrl =
+                    slcc.ConnectionManager.ConnectedOrgPublishedEndpoints[EndpointType.WebApplication];
+                CrmConnectionDetail.ServerName = new Uri(CrmConnectionDetail.WebApplicationUrl).Host;
+                CrmConnectionDetail.OrganizationVersion = slcc.ConnectionManager.CrmSvc.ConnectedOrgVersion.ToString();
+                CrmConnectionDetail.ServiceClient = slcc.ConnectionManager.CrmSvc;
+                if (!string.IsNullOrEmpty(slcc.ConnectionManager.ClientId))
+                {
+                    CrmConnectionDetail.AzureAdAppId = new Guid(slcc.ConnectionManager.ClientId);
+                    CrmConnectionDetail.ReplyUrl = slcc.ConnectionManager.RedirectUri.AbsoluteUri;
+                }
+
+                if (CrmConnectionDetail.ServiceClient.OrganizationServiceProxy != null)
+                {
+                    CrmConnectionDetail.UserName =
+                        CrmConnectionDetail.ServiceClient.OrganizationServiceProxy.ClientCredentials.UserName.UserName ??
+                        CrmConnectionDetail.ServiceClient.OrganizationServiceProxy.ClientCredentials.Windows.ClientCredential
+                            .UserName;
+                }
+                else if (CrmConnectionDetail.ServiceClient.OrganizationWebProxyClient != null)
+                {
+                    CrmConnectionDetail.UserName = CrmConnectionDetail.ServiceClient.OAuthUserId;
+                }
+
+                DisplayControl<ConnectionSucceededControl>();
             }
         }
 
         private void btnReset_Click(object sender, EventArgs e)
         {
-            updatedDetail = new ConnectionDetail(true);
-            DisplayControl<ConnectionFirstStepControl>();
+            CrmConnectionDetail = new ConnectionDetail(true);
+            navigationHistory.Clear();
+            DisplayControl<StartPageControl>();
         }
 
         #endregion Buttons events
@@ -339,31 +363,83 @@ Note that this is required to validate this wizard",
                     return;
                 }
 
-                updatedDetail.Organization = crmSvc.ConnectedOrgUniqueName;
-                updatedDetail.OrganizationFriendlyName = crmSvc.ConnectedOrgFriendlyName;
-                updatedDetail.OrganizationUrlName = updatedDetail.OrganizationUrlName;
-                updatedDetail.OrganizationVersion = crmSvc.ConnectedOrgVersion.ToString();
-                updatedDetail.OrganizationDataServiceUrl = crmSvc.ConnectedOrgPublishedEndpoints[EndpointType.OrganizationDataService];
-                updatedDetail.OrganizationServiceUrl = crmSvc.ConnectedOrgPublishedEndpoints[EndpointType.OrganizationService];
-                updatedDetail.ServiceClient = crmSvc;
+                CrmConnectionDetail.Organization = crmSvc.ConnectedOrgUniqueName;
+                CrmConnectionDetail.OrganizationFriendlyName = crmSvc.ConnectedOrgFriendlyName;
+                CrmConnectionDetail.OrganizationUrlName = CrmConnectionDetail.OrganizationUrlName;
+                CrmConnectionDetail.OrganizationVersion = crmSvc.ConnectedOrgVersion.ToString();
+                CrmConnectionDetail.OrganizationDataServiceUrl = crmSvc.ConnectedOrgPublishedEndpoints[EndpointType.OrganizationDataService];
+                CrmConnectionDetail.OrganizationServiceUrl = crmSvc.ConnectedOrgPublishedEndpoints[EndpointType.OrganizationService];
+                CrmConnectionDetail.ServiceClient = crmSvc;
 
                 DisplayControl<ConnectionSucceededControl>();
             };
-            bw.RunWorkerAsync(updatedDetail);
+            bw.RunWorkerAsync(CrmConnectionDetail);
         }
 
         private void ConnectionWizard2_Load(object sender, EventArgs e)
         {
-            DisplayControl<ConnectionFirstStepControl>();
+            if (CrmConnectionDetail != null)
+            {
+                if (CrmConnectionDetail.UseConnectionString)
+                {
+                    DisplayControl<ConnectionStringControl>();
+                }
+                else if (CrmConnectionDetail.IsFromSdkLoginCtrl)
+                {
+                    // Should not be possible as updating a
+                    // connection from the SDK login control
+                    // is handled in ConnectionSelector class
+                    DisplayControl<SdkLoginControlControl>();
+                }
+                else
+                {
+                    DisplayControl<ConnectionFirstStepControl>();
+                }
+            }
+            else
+            {
+                DisplayControl<StartPageControl>();
+            }
         }
 
         private void DisplayControl<T>() where T : IConnectionWizardControl
         {
-            if (typeof(T) == typeof(ConnectionFirstStepControl))
+            btnBack.Visible = navigationHistory.Count > 0;
+            navigationHistory.Add(typeof(T));
+
+            if (typeof(T) == typeof(StartPageControl))
             {
+                pnlFooter.Visible = false;
+                lblHeader.Text = @"Choose a connection method";
+
+                ctrl = new StartPageControl();
+                ((StartPageControl)ctrl).TypeSelected += (sender, e) =>
+               {
+                   switch (((StartPageControl)ctrl).Type)
+                   {
+                       case ConnectionType.Wizard:
+                           DisplayControl<ConnectionFirstStepControl>();
+                           break;
+
+                       case ConnectionType.Sdk:
+                           DisplayControl<SdkLoginControlControl>();
+                           break;
+
+                       case ConnectionType.ConnectionString:
+                           DisplayControl<ConnectionStringControl>();
+                           break;
+                   }
+               };
+
+                btnReset.Visible = false;
+                btnNext.Visible = false;
+            }
+            else if (typeof(T) == typeof(ConnectionFirstStepControl))
+            {
+                pnlFooter.Visible = true;
                 lblHeader.Text = @"General information and options";
 
-                var timespan = updatedDetail?.Timeout;
+                var timespan = CrmConnectionDetail?.Timeout;
                 if (!timespan.HasValue || timespan.Value.Ticks == 0)
                 {
                     timespan = new TimeSpan(0, 2, 0);
@@ -371,85 +447,80 @@ Note that this is required to validate this wizard",
                 ctrl = new ConnectionFirstStepControl
                 {
                     // Connection Properties
-                    Url = updatedDetail?.OriginalUrl,
-                    UseIntegratedAuth = !isNew && !(updatedDetail?.IsCustomAuth ?? true),
-                    UseMfa = updatedDetail?.UseMfa ?? false,
+                    Url = CrmConnectionDetail?.OriginalUrl,
+                    UseIntegratedAuth = !isNew && !(CrmConnectionDetail?.IsCustomAuth ?? true),
+                    UseMfa = CrmConnectionDetail?.UseMfa ?? false,
                     Timeout = timespan.Value
                 };
 
-                llConnectionString.Visible = true;
-                btnBack.Visible = false;
-                btnReset.Visible = false;
+                btnReset.Visible = true;
                 btnNext.Visible = true;
                 btnNext.Text = @"Next";
             }
             else if (typeof(T) == typeof(ConnectionCredentialsControl))
             {
+                pnlFooter.Visible = true;
                 lblHeader.Text = @"User credentials";
 
                 ctrl = new ConnectionCredentialsControl
                 {
                     // Connection Properties
-                    Domain = updatedDetail?.UserDomain,
-                    Username = updatedDetail?.UserName,
-                    IsOnline = updatedDetail?.UseOnline ?? false,
-                    PasswordIsSet = !updatedDetail?.PasswordIsEmpty ?? false,
-                    SavePassword = updatedDetail?.SavePassword ?? false
+                    Domain = CrmConnectionDetail?.UserDomain,
+                    Username = CrmConnectionDetail?.UserName,
+                    IsOnline = CrmConnectionDetail?.UseOnline ?? false,
+                    PasswordIsSet = !CrmConnectionDetail?.PasswordIsEmpty ?? false,
+                    SavePassword = CrmConnectionDetail?.SavePassword ?? false
                 };
 
-                llConnectionString.Visible = false;
                 btnReset.Visible = true;
-                btnBack.Visible = true;
                 btnNext.Visible = true;
                 btnNext.Text = @"Next";
             }
             else if (typeof(T) == typeof(ConnectionIfdControl))
             {
+                pnlFooter.Visible = true;
                 lblHeader.Text = @"Internet Facing Deployment settings";
 
                 ctrl = new ConnectionIfdControl
                 {
                     // Connection Properties
-                    IsIfd = updatedDetail?.UseIfd ?? false,
-                    HomeRealmUrl = updatedDetail?.HomeRealmUrl
+                    IsIfd = CrmConnectionDetail?.UseIfd ?? false,
+                    HomeRealmUrl = CrmConnectionDetail?.HomeRealmUrl
                 };
 
-                llConnectionString.Visible = false;
                 btnReset.Visible = true;
-                btnBack.Visible = true;
                 btnNext.Visible = true;
                 btnNext.Text = @"Next";
             }
             else if (typeof(T) == typeof(ConnectionLoadingControl))
             {
+                pnlFooter.Visible = true;
                 lblHeader.Text = @"Connecting...";
 
                 ctrl = new ConnectionLoadingControl();
 
-                llConnectionString.Visible = false;
                 btnReset.Visible = false;
-                btnBack.Visible = false;
                 btnNext.Visible = false;
                 btnNext.Text = @"Next";
             }
             else if (typeof(T) == typeof(ConnectionSucceededControl))
             {
+                pnlFooter.Visible = true;
                 lblHeader.Text = @"Connection validated!";
 
                 ctrl = new ConnectionSucceededControl
                 {
-                    ConnectionName = updatedDetail.ConnectionName,
-                    ConnectionDetail = updatedDetail
+                    ConnectionName = CrmConnectionDetail.ConnectionName,
+                    ConnectionDetail = CrmConnectionDetail
                 };
 
-                llConnectionString.Visible = false;
                 btnReset.Visible = false;
-                btnBack.Visible = false;
                 btnNext.Visible = true;
                 btnNext.Text = @"Finish";
             }
             else if (typeof(T) == typeof(ConnectionFailedControl))
             {
+                pnlFooter.Visible = true;
                 lblHeader.Text = @"Connection failed!";
 
                 ctrl = new ConnectionFailedControl
@@ -457,52 +528,59 @@ Note that this is required to validate this wizard",
                     ErrorMEssage = lastError
                 };
 
-                llConnectionString.Visible = false;
                 btnReset.Visible = true;
-                btnBack.Visible = true;
                 btnNext.Visible = false;
                 btnNext.Text = @"Finish";
             }
             else if (typeof(T) == typeof(ConnectionStringControl))
             {
+                pnlFooter.Visible = true;
                 lblHeader.Text = @"Connectionstring settings";
 
                 ctrl = new ConnectionStringControl
                 {
-                    ConnectionString = updatedDetail.ConnectionString
+                    ConnectionString = CrmConnectionDetail.ConnectionString
                 };
 
-                llConnectionString.Visible = false;
                 btnReset.Visible = true;
-                btnBack.Visible = true;
                 btnNext.Visible = true;
                 btnNext.Text = @"Next";
             }
             else if (typeof(T) == typeof(ConnectionOauthControl))
             {
+                pnlFooter.Visible = true;
                 lblHeader.Text = @"OAuth protocol settings";
 
                 ctrl = new ConnectionOauthControl
                 {
-                    AzureAdAppId = updatedDetail.AzureAdAppId,
-                    ReplyUrl = updatedDetail.ReplyUrl
+                    AzureAdAppId = CrmConnectionDetail.AzureAdAppId,
+                    ReplyUrl = CrmConnectionDetail.ReplyUrl
                 };
 
-                llConnectionString.Visible = false;
                 btnReset.Visible = true;
-                btnBack.Visible = true;
                 btnNext.Visible = true;
                 btnNext.Text = @"Next";
+            }
+            else if (typeof(T) == typeof(SdkLoginControlControl))
+            {
+                pnlFooter.Visible = true;
+                lblHeader.Text = @"SDK Login control (Preview)";
+
+                if (!CrmConnectionDetail.ConnectionId.HasValue)
+                {
+                    CrmConnectionDetail.ConnectionId = Guid.NewGuid();
+                }
+
+                ctrl = new SdkLoginControlControl(CrmConnectionDetail.ConnectionId.Value, isNew);
+                ((SdkLoginControlControl)ctrl).ConnectionSucceeded += (sender, evt) => { btnNext_Click(btnNext, null); };
+
+                btnReset.Visible = true;
+                btnNext.Visible = false;
             }
 
         ((UserControl)ctrl).Dock = DockStyle.Fill;
             pnlMain.Controls.Clear();
             pnlMain.Controls.Add((UserControl)ctrl);
-        }
-
-        private void llConnectionString_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            DisplayControl<ConnectionStringControl>();
         }
     }
 }
