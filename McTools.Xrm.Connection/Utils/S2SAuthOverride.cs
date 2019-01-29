@@ -27,7 +27,7 @@ namespace McTools.Xrm.Connection.Utils
 
         private AuthenticationResult GetAccessTokenFromAzureAD(Uri orgUrl)
         {
-            var credentials = new ClientCredential(_connection.S2SClientId, _connection.S2SClientSecret);
+            var credentials = new ClientCredential(_connection.AzureAdAppId.ToString(), _connection.S2SClientSecret);
             var parameters = AuthenticationParameters.CreateFromResourceUrlAsync(orgUrl).Result;
             var context = new AuthenticationContext(parameters.Authority);
             var result = context.AcquireToken(parameters.Resource, credentials);

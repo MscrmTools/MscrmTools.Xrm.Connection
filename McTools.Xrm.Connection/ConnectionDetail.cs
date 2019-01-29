@@ -193,11 +193,6 @@ namespace McTools.Xrm.Connection
         public string RefreshToken { get; set; }
 
         /// <summary>
-        /// Client ID used for S2S Auth
-        /// </summary>
-        public string S2SClientId { get; set; }
-
-        /// <summary>
         /// Client Secret used for S2S Auth
         /// </summary>
         public string S2SClientSecret { get; set; }
@@ -296,7 +291,7 @@ namespace McTools.Xrm.Connection
                 return crmSvc;
             }
             
-            if (!String.IsNullOrEmpty(S2SClientId))
+            if (!String.IsNullOrEmpty(S2SClientSecret))
             {
                 ConnectOAuth();
             }
@@ -542,7 +537,6 @@ namespace McTools.Xrm.Connection
                 EnvironmentColor = EnvironmentColor,
                 EnvironmentTextColor = EnvironmentTextColor,
                 RefreshToken = RefreshToken,
-                S2SClientId = S2SClientId,
                 S2SClientSecret = S2SClientSecret,
                 TenantId = TenantId,
                 IsFromSdkLoginCtrl = IsFromSdkLoginCtrl
@@ -680,7 +674,6 @@ namespace McTools.Xrm.Connection
                     new XElement("IsFromSdkLoginCtrl", IsFromSdkLoginCtrl),
                     new XElement("LastUsedOn", LastUsedOn.ToString(CultureInfo.InvariantCulture.DateTimeFormat)),
                     new XElement("RefreshToken", RefreshToken),
-                    new XElement("S2SClientId", S2SClientId),
                     new XElement("S2SClientSecret", S2SClientSecret),
                     new XElement("TenantId", TenantId),
                     GetCustomInfoXElement());
