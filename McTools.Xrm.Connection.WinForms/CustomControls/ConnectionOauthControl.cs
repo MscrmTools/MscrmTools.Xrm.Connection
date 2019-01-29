@@ -35,6 +35,18 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
             set => txtReplyUrl.Text = value;
         }
 
+        public string ClientSecret
+        {
+            get => txtClientSecret.Text;
+            set => txtClientSecret.Text = value;
+        }
+
+        public string RefreshToken
+        {
+            get => txtRefreshToken.Text;
+            set => txtRefreshToken.Text = value;
+        }
+
         private void ConnectionOauthControl_Load(object sender, EventArgs e)
         {
             txtAzureAdAppId.Focus();

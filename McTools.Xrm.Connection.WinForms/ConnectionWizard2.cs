@@ -258,6 +258,8 @@ Note that this is required to validate this wizard",
             {
                 CrmConnectionDetail.AzureAdAppId = coc.AzureAdAppId;
                 CrmConnectionDetail.ReplyUrl = coc.ReplyUrl;
+                CrmConnectionDetail.S2SClientSecret = coc.ClientSecret;
+                CrmConnectionDetail.RefreshToken = coc.RefreshToken;
 
                 if (CrmConnectionDetail.AzureAdAppId == Guid.Empty
                     || string.IsNullOrEmpty(CrmConnectionDetail.ReplyUrl))
@@ -554,7 +556,9 @@ Note that this is required to validate this wizard",
                 ctrl = new ConnectionOauthControl
                 {
                     AzureAdAppId = CrmConnectionDetail.AzureAdAppId,
-                    ReplyUrl = CrmConnectionDetail.ReplyUrl
+                    ReplyUrl = CrmConnectionDetail.ReplyUrl,
+                    ClientSecret = CrmConnectionDetail.S2SClientSecret,
+                    RefreshToken = CrmConnectionDetail.RefreshToken
                 };
 
                 btnReset.Visible = true;

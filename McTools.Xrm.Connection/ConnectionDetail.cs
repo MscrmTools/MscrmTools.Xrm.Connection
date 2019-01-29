@@ -383,8 +383,8 @@ namespace McTools.Xrm.Connection
                 CrmServiceClient.AuthOverrideHook = new RefreshTokenAuthOverride(this);
             else
                 CrmServiceClient.AuthOverrideHook = new S2SAuthOverride(this);
-
-            crmSvc = new CrmServiceClient(new Uri(OrganizationServiceUrl), true);
+            
+            crmSvc = new CrmServiceClient(new Uri($"https://{ServerName}:{ServerPort}"), true);
 
             CrmServiceClient.AuthOverrideHook = null;
         }
