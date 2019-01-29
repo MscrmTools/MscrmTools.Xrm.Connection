@@ -346,6 +346,7 @@ namespace McTools.Xrm.Connection
                 try
                 {
                     var req = WebRequest.Create(path);
+                    req.Credentials = CredentialCache.DefaultCredentials;
                     using (req.GetResponse())
                     {
                         return true;

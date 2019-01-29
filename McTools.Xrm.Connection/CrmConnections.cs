@@ -261,7 +261,7 @@ namespace McTools.Xrm.Connection
                     cd.UseMfa = useMfaElement != null && useMfaElement.Value == "true";
 
                     var userDomainElement = elt.Element("UserDomain");
-                    if (timeOutElement != null)
+                    if (userDomainElement != null)
                     {
                         cd.UserDomain = userDomainElement.Value;
                     }
@@ -348,6 +348,7 @@ namespace McTools.Xrm.Connection
             if (Uri.IsWellFormedUriString(filePath, UriKind.Absolute))
             {
                 var req = WebRequest.Create(filePath);
+                req.Credentials = CredentialCache.DefaultCredentials;
                 var resp = req.GetResponse();
                 return resp.GetResponseStream();
             }
