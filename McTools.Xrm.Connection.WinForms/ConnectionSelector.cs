@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -96,6 +97,13 @@ namespace McTools.Xrm.Connection.WinForms
                 lvConnections.Groups.AddRange(groups);
                 lvConnections.EndUpdate();
             }
+
+            tsbNewConnection.Enabled = !ConnectionManager.Instance.ConnectionsList.IsReadOnly;
+            tsbUpdateConnection.Enabled = !ConnectionManager.Instance.ConnectionsList.IsReadOnly;
+            tsbCloneConnection.Enabled = !ConnectionManager.Instance.ConnectionsList.IsReadOnly;
+            tsbDeleteConnection.Enabled = !ConnectionManager.Instance.ConnectionsList.IsReadOnly;
+            tsbUpdatePassword.Enabled = !ConnectionManager.Instance.ConnectionsList.IsReadOnly;
+            tsb_UseMru.Enabled = !ConnectionManager.Instance.ConnectionsList.IsReadOnly;
         }
 
         private void LoadConnectionFile()
@@ -182,7 +190,7 @@ namespace McTools.Xrm.Connection.WinForms
             {
                 BValidateClick(sender, e);
             }
-            else
+            else if (!ConnectionManager.Instance.ConnectionsList.IsReadOnly)
             {
                 tsbUpdateConnection_Click(sender, null);
             }
@@ -225,7 +233,7 @@ namespace McTools.Xrm.Connection.WinForms
                     {
                         indexToSelect = index;
                     }
-                    else
+                    else if (!Uri.IsWellFormedUriString(file.Path, UriKind.Absolute))
                     {
                         tsbMoveToExistingFile.DropDownItems.Add(new ToolStripButton
                         {
@@ -247,7 +255,7 @@ namespace McTools.Xrm.Connection.WinForms
             tscbbConnectionsFile.SelectedIndex = indexToSelect;
             tscbbConnectionsFile.SelectedIndexChanged += tscbbConnectionsFile_SelectedIndexChanged;
 
-            if (tscbbConnectionsFile.SelectedItem != null && !File.Exists(((ConnectionFile)tscbbConnectionsFile.SelectedItem).Path))
+            if (tscbbConnectionsFile.SelectedItem != null && !ConnectionManager.FileExists(((ConnectionFile)tscbbConnectionsFile.SelectedItem).Path))
             {
                 CleanFileList((ConnectionFile)tscbbConnectionsFile.SelectedItem);
                 return;
@@ -397,7 +405,7 @@ namespace McTools.Xrm.Connection.WinForms
             }
             else
             {
-                if (!File.Exists(connectionFile.Path))
+                if (!ConnectionManager.FileExists(connectionFile.Path))
                 {
                     CleanFileList(connectionFile);
                     return;
@@ -415,7 +423,7 @@ namespace McTools.Xrm.Connection.WinForms
                 tsbMoveToExistingFile.DropDownItems.Clear();
                 foreach (var file in ConnectionsList.Instance.Files.OrderBy(k => k.Name))
                 {
-                    if (connectionFile.Path == file.Path)
+                    if (connectionFile.Path == file.Path || Uri.IsWellFormedUriString(file.Path, UriKind.Absolute))
                     {
                         continue;
                     }

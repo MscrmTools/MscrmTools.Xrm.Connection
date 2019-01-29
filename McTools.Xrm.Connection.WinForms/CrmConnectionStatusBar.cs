@@ -229,7 +229,7 @@ namespace McTools.Xrm.Connection.WinForms
                                 "McTools.Xrm.Connection.WinForms.Resources.server.png");
                     }
 
-                    BuildActionItems(item);
+                    BuildActionItems(item, connections.IsReadOnly);
                     if (!mergeConnectionFiles && filesCount > 1)
                     {
                         fileItem.DropDownItems.Add(item);
@@ -248,14 +248,17 @@ namespace McTools.Xrm.Connection.WinForms
                     }
                 }
 
-                var newConnectionItem = new ToolStripMenuItem();
-                newConnectionItem.Text = "Create new connection";
-                newConnectionItem.Image = (Image)resources.GetObject("server_add");
-                newConnectionItem.Click += newConnectionItem_Click;
-
-                if (!mergeConnectionFiles && filesCount > 1)
+                if (!connections.IsReadOnly)
                 {
-                    fileItem.DropDownItems.Add(newConnectionItem);
+                    var newConnectionItem = new ToolStripMenuItem();
+                    newConnectionItem.Text = "Create new connection";
+                    newConnectionItem.Image = (Image)resources.GetObject("server_add");
+                    newConnectionItem.Click += newConnectionItem_Click;
+
+                    if (!mergeConnectionFiles && filesCount > 1)
+                    {
+                        fileItem.DropDownItems.Add(newConnectionItem);
+                    }
                 }
             }
 
@@ -293,7 +296,8 @@ namespace McTools.Xrm.Connection.WinForms
         /// Creates the three action menus for a connection
         /// </summary>
         /// <param name="item">Menu where to add the actions</param>
-        private void BuildActionItems(ToolStripMenuItem item)
+        /// <param name="readOnly">Indicates if the connection is from a read-only list</param>
+        private void BuildActionItems(ToolStripMenuItem item, bool readOnly)
         {
             ToolStripMenuItem cItem = new ToolStripMenuItem();
             cItem.Click += actionItem_Click;
@@ -301,17 +305,20 @@ namespace McTools.Xrm.Connection.WinForms
             cItem.Image = (Image)resources.GetObject("server_connect");
             item.DropDownItems.Add(cItem);
 
-            ToolStripMenuItem eItem = new ToolStripMenuItem();
-            eItem.Click += actionItem_Click;
-            eItem.Text = "Edit";
-            eItem.Image = (Image)resources.GetObject("server_edit");
-            item.DropDownItems.Add(eItem);
+            if (!readOnly)
+            {
+                ToolStripMenuItem eItem = new ToolStripMenuItem();
+                eItem.Click += actionItem_Click;
+                eItem.Text = "Edit";
+                eItem.Image = (Image)resources.GetObject("server_edit");
+                item.DropDownItems.Add(eItem);
 
-            ToolStripMenuItem dItem = new ToolStripMenuItem();
-            dItem.Click += actionItem_Click;
-            dItem.Text = "Delete";
-            dItem.Image = (Image)resources.GetObject("server_delete");
-            item.DropDownItems.Add(dItem);
+                ToolStripMenuItem dItem = new ToolStripMenuItem();
+                dItem.Click += actionItem_Click;
+                dItem.Text = "Delete";
+                dItem.Image = (Image)resources.GetObject("server_delete");
+                item.DropDownItems.Add(dItem);
+            }
         }
 
         /// <summary>
@@ -447,7 +454,7 @@ namespace McTools.Xrm.Connection.WinForms
                             "McTools.Xrm.Connection.WinForms.Resources.server.png");
                 }
 
-                BuildActionItems(item);
+                BuildActionItems(item, false);
 
                 if (parentItem.DropDownItems.Count == 1)
                 {
