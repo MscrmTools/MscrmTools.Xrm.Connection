@@ -525,7 +525,8 @@ namespace McTools.Xrm.Connection
                 EnvironmentTextColor = EnvironmentTextColor,
                 RefreshToken = RefreshToken,
                 S2SClientId = S2SClientId,
-                S2SClientSecret = S2SClientSecret
+                S2SClientSecret = S2SClientSecret,
+                TenantId = TenantId
             };
         }
 
@@ -661,6 +662,7 @@ namespace McTools.Xrm.Connection
                     new XElement("RefreshToken", RefreshToken),
                     new XElement("S2SClientId", S2SClientId),
                     new XElement("S2SClientSecret", S2SClientSecret),
+                    new XElement("TenantId", TenantId),
                     GetCustomInfoXElement());
         }
 
