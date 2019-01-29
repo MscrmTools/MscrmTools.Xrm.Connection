@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Xml.Linq;
+using McTools.Xrm.Connection.Utils;
 
 namespace McTools.Xrm.Connection
 {
@@ -186,6 +187,16 @@ namespace McTools.Xrm.Connection
 
         public string WebApplicationUrl { get; set; }
 
+        /// <summary>
+        /// OAuth Refresh Token
+        /// </summary>
+        public string RefreshToken { get; set; }
+
+        /// <summary>
+        /// Client Secret used for S2S Auth
+        /// </summary>
+        public string S2SClientSecret { get; set; }
+
         #endregion Propriétés
 
         #region Constructeur
@@ -274,8 +285,12 @@ namespace McTools.Xrm.Connection
 
                 return crmSvc;
             }
-
-            if (UseOnline)
+            
+            if (!String.IsNullOrEmpty(S2SClientSecret))
+            {
+                ConnectOAuth();
+            }
+            else if (UseOnline)
             {
                 ConnectOnline();
             }
@@ -360,6 +375,18 @@ namespace McTools.Xrm.Connection
             EnvironmentText = editedConnection.EnvironmentText;
             EnvironmentColor = editedConnection.EnvironmentColor;
             EnvironmentTextColor = editedConnection.EnvironmentTextColor;
+        }
+
+        private void ConnectOAuth()
+        {
+            if (!String.IsNullOrEmpty(RefreshToken))
+                CrmServiceClient.AuthOverrideHook = new RefreshTokenAuthOverride(this);
+            else
+                CrmServiceClient.AuthOverrideHook = new S2SAuthOverride(this);
+            
+            crmSvc = new CrmServiceClient(new Uri($"https://{ServerName}:{ServerPort}"), true);
+
+            CrmServiceClient.AuthOverrideHook = null;
         }
 
         private void ConnectIfd()
@@ -504,6 +531,8 @@ namespace McTools.Xrm.Connection
                 EnvironmentText = EnvironmentText,
                 EnvironmentColor = EnvironmentColor,
                 EnvironmentTextColor = EnvironmentTextColor,
+                RefreshToken = RefreshToken,
+                S2SClientSecret = S2SClientSecret,
                 IsFromSdkLoginCtrl = IsFromSdkLoginCtrl
             };
         }
@@ -638,6 +667,8 @@ namespace McTools.Xrm.Connection
                     new XElement("EnvironmentTextColor", ColorTranslator.ToHtml(EnvironmentTextColor ?? Color.FromArgb(255, 255, 255, 255))),
                     new XElement("IsFromSdkLoginCtrl", IsFromSdkLoginCtrl),
                     new XElement("LastUsedOn", LastUsedOn.ToString(CultureInfo.InvariantCulture.DateTimeFormat)),
+                    new XElement("RefreshToken", RefreshToken),
+                    new XElement("S2SClientSecret", S2SClientSecret),
                     GetCustomInfoXElement());
         }
 

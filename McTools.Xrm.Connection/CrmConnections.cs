@@ -326,6 +326,18 @@ namespace McTools.Xrm.Connection
                         cd.LastUsedOn = DateTime.Parse(lastUsedOnElt.Value, CultureInfo.InvariantCulture.DateTimeFormat);
                     }
 
+                    var refreshTokenElt = elt.Element("RefreshToken");
+                    if (refreshTokenElt != null)
+                    {
+                        cd.RefreshToken = refreshTokenElt.Value;
+                    }
+
+                    var s2sClientSecretElt = elt.Element("S2SClientSecret");
+                    if (s2sClientSecretElt != null)
+                    {
+                        cd.S2SClientSecret = s2sClientSecretElt.Value;
+                    }
+
                     var isFromSdkLoginCtrlElt = elt.Element("IsFromSdkLoginCtrl");
                     if (isFromSdkLoginCtrlElt != null)
                     {

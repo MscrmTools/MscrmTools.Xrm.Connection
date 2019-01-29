@@ -35,6 +35,10 @@
             this.txtAzureAdAppId = new System.Windows.Forms.TextBox();
             this.lblReplyUrl = new System.Windows.Forms.Label();
             this.txtReplyUrl = new System.Windows.Forms.TextBox();
+            this.lblClientSecret = new System.Windows.Forms.Label();
+            this.txtClientSecret = new System.Windows.Forms.TextBox();
+            this.lblRefreshToken = new System.Windows.Forms.Label();
+            this.txtRefreshToken = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -67,19 +71,22 @@
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 300F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.Controls.Add(this.txtRefreshToken, 1, 3);
+            this.tableLayoutPanel1.Controls.Add(this.lblRefreshToken, 0, 3);
+            this.tableLayoutPanel1.Controls.Add(this.txtClientSecret, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.lblAzureAdAppId, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.txtAzureAdAppId, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.lblReplyUrl, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.txtReplyUrl, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.lblClientSecret, 0, 2);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 45);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 3;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.RowCount = 4;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(900, 196);
             this.tableLayoutPanel1.TabIndex = 15;
             // 
@@ -116,11 +123,50 @@
             // 
             // txtReplyUrl
             // 
+            this.txtReplyUrl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtReplyUrl.Location = new System.Drawing.Point(304, 60);
             this.txtReplyUrl.Margin = new System.Windows.Forms.Padding(4, 10, 4, 4);
             this.txtReplyUrl.Name = "txtReplyUrl";
             this.txtReplyUrl.Size = new System.Drawing.Size(592, 29);
             this.txtReplyUrl.TabIndex = 2;
+            // 
+            // lblClientSecret
+            // 
+            this.lblClientSecret.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblClientSecret.Location = new System.Drawing.Point(3, 66);
+            this.lblClientSecret.Name = "lblClientSecret";
+            this.lblClientSecret.Size = new System.Drawing.Size(212, 33);
+            this.lblClientSecret.TabIndex = 15;
+            this.lblClientSecret.Text = "Client Secret (OAuth or S2S)";
+            this.lblClientSecret.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // txtClientSecret
+            // 
+            this.txtClientSecret.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtClientSecret.Location = new System.Drawing.Point(221, 73);
+            this.txtClientSecret.Margin = new System.Windows.Forms.Padding(3, 7, 3, 3);
+            this.txtClientSecret.Name = "txtClientSecret";
+            this.txtClientSecret.Size = new System.Drawing.Size(592, 29);
+            this.txtClientSecret.TabIndex = 16;
+            // 
+            // lblRefreshToken
+            // 
+            this.lblRefreshToken.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblRefreshToken.Location = new System.Drawing.Point(3, 99);
+            this.lblRefreshToken.Name = "lblRefreshToken";
+            this.lblRefreshToken.Size = new System.Drawing.Size(212, 33);
+            this.lblRefreshToken.TabIndex = 17;
+            this.lblRefreshToken.Text = "Refresh Token (OAuth)";
+            this.lblRefreshToken.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // txtRefreshToken
+            // 
+            this.txtRefreshToken.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtRefreshToken.Location = new System.Drawing.Point(221, 106);
+            this.txtRefreshToken.Margin = new System.Windows.Forms.Padding(3, 7, 3, 3);
+            this.txtRefreshToken.Name = "txtRefreshToken";
+            this.txtRefreshToken.Size = new System.Drawing.Size(592, 29);
+            this.txtRefreshToken.TabIndex = 18;
             // 
             // ConnectionOauthControl
             // 
@@ -147,5 +193,9 @@
         private System.Windows.Forms.TextBox txtAzureAdAppId;
         private System.Windows.Forms.Label lblReplyUrl;
         private System.Windows.Forms.TextBox txtReplyUrl;
+        private System.Windows.Forms.TextBox txtClientSecret;
+        private System.Windows.Forms.Label lblClientSecret;
+        private System.Windows.Forms.TextBox txtRefreshToken;
+        private System.Windows.Forms.Label lblRefreshToken;
     }
 }

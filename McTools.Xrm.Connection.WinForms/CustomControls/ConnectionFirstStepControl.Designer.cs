@@ -116,7 +116,7 @@
             this.lblUseMfa.Name = "lblUseMfa";
             this.lblUseMfa.Size = new System.Drawing.Size(312, 50);
             this.lblUseMfa.TabIndex = 16;
-            this.lblUseMfa.Text = "Use Multi Factor Authentication";
+            this.lblUseMfa.Text = "Use Multi Factor Auth, OAuth or S2S";
             this.lblUseMfa.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // chkUseMfa
