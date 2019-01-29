@@ -10,11 +10,8 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Xml.Linq;
 using McTools.Xrm.Connection.Utils;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
-using Newtonsoft.Json;
 
 namespace McTools.Xrm.Connection
 {
@@ -299,13 +296,9 @@ namespace McTools.Xrm.Connection
                 return crmSvc;
             }
             
-            if (!String.IsNullOrEmpty(RefreshToken))
+            if (!String.IsNullOrEmpty(S2SClientId))
             {
-                ConnectRefreshToken();
-            }
-            else if (!String.IsNullOrEmpty(S2SClientId))
-            {
-                ConnectS2S();
+                ConnectOAuth();
             }
             else if (UseOnline)
             {
@@ -394,95 +387,16 @@ namespace McTools.Xrm.Connection
             EnvironmentTextColor = editedConnection.EnvironmentTextColor;
         }
 
-        private void ConnectRefreshToken()
+        private void ConnectOAuth()
         {
-            AccessToken TokenGenerator(AccessToken token) => GetOAuthAccessToken(OrganizationServiceUrl, ReplyUrl, null, token?.RefreshToken ?? RefreshToken, S2SClientId, S2SClientSecret);
-
-            var sdkService = new ManagedTokenOrganizationWebProxyClient(new Uri(OrganizationServiceUrl + "/web?SdkClientVersion=9.0"), false, TokenGenerator);
-
-            crmSvc = new CrmServiceClient(sdkService);
-        }
-
-        /// <summary>
-        /// Gets the OAuth access token from the D365 OAuth redirect
-        /// </summary>
-        /// <param name="orgUri">The Url of the D365 instance we want to access</param>
-        /// <param name="redirectUrl">The Url of the local website the user has been redirected to</param>
-        /// <param name="code">The code parameter supplied in the query string of the redirect by Microsoft</param>
-        /// <param name="refreshToken">The refresh token to use to get the new access token</param>
-        /// <param name="clientId">The Client ID that identifies the calling application</param>
-        /// <param name="clientSecret">The Client Secret to authenticate the calling application</param>
-        /// <returns>Details of the authentication that has been established</returns>
-        private static AccessToken GetOAuthAccessToken(string orgUri, string redirectUrl, string code, string refreshToken, string clientId, string clientSecret)
-        {
-            // Get the main URL of the instance to be used for authentication
-            orgUri = new Uri(new Uri(orgUri), "/").ToString();
-
-            var req = WebRequest.CreateHttp("https://login.microsoft.com/common/oauth2/token");
-            req.Method = "POST";
-            req.ContentType = "application/x-www-form-urlencoded";
-            var oauthParams = new Dictionary<string, string>
-            {
-                {"client_id", clientId },
-                {"client_secret", clientSecret },
-                {"redirect_uri", redirectUrl },
-                {"resource", orgUri }
-            };
-
-            if (!String.IsNullOrEmpty(code))
-            {
-                oauthParams["grant_type"] = "authorization_code";
-                oauthParams["code"] = code;
-            }
-            else if (!String.IsNullOrEmpty(refreshToken))
-            {
-                oauthParams["grant_type"] = "refresh_token";
-                oauthParams["refresh_token"] = refreshToken;
-            }
+            if (!String.IsNullOrEmpty(RefreshToken))
+                CrmServiceClient.AuthOverrideHook = new RefreshTokenAuthOverride(this);
             else
-            {
-                throw new ArgumentNullException(nameof(code));
-            }
+                CrmServiceClient.AuthOverrideHook = new S2SAuthOverride(this);
 
-            using (var reqStream = req.GetRequestStream())
-            using (var reqWriter = new StreamWriter(reqStream))
-            {
-                reqWriter.Write(String.Join("&", oauthParams.Select(param => HttpUtility.UrlEncode(param.Key) + "=" + HttpUtility.UrlEncode(param.Value))));
-            }
+            crmSvc = new CrmServiceClient(new Uri(OrganizationServiceUrl), true);
 
-            try
-            {
-                using (var resp = req.GetResponse())
-                using (var respStream = resp.GetResponseStream())
-                using (var respReader = new StreamReader(respStream))
-                using (var jsonReader = new JsonTextReader(respReader))
-                {
-                    var token = JsonSerializer.CreateDefault().Deserialize<AccessToken>(jsonReader);
-
-                    return token;
-                }
-            }
-            catch (WebException ex)
-            {
-                using (var resp = ex.Response)
-                using (var respStream = resp.GetResponseStream())
-                using (var respReader = new StreamReader(respStream))
-                using (var jsonReader = new JsonTextReader(respReader))
-                {
-                    AccessToken token;
-
-                    try
-                    {
-                        token = JsonSerializer.CreateDefault().Deserialize<AccessToken>(jsonReader);
-                    }
-                    catch (JsonSerializationException)
-                    {
-                        token = JsonSerializer.CreateDefault().Deserialize<AccessToken[]>(jsonReader)[0];
-                    }
-
-                    throw new ApplicationException(token.ErrorDescription ?? token.Message);
-                }
-            }
+            CrmServiceClient.AuthOverrideHook = null;
         }
 
         private void ConnectIfd()
@@ -516,27 +430,6 @@ namespace McTools.Xrm.Connection
                     true,
                     UseSsl);
             }
-        }
-
-        private void ConnectS2S()
-        {
-            AccessToken TokenGenerator(AccessToken _)
-            {
-                const string aadInstance = "https://login.microsoftonline.com/";
-
-                var clientcred = new ClientCredential(S2SClientId, S2SClientSecret);
-                var authenticationContext = new AuthenticationContext(aadInstance + TenantId);
-                var authenticationResult = authenticationContext.AcquireToken(WebApplicationUrl, clientcred);
-                return new AccessToken
-                {
-                    Token = authenticationResult.AccessToken,
-                    ExpiresOn = (long)(authenticationResult.ExpiresOn.UtcDateTime - new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds
-                };
-            }
-
-            var sdkService = new ManagedTokenOrganizationWebProxyClient(new Uri(OrganizationServiceUrl + "/web?SdkClientVersion=9.0"), false, TokenGenerator);
-
-            crmSvc = new CrmServiceClient(sdkService);
         }
 
         private void ConnectOnline()
