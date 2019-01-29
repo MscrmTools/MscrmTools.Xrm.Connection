@@ -198,6 +198,11 @@ namespace McTools.Xrm.Connection
         /// </summary>
         public string S2SClientSecret { get; set; }
 
+        /// <summary>
+        /// AAD Tenant ID for Org used for S2S Auth
+        /// </summary>
+        public string TenantId { get; set; }
+
         #endregion Propriétés
 
         #region Constructeur
