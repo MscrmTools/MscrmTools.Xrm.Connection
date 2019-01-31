@@ -258,8 +258,11 @@ Note that this is required to validate this wizard",
             {
                 CrmConnectionDetail.AzureAdAppId = coc.AzureAdAppId;
                 CrmConnectionDetail.ReplyUrl = coc.ReplyUrl;
-                CrmConnectionDetail.S2SClientSecret = coc.ClientSecret;
-                CrmConnectionDetail.RefreshToken = coc.RefreshToken;
+
+                if (coc.ClientSecretChanged)
+                {
+                    CrmConnectionDetail.SetClientSecret(coc.ClientSecret);
+                }
 
                 if (CrmConnectionDetail.AzureAdAppId == Guid.Empty
                     || string.IsNullOrEmpty(CrmConnectionDetail.ReplyUrl))
@@ -273,7 +276,7 @@ Note that this is required to validate this wizard",
                     return;
                 }
 
-                if (!String.IsNullOrEmpty(CrmConnectionDetail.S2SClientSecret))
+                if (!CrmConnectionDetail.ClientSecretIsEmpty)
                 {
                     CrmConnectionDetail.IsCustomAuth = false;
                     DisplayControl<ConnectionLoadingControl>();
@@ -381,6 +384,13 @@ Note that this is required to validate this wizard",
                 CrmConnectionDetail.OrganizationDataServiceUrl = crmSvc.ConnectedOrgPublishedEndpoints[EndpointType.OrganizationDataService];
                 CrmConnectionDetail.OrganizationServiceUrl = crmSvc.ConnectedOrgPublishedEndpoints[EndpointType.OrganizationService];
                 CrmConnectionDetail.ServiceClient = crmSvc;
+                CrmConnectionDetail.UserName = CrmConnectionDetail.UserName?.Length > 0
+                    ? CrmConnectionDetail.UserName
+                    : crmSvc.OAuthUserId?.Length > 0
+                        ? crmSvc.OAuthUserId
+                        : CrmConnectionDetail.AzureAdAppId != Guid.Empty
+                            ? CrmConnectionDetail.AzureAdAppId.ToString("B")
+                            : null;
 
                 DisplayControl<ConnectionSucceededControl>();
             };
@@ -389,7 +399,7 @@ Note that this is required to validate this wizard",
 
         private void ConnectionWizard2_Load(object sender, EventArgs e)
         {
-            if (CrmConnectionDetail != null)
+            if (!isNew)
             {
                 if (CrmConnectionDetail.UseConnectionString)
                 {
@@ -416,7 +426,9 @@ Note that this is required to validate this wizard",
         private void DisplayControl<T>() where T : IConnectionWizardControl
         {
             btnBack.Visible = navigationHistory.Count > 0;
-            navigationHistory.Add(typeof(T));
+
+            if (typeof(T) != typeof(ConnectionLoadingControl))
+                navigationHistory.Add(typeof(T));
 
             if (typeof(T) == typeof(StartPageControl))
             {
@@ -566,8 +578,7 @@ Note that this is required to validate this wizard",
                 {
                     AzureAdAppId = CrmConnectionDetail.AzureAdAppId,
                     ReplyUrl = CrmConnectionDetail.ReplyUrl,
-                    ClientSecret = CrmConnectionDetail.S2SClientSecret,
-                    RefreshToken = CrmConnectionDetail.RefreshToken
+                    HasClientSecret = !CrmConnectionDetail.ClientSecretIsEmpty
                 };
 
                 btnReset.Visible = true;

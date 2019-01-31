@@ -2,9 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -516,6 +514,7 @@ namespace McTools.Xrm.Connection.WinForms
                 var item = new ListViewItem(newConnection.ConnectionName);
                 item.SubItems.Add(newConnection.ServerName);
                 item.SubItems.Add(newConnection.Organization);
+                item.SubItems.Add(newConnection.UserName);
                 item.SubItems.Add(newConnection.OrganizationVersion);
                 item.Tag = newConnection;
                 item.Group = GetGroup(newConnection);

@@ -42,6 +42,11 @@ namespace McTools.Xrm.Connection
         /// </summary>
         public List<ConnectionDetail> Connections { get; set; }
 
+        /// <summary>
+        /// Indicates if this connection list can be updated
+        /// </summary>
+        public bool IsReadOnly { get; private set; }
+
         public string Name { get; set; }
 
         public string Password
@@ -73,11 +78,6 @@ namespace McTools.Xrm.Connection
             get { return _userName; }
             set { _userName = value; }
         }
-
-        /// <summary>
-        /// Indicates if this connection list can be updated
-        /// </summary>
-        public bool IsReadOnly { get; private set; }
 
         #endregion Propriétés
 
@@ -335,7 +335,7 @@ namespace McTools.Xrm.Connection
                     var s2sClientSecretElt = elt.Element("S2SClientSecret");
                     if (s2sClientSecretElt != null)
                     {
-                        cd.S2SClientSecret = s2sClientSecretElt.Value;
+                        cd.SetClientSecret(s2sClientSecretElt.Value, true);
                     }
 
                     var isFromSdkLoginCtrlElt = elt.Element("IsFromSdkLoginCtrl");
@@ -359,19 +359,6 @@ namespace McTools.Xrm.Connection
             }
 
             return crmConnections;
-        }
-
-        private static Stream OpenStream(string filePath)
-        {
-            if (Uri.IsWellFormedUriString(filePath, UriKind.Absolute))
-            {
-                var req = WebRequest.Create(filePath);
-                req.Credentials = CredentialCache.DefaultCredentials;
-                var resp = req.GetResponse();
-                return resp.GetResponseStream();
-            }
-
-            return File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
         }
 
         public ConnectionDetail CloneConnection(ConnectionDetail detail)
@@ -437,6 +424,19 @@ namespace McTools.Xrm.Connection
         public override string ToString()
         {
             return Name;
+        }
+
+        private static Stream OpenStream(string filePath)
+        {
+            if (Uri.IsWellFormedUriString(filePath, UriKind.Absolute))
+            {
+                var req = WebRequest.Create(filePath);
+                req.Credentials = CredentialCache.DefaultCredentials;
+                var resp = req.GetResponse();
+                return resp.GetResponseStream();
+            }
+
+            return File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
         }
 
         #endregion methods

@@ -247,6 +247,33 @@ namespace McTools.Xrm.Connection
         #region Methods
 
         /// <summary>
+        /// Checks if a configuration file exists
+        /// </summary>
+        /// <param name="path">The file to check for</param>
+        /// <returns><c>true</c> if the <paramref name="path"/> exists, or <c>false</c> otherwise</returns>
+        public static bool FileExists(string path)
+        {
+            if (Uri.IsWellFormedUriString(path, UriKind.Absolute))
+            {
+                try
+                {
+                    var req = WebRequest.Create(path);
+                    req.Credentials = CredentialCache.DefaultCredentials;
+                    using (req.GetResponse())
+                    {
+                        return true;
+                    }
+                }
+                catch (WebException)
+                {
+                    return false;
+                }
+            }
+
+            return File.Exists(path);
+        }
+
+        /// <summary>
         /// Launch the Crm connection process
         /// </summary>
         /// <param name="details">Details of the Crm connection</param>
@@ -334,34 +361,6 @@ namespace McTools.Xrm.Connection
                 throw new Exception("Error while deserializing configuration file. Details: " + error.Message);
             }
         }
-
-        /// <summary>
-        /// Checks if a configuration file exists
-        /// </summary>
-        /// <param name="path">The file to check for</param>
-        /// <returns><c>true</c> if the <paramref name="path"/> exists, or <c>false</c> otherwise</returns>
-        public static bool FileExists(string path)
-        {
-            if (Uri.IsWellFormedUriString(path, UriKind.Absolute))
-            {
-                try
-                {
-                    var req = WebRequest.Create(path);
-                    req.Credentials = CredentialCache.DefaultCredentials;
-                    using (req.GetResponse())
-                    {
-                        return true;
-                    }
-                }
-                catch (WebException)
-                {
-                    return false;
-                }
-            }
-
-            return File.Exists(path);
-        }
-
 
         /// <summary>
         /// Saves Crm connections list to file
@@ -462,7 +461,7 @@ namespace McTools.Xrm.Connection
                 if (endpoints == null)
                 {
                     // Some connection methods do not automatically retrieve the endpoints - get them now
-                    var orgDetails = (RetrieveCurrentOrganizationResponse) service.Execute(new RetrieveCurrentOrganizationRequest());
+                    var orgDetails = (RetrieveCurrentOrganizationResponse)service.Execute(new RetrieveCurrentOrganizationRequest());
                     endpoints = orgDetails.Detail.Endpoints;
                 }
 
@@ -478,6 +477,7 @@ namespace McTools.Xrm.Connection
                     currentConnection.OrganizationVersion = detail.OrganizationVersion;
                     currentConnection.SavePassword = detail.SavePassword;
                     detail.CopyPasswordTo(currentConnection);
+                    detail.CopyClientSecretTo(currentConnection);
                 }
 
                 detail.LastUsedOn = DateTime.Now;
