@@ -20,7 +20,7 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
             tt.SetToolTip(btnStandard, @"Connect using the wizard included with XrmToolBox");
             tt.SetToolTip(btnSdkLoginControl, @"Connect using the wizard included in official Microsoft tools like Plugin Registration Tool or Configuration Manager.
 
-Connections created with this wizard cannot be transported across multiple computers");
+Connections created with this wizard cannot be transported across multiple computers (Preview)");
             tt.SetToolTip(btnConnectionString, @"Connect by writing your own connection string");
         }
 
