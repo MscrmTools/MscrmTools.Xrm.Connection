@@ -122,8 +122,26 @@ namespace McTools.Xrm.Connection.WinForms
 
             preConnectionRequestAction?.Invoke();
 
-            ConnectionManager.Instance.ConnectToServer(new List<ConnectionDetail> { connectionDetail }, connectionParameter);
+            if (connectionDetail.IsFromSdkLoginCtrl)
+            {
+                var cd = connectionDetail;
 
+                var ctrl = new CRMLoginForm1(cd.ConnectionId.Value);
+                if (cd.AzureAdAppId != Guid.Empty)
+                {
+                    ctrl.AppId = cd.AzureAdAppId.ToString();
+                    ctrl.RedirectUri = new Uri(cd.ReplyUrl);
+                }
+
+                ctrl.ShowDialog();
+
+                ConnectionManager.Instance.ConnectToServerWithSdkLoginCtrl(cd, ctrl.CrmConnectionMgr.CrmSvc,
+                    connectionParameter);
+            }
+            else
+            {
+                ConnectionManager.Instance.ConnectToServer(new List<ConnectionDetail> { connectionDetail }, connectionParameter);
+            }
             return true;
         }
 
