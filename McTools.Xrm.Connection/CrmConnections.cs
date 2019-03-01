@@ -51,20 +51,20 @@ namespace McTools.Xrm.Connection
 
         public string Password
         {
-            get { return _password; }
-            set { _password = value; }
+            get => _password;
+            set => _password = value;
         }
 
         public string ProxyAddress
         {
-            get { return _proxyAddress; }
-            set { _proxyAddress = value; }
+            get => _proxyAddress;
+            set => _proxyAddress = value;
         }
 
         public bool UseCustomProxy
         {
-            get { return _useCustomProxy; }
-            set { _useCustomProxy = value; }
+            get => _useCustomProxy;
+            set => _useCustomProxy = value;
         }
 
         public bool UseDefaultCredentials { get; set; }
@@ -75,8 +75,8 @@ namespace McTools.Xrm.Connection
 
         public string UserName
         {
-            get { return _userName; }
-            set { _userName = value; }
+            get => _userName;
+            set => _userName = value;
         }
 
         #endregion Propriétés

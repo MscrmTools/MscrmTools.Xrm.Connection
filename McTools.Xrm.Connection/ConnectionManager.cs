@@ -523,17 +523,7 @@ namespace McTools.Xrm.Connection
                 {
                     if (parameters[3] is CrmServiceClient service)
                     {
-                        IOrganizationService ios = service.OrganizationServiceProxy;
-                        if (ios == null)
-                        {
-                            ios = service.OrganizationWebProxyClient;
-                            if (ios == null)
-                            {
-                                SendFailureMessage(parameters, "Unable to find an instanciated service");
-                            }
-                        }
-
-                        SendSuccessMessage(ios, parameters);
+                        SendSuccessMessage(service, parameters);
                     }
                 }
             }

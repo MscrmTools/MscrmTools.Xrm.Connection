@@ -154,10 +154,10 @@ namespace McTools.Xrm.Connection.WinForms
         /// <summary>
         /// Deletes a Crm connection from the connections list
         /// </summary>
-        /// <param name="connectionToDelete">Details of the connection to delete</param>
+        /// <param name="connectionId">Id of the connection to delete</param>
         public void DeleteConnection(Guid? connectionId)
         {
-            var connection = ConnectionManager.Instance.ConnectionsList.Connections.Where(x => x.ConnectionId == connectionId).FirstOrDefault();
+            var connection = ConnectionManager.Instance.ConnectionsList.Connections.FirstOrDefault(x => x.ConnectionId == connectionId);
 
             if (connection != null)
             {

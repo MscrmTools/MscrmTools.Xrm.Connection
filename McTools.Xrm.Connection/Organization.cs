@@ -8,7 +8,7 @@ namespace McTools.Xrm.Connection
 
         public override string ToString()
         {
-            return this.OrganizationDetail.FriendlyName;
+            return OrganizationDetail.FriendlyName;
         }
     }
 }

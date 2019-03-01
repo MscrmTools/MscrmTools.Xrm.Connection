@@ -21,14 +21,9 @@ namespace McTools.Xrm.Connection.WinForms
         private bool hadCreatedNewConnection;
 
         /// <summary>
-        /// Connexion sélectionnée
-        /// </summary>
-        private List<ConnectionDetail> selectedConnections;
-
-        /// <summary>
         /// Obtient la connexion sélectionnée
         /// </summary>
-        public List<ConnectionDetail> SelectedConnections => selectedConnections;
+        public List<ConnectionDetail> SelectedConnections { get; private set; }
 
         #endregion Variables
 
@@ -145,10 +140,7 @@ namespace McTools.Xrm.Connection.WinForms
 
         #region Properties
 
-        public bool HadCreatedNewConnection
-        {
-            get { return hadCreatedNewConnection; }
-        }
+        public bool HadCreatedNewConnection => hadCreatedNewConnection;
 
         #endregion Properties
 
@@ -164,11 +156,11 @@ namespace McTools.Xrm.Connection.WinForms
         {
             if (lvConnections.SelectedItems.Count > 0)
             {
-                selectedConnections = new List<ConnectionDetail>();
+                SelectedConnections = new List<ConnectionDetail>();
 
                 foreach (ListViewItem item in lvConnections.SelectedItems)
                 {
-                    selectedConnections.Add(item.Tag as ConnectionDetail);
+                    SelectedConnections.Add(item.Tag as ConnectionDetail);
                 }
 
                 DialogResult = DialogResult.OK;
