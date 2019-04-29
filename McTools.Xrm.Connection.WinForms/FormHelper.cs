@@ -29,6 +29,14 @@ namespace McTools.Xrm.Connection.WinForms
 
             if (cs.ShowDialog(innerAppForm) == DialogResult.OK)
             {
+                if (cs.SelectedConnections.Any(c => c.IsFromSdkLoginCtrl)
+                    && cs.SelectedConnections.Count > 1)
+                {
+                    MessageBox.Show(innerAppForm, @"You cannot select multiple connections that used SDK Login control",
+                        @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+
                 foreach (var connectionDetail in cs.SelectedConnections)
                 {
                     if (!connectionDetail.UseConnectionString && connectionDetail.IsCustomAuth)
@@ -55,7 +63,26 @@ namespace McTools.Xrm.Connection.WinForms
 
                 preConnectionRequestAction?.Invoke();
 
-                ConnectionManager.Instance.ConnectToServer(cs.SelectedConnections, connectionParameter);
+                if (cs.SelectedConnections.First().IsFromSdkLoginCtrl)
+                {
+                    var cd = cs.SelectedConnections.First();
+
+                    var ctrl = new CRMLoginForm1(cd.ConnectionId.Value);
+                    if (cd.AzureAdAppId != Guid.Empty)
+                    {
+                        ctrl.AppId = cd.AzureAdAppId.ToString();
+                        ctrl.RedirectUri = new Uri(cd.ReplyUrl);
+                    }
+
+                    ctrl.ShowDialog();
+
+                    ConnectionManager.Instance.ConnectToServerWithSdkLoginCtrl(cd, ctrl.CrmConnectionMgr.CrmSvc,
+                        connectionParameter);
+                }
+                else
+                {
+                    ConnectionManager.Instance.ConnectToServer(cs.SelectedConnections, connectionParameter);
+                }
 
                 return true;
             }
@@ -95,8 +122,26 @@ namespace McTools.Xrm.Connection.WinForms
 
             preConnectionRequestAction?.Invoke();
 
-            ConnectionManager.Instance.ConnectToServer(new List<ConnectionDetail> { connectionDetail }, connectionParameter);
+            if (connectionDetail.IsFromSdkLoginCtrl)
+            {
+                var cd = connectionDetail;
 
+                var ctrl = new CRMLoginForm1(cd.ConnectionId.Value);
+                if (cd.AzureAdAppId != Guid.Empty)
+                {
+                    ctrl.AppId = cd.AzureAdAppId.ToString();
+                    ctrl.RedirectUri = new Uri(cd.ReplyUrl);
+                }
+
+                ctrl.ShowDialog();
+
+                ConnectionManager.Instance.ConnectToServerWithSdkLoginCtrl(cd, ctrl.CrmConnectionMgr.CrmSvc,
+                    connectionParameter);
+            }
+            else
+            {
+                ConnectionManager.Instance.ConnectToServer(new List<ConnectionDetail> { connectionDetail }, connectionParameter);
+            }
             return true;
         }
 
@@ -109,10 +154,10 @@ namespace McTools.Xrm.Connection.WinForms
         /// <summary>
         /// Deletes a Crm connection from the connections list
         /// </summary>
-        /// <param name="connectionToDelete">Details of the connection to delete</param>
+        /// <param name="connectionId">Id of the connection to delete</param>
         public void DeleteConnection(Guid? connectionId)
         {
-            var connection = ConnectionManager.Instance.ConnectionsList.Connections.Where(x => x.ConnectionId == connectionId).FirstOrDefault();
+            var connection = ConnectionManager.Instance.ConnectionsList.Connections.FirstOrDefault(x => x.ConnectionId == connectionId);
 
             if (connection != null)
             {

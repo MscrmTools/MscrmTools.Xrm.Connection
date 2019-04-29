@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Microsoft.Xrm.Sdk.Discovery;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
@@ -21,14 +21,9 @@ namespace McTools.Xrm.Connection.WinForms
         private bool hadCreatedNewConnection;
 
         /// <summary>
-        /// Connexion sélectionnée
-        /// </summary>
-        private List<ConnectionDetail> selectedConnections;
-
-        /// <summary>
         /// Obtient la connexion sélectionnée
         /// </summary>
-        public List<ConnectionDetail> SelectedConnections => selectedConnections;
+        public List<ConnectionDetail> SelectedConnections { get; private set; }
 
         #endregion Variables
 
@@ -95,6 +90,13 @@ namespace McTools.Xrm.Connection.WinForms
                 lvConnections.Groups.AddRange(groups);
                 lvConnections.EndUpdate();
             }
+
+            tsbNewConnection.Enabled = !ConnectionManager.Instance.ConnectionsList.IsReadOnly;
+            tsbUpdateConnection.Enabled = !ConnectionManager.Instance.ConnectionsList.IsReadOnly;
+            tsbCloneConnection.Enabled = !ConnectionManager.Instance.ConnectionsList.IsReadOnly;
+            tsbDeleteConnection.Enabled = !ConnectionManager.Instance.ConnectionsList.IsReadOnly;
+            tsbUpdatePassword.Enabled = !ConnectionManager.Instance.ConnectionsList.IsReadOnly;
+            tsb_UseMru.Enabled = !ConnectionManager.Instance.ConnectionsList.IsReadOnly;
         }
 
         private void LoadConnectionFile()
@@ -138,10 +140,7 @@ namespace McTools.Xrm.Connection.WinForms
 
         #region Properties
 
-        public bool HadCreatedNewConnection
-        {
-            get { return hadCreatedNewConnection; }
-        }
+        public bool HadCreatedNewConnection => hadCreatedNewConnection;
 
         #endregion Properties
 
@@ -157,11 +156,11 @@ namespace McTools.Xrm.Connection.WinForms
         {
             if (lvConnections.SelectedItems.Count > 0)
             {
-                selectedConnections = new List<ConnectionDetail>();
+                SelectedConnections = new List<ConnectionDetail>();
 
                 foreach (ListViewItem item in lvConnections.SelectedItems)
                 {
-                    selectedConnections.Add(item.Tag as ConnectionDetail);
+                    SelectedConnections.Add(item.Tag as ConnectionDetail);
                 }
 
                 DialogResult = DialogResult.OK;
@@ -181,7 +180,7 @@ namespace McTools.Xrm.Connection.WinForms
             {
                 BValidateClick(sender, e);
             }
-            else
+            else if (!ConnectionManager.Instance.ConnectionsList.IsReadOnly)
             {
                 tsbUpdateConnection_Click(sender, null);
             }
@@ -224,7 +223,7 @@ namespace McTools.Xrm.Connection.WinForms
                     {
                         indexToSelect = index;
                     }
-                    else
+                    else if (!Uri.IsWellFormedUriString(file.Path, UriKind.Absolute))
                     {
                         tsbMoveToExistingFile.DropDownItems.Add(new ToolStripButton
                         {
@@ -246,7 +245,7 @@ namespace McTools.Xrm.Connection.WinForms
             tscbbConnectionsFile.SelectedIndex = indexToSelect;
             tscbbConnectionsFile.SelectedIndexChanged += tscbbConnectionsFile_SelectedIndexChanged;
 
-            if (tscbbConnectionsFile.SelectedItem != null && !File.Exists(((ConnectionFile)tscbbConnectionsFile.SelectedItem).Path))
+            if (tscbbConnectionsFile.SelectedItem != null && !ConnectionManager.FileExists(((ConnectionFile)tscbbConnectionsFile.SelectedItem).Path))
             {
                 CleanFileList((ConnectionFile)tscbbConnectionsFile.SelectedItem);
                 return;
@@ -396,7 +395,7 @@ namespace McTools.Xrm.Connection.WinForms
             }
             else
             {
-                if (!File.Exists(connectionFile.Path))
+                if (!ConnectionManager.FileExists(connectionFile.Path))
                 {
                     CleanFileList(connectionFile);
                     return;
@@ -414,7 +413,7 @@ namespace McTools.Xrm.Connection.WinForms
                 tsbMoveToExistingFile.DropDownItems.Clear();
                 foreach (var file in ConnectionsList.Instance.Files.OrderBy(k => k.Name))
                 {
-                    if (connectionFile.Path == file.Path)
+                    if (connectionFile.Path == file.Path || Uri.IsWellFormedUriString(file.Path, UriKind.Absolute))
                     {
                         continue;
                     }
@@ -507,6 +506,7 @@ namespace McTools.Xrm.Connection.WinForms
                 var item = new ListViewItem(newConnection.ConnectionName);
                 item.SubItems.Add(newConnection.ServerName);
                 item.SubItems.Add(newConnection.Organization);
+                item.SubItems.Add(newConnection.UserName);
                 item.SubItems.Add(newConnection.OrganizationVersion);
                 item.Tag = newConnection;
                 item.Group = GetGroup(newConnection);
@@ -553,7 +553,44 @@ namespace McTools.Xrm.Connection.WinForms
             {
                 ListViewItem item = lvConnections.SelectedItems[0];
 
-                var cForm = new ConnectionWizard2((ConnectionDetail)item.Tag)
+                var cd = (ConnectionDetail)item.Tag;
+
+                if (cd.IsFromSdkLoginCtrl)
+                {
+                    var ctrl = new CRMLoginForm1(cd.ConnectionId.Value, true);
+                    ctrl.ShowDialog();
+
+                    if (ctrl.CrmConnectionMgr.CrmSvc?.IsReady ?? false)
+                    {
+                        cd.Organization = ctrl.CrmConnectionMgr.ConnectedOrgUniqueName;
+                        cd.OrganizationFriendlyName = ctrl.CrmConnectionMgr.ConnectedOrgFriendlyName;
+                        cd.OrganizationDataServiceUrl =
+                            ctrl.CrmConnectionMgr.ConnectedOrgPublishedEndpoints[EndpointType.OrganizationDataService];
+                        cd.OrganizationServiceUrl =
+                            ctrl.CrmConnectionMgr.ConnectedOrgPublishedEndpoints[EndpointType.OrganizationService];
+                        cd.WebApplicationUrl =
+                            ctrl.CrmConnectionMgr.ConnectedOrgPublishedEndpoints[EndpointType.WebApplication];
+                        cd.ServerName = new Uri(cd.WebApplicationUrl).Host;
+                        cd.OrganizationVersion = ctrl.CrmConnectionMgr.CrmSvc.ConnectedOrgVersion.ToString();
+
+                        item.Tag = cd;
+                        lvConnections.Items.Remove(item);
+                        lvConnections.Items.Add(item);
+                        lvConnections.Refresh();//RedrawItems(0, lvConnections.Items.Count - 1, false);
+
+                        var updatedConnectionDetail = ConnectionManager.Instance.ConnectionsList.Connections.FirstOrDefault(
+                            c => c.ConnectionId == cd.ConnectionId);
+
+                        ConnectionManager.Instance.ConnectionsList.Connections.Remove(updatedConnectionDetail);
+                        ConnectionManager.Instance.ConnectionsList.Connections.Add(cd);
+
+                        ConnectionManager.Instance.SaveConnectionsFile();
+                    }
+
+                    return;
+                }
+
+                var cForm = new ConnectionWizard2(cd)
                 {
                     StartPosition = FormStartPosition.CenterParent
                 };

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xrm.Sdk.Client;
+﻿using McTools.Xrm.Connection.Utils;
+using Microsoft.Xrm.Sdk.Client;
 using Microsoft.Xrm.Sdk.Discovery;
 using Microsoft.Xrm.Tooling.Connector;
 using System;
@@ -19,13 +20,17 @@ namespace McTools.Xrm.Connection
     /// </summary>
     public class ConnectionDetail : IComparable, ICloneable
     {
+        private string clientSecret;
         private string userPassword;
 
         #region Propriétés
 
         private CrmServiceClient crmSvc;
+
         public AuthenticationProviderType AuthType { get; set; }
         public Guid AzureAdAppId { get; set; }
+
+        public bool ClientSecretIsEmpty => string.IsNullOrEmpty(clientSecret);
 
         /// <summary>
         /// Gets or sets the connection unique identifier
@@ -64,6 +69,8 @@ namespace McTools.Xrm.Connection
         public bool IsCustomAuth { get; set; }
 
         public bool IsEnvironmentHighlightSet { get; set; }
+        public bool IsFromSdkLoginCtrl { get; set; }
+
         public DateTime LastUsedOn { get; set; }
 
         /// <summary>
@@ -111,6 +118,11 @@ namespace McTools.Xrm.Connection
         /// Gets an information if the password is empty
         /// </summary>
         public bool PasswordIsEmpty { get { return string.IsNullOrEmpty(userPassword); } }
+
+        /// <summary>
+        /// OAuth Refresh Token
+        /// </summary>
+        public string RefreshToken { get; set; }
 
         public string ReplyUrl { get; set; }
 
@@ -182,6 +194,15 @@ namespace McTools.Xrm.Connection
         public bool UseSsl { get; set; }
 
         public string WebApplicationUrl { get; set; }
+
+        /// <summary>
+        /// Client Secret used for S2S Auth
+        /// </summary>
+        internal string S2SClientSecret
+        {
+            get => clientSecret;
+            set => clientSecret = value;
+        }
 
         #endregion Propriétés
 
@@ -272,7 +293,11 @@ namespace McTools.Xrm.Connection
                 return crmSvc;
             }
 
-            if (UseOnline)
+            if (!string.IsNullOrEmpty(clientSecret))
+            {
+                ConnectOAuth();
+            }
+            else if (UseOnline)
             {
                 ConnectOnline();
             }
@@ -298,6 +323,26 @@ namespace McTools.Xrm.Connection
             }
 
             return crmSvc;
+        }
+
+        public void SetClientSecret(string secret, bool isEncrypted = false)
+        {
+            if (!string.IsNullOrEmpty(secret))
+            {
+                if (isEncrypted)
+                {
+                    clientSecret = secret;
+                }
+                else
+                {
+                    clientSecret = CryptoManager.Encrypt(secret, ConnectionManager.CryptoPassPhrase,
+                        ConnectionManager.CryptoSaltValue,
+                        ConnectionManager.CryptoHashAlgorythm,
+                        ConnectionManager.CryptoPasswordIterations,
+                        ConnectionManager.CryptoInitVector,
+                        ConnectionManager.CryptoKeySize);
+                }
+            }
         }
 
         public void SetPassword(string password, bool isEncrypted = false)
@@ -351,52 +396,15 @@ namespace McTools.Xrm.Connection
             HomeRealmUrl = editedConnection.HomeRealmUrl;
             Timeout = editedConnection.Timeout;
             UseMfa = editedConnection.UseMfa;
-            UseMfa = editedConnection.UseMfa;
+            ReplyUrl = editedConnection.ReplyUrl;
             AzureAdAppId = editedConnection.AzureAdAppId;
+            clientSecret = editedConnection.clientSecret;
+            RefreshToken = editedConnection.RefreshToken;
             IsEnvironmentHighlightSet = editedConnection.IsEnvironmentHighlightSet;
             EnvironmentText = editedConnection.EnvironmentText;
             EnvironmentColor = editedConnection.EnvironmentColor;
             EnvironmentTextColor = editedConnection.EnvironmentTextColor;
         }
-
-        private void ConnectOnline()
-        {
-            AuthType = AuthenticationProviderType.OnlineFederation;
-
-            var password = CryptoManager.Decrypt(userPassword, ConnectionManager.CryptoPassPhrase,
-                 ConnectionManager.CryptoSaltValue,
-                 ConnectionManager.CryptoHashAlgorythm,
-                 ConnectionManager.CryptoPasswordIterations,
-                 ConnectionManager.CryptoInitVector,
-                 ConnectionManager.CryptoKeySize);
-
-            Utilities.GetOrgnameAndOnlineRegionFromServiceUri(new Uri(OriginalUrl), out var region, out var orgName, out _);
-
-            if (UseMfa)
-            {
-                var path = Path.Combine(Path.GetTempPath(), ConnectionId.Value.ToString("B"), "oauth-cache.txt");
-
-                crmSvc = new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password), 
-                    region, 
-                    orgName, 
-                    false, 
-                    null, 
-                    null, 
-                    AzureAdAppId.ToString(), 
-                    new Uri(ReplyUrl), 
-                    path, 
-                    null);
-            }
-
-            crmSvc = new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password), 
-                region, 
-                orgName, 
-                true, 
-                true, 
-                null, 
-                true);
-        }
-
 
         private void ConnectIfd()
         {
@@ -428,8 +436,57 @@ namespace McTools.Xrm.Connection
                     OrganizationUrlName,
                     true,
                     UseSsl);
-
             }
+        }
+
+        private void ConnectOAuth()
+        {
+            if (!String.IsNullOrEmpty(RefreshToken))
+                CrmServiceClient.AuthOverrideHook = new RefreshTokenAuthOverride(this);
+            else
+                CrmServiceClient.AuthOverrideHook = new S2SAuthOverride(this);
+
+            crmSvc = new CrmServiceClient(new Uri($"https://{ServerName}:{ServerPort}"), true);
+
+            CrmServiceClient.AuthOverrideHook = null;
+        }
+
+        private void ConnectOnline()
+        {
+            AuthType = AuthenticationProviderType.OnlineFederation;
+
+            var password = CryptoManager.Decrypt(userPassword, ConnectionManager.CryptoPassPhrase,
+                 ConnectionManager.CryptoSaltValue,
+                 ConnectionManager.CryptoHashAlgorythm,
+                 ConnectionManager.CryptoPasswordIterations,
+                 ConnectionManager.CryptoInitVector,
+                 ConnectionManager.CryptoKeySize);
+
+            Utilities.GetOrgnameAndOnlineRegionFromServiceUri(new Uri(OriginalUrl), out var region, out var orgName, out _);
+
+            if (UseMfa)
+            {
+                var path = Path.Combine(Path.GetTempPath(), ConnectionId.Value.ToString("B"), "oauth-cache.txt");
+
+                crmSvc = new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password),
+                    region,
+                    orgName,
+                    false,
+                    null,
+                    null,
+                    AzureAdAppId.ToString(),
+                    new Uri(ReplyUrl),
+                    path,
+                    null);
+            }
+
+            crmSvc = new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password),
+                region,
+                orgName,
+                true,
+                true,
+                null,
+                true);
         }
 
         private void ConnectOnprem()
@@ -453,12 +510,12 @@ namespace McTools.Xrm.Connection
                 credential = new NetworkCredential(UserName, password, UserDomain);
             }
 
-            crmSvc = new CrmServiceClient(credential, 
-                AuthenticationType.AD, 
-                ServerName, 
-                ServerPort.ToString(), 
-                OrganizationUrlName, 
-                true, 
+            crmSvc = new CrmServiceClient(credential,
+                AuthenticationType.AD,
+                ServerName,
+                ServerPort.ToString(),
+                OrganizationUrlName,
+                true,
                 UseSsl);
         }
 
@@ -469,7 +526,7 @@ namespace McTools.Xrm.Connection
             return new ConnectionDetail
             {
                 AuthType = AuthType,
-                ConnectionId = ConnectionId,
+                ConnectionId = Guid.NewGuid(),
                 ConnectionName = ConnectionName,
                 ConnectionString = ConnectionString,
                 UseConnectionString = UseConnectionString,
@@ -502,8 +559,16 @@ namespace McTools.Xrm.Connection
                 IsEnvironmentHighlightSet = IsEnvironmentHighlightSet,
                 EnvironmentText = EnvironmentText,
                 EnvironmentColor = EnvironmentColor,
-                EnvironmentTextColor = EnvironmentTextColor
+                EnvironmentTextColor = EnvironmentTextColor,
+                RefreshToken = RefreshToken,
+                S2SClientSecret = S2SClientSecret,
+                IsFromSdkLoginCtrl = IsFromSdkLoginCtrl
             };
+        }
+
+        public void CopyClientSecretTo(ConnectionDetail detail)
+        {
+            detail.clientSecret = clientSecret;
         }
 
         public void CopyPasswordTo(ConnectionDetail detail)
@@ -560,21 +625,22 @@ namespace McTools.Xrm.Connection
             }
 
             if (originalDetail.HomeRealmUrl != HomeRealmUrl
-               || originalDetail.IsCustomAuth != IsCustomAuth
-               || originalDetail.Organization != Organization
-               || originalDetail.OrganizationUrlName != OrganizationUrlName
-               || originalDetail.ServerName.ToLower() != ServerName.ToLower()
-               || originalDetail.ServerPort != ServerPort
-               || originalDetail.UseIfd != UseIfd
-               || originalDetail.UseOnline != UseOnline
-               || originalDetail.UseOsdp != UseOsdp
-               || originalDetail.UseSsl != UseSsl
-               || originalDetail.UseMfa != UseMfa
-               || originalDetail.AzureAdAppId != AzureAdAppId
-               || originalDetail.ReplyUrl != ReplyUrl
-               || originalDetail.UserDomain?.ToLower() != UserDomain?.ToLower()
-               || originalDetail.UserName?.ToLower() != UserName?.ToLower()
-               || SavePassword && !string.IsNullOrEmpty(userPassword) && originalDetail.userPassword != userPassword)
+                || originalDetail.IsCustomAuth != IsCustomAuth
+                || originalDetail.Organization != Organization
+                || originalDetail.OrganizationUrlName != OrganizationUrlName
+                || originalDetail.ServerName.ToLower() != ServerName.ToLower()
+                || originalDetail.ServerPort != ServerPort
+                || originalDetail.UseIfd != UseIfd
+                || originalDetail.UseOnline != UseOnline
+                || originalDetail.UseOsdp != UseOsdp
+                || originalDetail.UseSsl != UseSsl
+                || originalDetail.UseMfa != UseMfa
+                || originalDetail.clientSecret != clientSecret
+                || originalDetail.AzureAdAppId != AzureAdAppId
+                || originalDetail.ReplyUrl != ReplyUrl
+                || originalDetail.UserDomain?.ToLower() != UserDomain?.ToLower()
+                || originalDetail.UserName?.ToLower() != UserName?.ToLower()
+                || SavePassword && !string.IsNullOrEmpty(userPassword) && originalDetail.userPassword != userPassword)
             {
                 return true;
             }
@@ -634,7 +700,10 @@ namespace McTools.Xrm.Connection
                     new XElement("EnvironmentText", EnvironmentText),
                     new XElement("EnvironmentColor", ColorTranslator.ToHtml(EnvironmentColor ?? Color.FromArgb(255, 255, 0, 255))),
                     new XElement("EnvironmentTextColor", ColorTranslator.ToHtml(EnvironmentTextColor ?? Color.FromArgb(255, 255, 255, 255))),
+                    new XElement("IsFromSdkLoginCtrl", IsFromSdkLoginCtrl),
                     new XElement("LastUsedOn", LastUsedOn.ToString(CultureInfo.InvariantCulture.DateTimeFormat)),
+                    new XElement("RefreshToken", RefreshToken),
+                    new XElement("S2SClientSecret", S2SClientSecret),
                     GetCustomInfoXElement());
         }
 

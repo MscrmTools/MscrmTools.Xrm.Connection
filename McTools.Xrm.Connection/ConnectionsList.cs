@@ -1,29 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Xml.Serialization;
 
 namespace McTools.Xrm.Connection
 {
     public class ConnectionFile
     {
-        public string  Name { get; set; }
-
-        public ConnectionFile(){}
+        public ConnectionFile()
+        {
+        }
 
         public ConnectionFile(string name)
         {
             Name = name;
         }
-        public ConnectionFile(CrmConnections Connections)
+
+        public ConnectionFile(CrmConnections connections)
         {
-            Name = Connections.Name;
+            Name = connections.Name;
         }
 
         public DateTime LastUsed { get; set; }
-
+        public string Name { get; set; }
         public string Path { get; set; }
 
         public override string ToString()
@@ -34,8 +33,8 @@ namespace McTools.Xrm.Connection
 
     public class ConnectionsList
     {
-        private static ConnectionsList instance;
         private static string connectionsListFilePath = "MscrmTools.ConnectionsList.xml";
+        private static ConnectionsList instance;
 
         private ConnectionsList()
         {
@@ -44,8 +43,8 @@ namespace McTools.Xrm.Connection
 
         public static string ConnectionsListFilePath
         {
-            get { return connectionsListFilePath; }
-            set { connectionsListFilePath = value; }
+            get => connectionsListFilePath;
+            set => connectionsListFilePath = value;
         }
 
         public static ConnectionsList Instance

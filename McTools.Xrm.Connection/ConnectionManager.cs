@@ -1,6 +1,6 @@
 ﻿using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Discovery;
+using Microsoft.Xrm.Sdk.Organization;
 using Microsoft.Xrm.Tooling.Connector;
 using System;
 using System.Collections.Generic;
@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
+using EndpointCollection = Microsoft.Xrm.Sdk.Organization.EndpointCollection;
 
 namespace McTools.Xrm.Connection
 {
@@ -158,6 +159,9 @@ namespace McTools.Xrm.Connection
                 fsw.Dispose();
             }
 
+            if (Uri.IsWellFormedUriString(ConfigurationFile, UriKind.Absolute))
+                return;
+
             var path = new FileInfo(ConfigurationFile).Directory.FullName;
 
             if (Directory.Exists(path))
@@ -243,6 +247,33 @@ namespace McTools.Xrm.Connection
         #region Methods
 
         /// <summary>
+        /// Checks if a configuration file exists
+        /// </summary>
+        /// <param name="path">The file to check for</param>
+        /// <returns><c>true</c> if the <paramref name="path"/> exists, or <c>false</c> otherwise</returns>
+        public static bool FileExists(string path)
+        {
+            if (Uri.IsWellFormedUriString(path, UriKind.Absolute))
+            {
+                try
+                {
+                    var req = WebRequest.Create(path);
+                    req.Credentials = CredentialCache.DefaultCredentials;
+                    using (req.GetResponse())
+                    {
+                        return true;
+                    }
+                }
+                catch (WebException)
+                {
+                    return false;
+                }
+            }
+
+            return File.Exists(path);
+        }
+
+        /// <summary>
         /// Launch the Crm connection process
         /// </summary>
         /// <param name="details">Details of the Crm connection</param>
@@ -277,7 +308,7 @@ namespace McTools.Xrm.Connection
             try
             {
                 CrmConnections crmConnections;
-                if (File.Exists(ConfigurationFile))
+                if (FileExists(ConfigurationFile))
                 {
                     crmConnections = CrmConnections.LoadFromFile(ConfigurationFile);
 
@@ -415,7 +446,7 @@ namespace McTools.Xrm.Connection
                     // When the configuration seems to be wrong, endpoints are available
                     // so we can check if there is a difference between what the user
                     // specified for connection.
-                    var returnedWebAppUrl = service.ConnectedOrgPublishedEndpoints[EndpointType.WebApplication];
+                    var returnedWebAppUrl = service.ConnectedOrgPublishedEndpoints[Microsoft.Xrm.Sdk.Discovery.EndpointType.WebApplication];
                     if (detail.OriginalUrl.ToLower().IndexOf(returnedWebAppUrl.ToLower(), StringComparison.Ordinal) < 0)
                     {
                         string message =
@@ -425,8 +456,17 @@ namespace McTools.Xrm.Connection
                     }
                 }
 
-                detail.WebApplicationUrl = service.ConnectedOrgPublishedEndpoints[EndpointType.WebApplication];
-                detail.OrganizationDataServiceUrl = service.ConnectedOrgPublishedEndpoints[EndpointType.OrganizationDataService];
+                var endpoints = service.ConnectedOrgPublishedEndpoints != null ? EndpointCollection.FromDiscovery(service.ConnectedOrgPublishedEndpoints) : null;
+
+                if (endpoints == null)
+                {
+                    // Some connection methods do not automatically retrieve the endpoints - get them now
+                    var orgDetails = (RetrieveCurrentOrganizationResponse)service.Execute(new RetrieveCurrentOrganizationRequest());
+                    endpoints = orgDetails.Detail.Endpoints;
+                }
+
+                detail.WebApplicationUrl = endpoints[EndpointType.WebApplication];
+                detail.OrganizationDataServiceUrl = endpoints[EndpointType.OrganizationDataService];
                 detail.OrganizationVersion = service.ConnectedOrgVersion.ToString();
 
                 var currentConnection = ConnectionsList.Connections.FirstOrDefault(x => x.ConnectionId == detail.ConnectionId);
@@ -437,6 +477,7 @@ namespace McTools.Xrm.Connection
                     currentConnection.OrganizationVersion = detail.OrganizationVersion;
                     currentConnection.SavePassword = detail.SavePassword;
                     detail.CopyPasswordTo(currentConnection);
+                    detail.CopyClientSecretTo(currentConnection);
                 }
 
                 detail.LastUsedOn = DateTime.Now;
@@ -482,17 +523,7 @@ namespace McTools.Xrm.Connection
                 {
                     if (parameters[3] is CrmServiceClient service)
                     {
-                        IOrganizationService ios = service.OrganizationServiceProxy;
-                        if (ios == null)
-                        {
-                            ios = service.OrganizationWebProxyClient;
-                            if (ios == null)
-                            {
-                                SendFailureMessage(parameters, "Unable to find an instanciated service");
-                            }
-                        }
-
-                        SendSuccessMessage(ios, parameters);
+                        SendSuccessMessage(service, parameters);
                     }
                 }
             }
@@ -559,5 +590,19 @@ namespace McTools.Xrm.Connection
         }
 
         #endregion Send Events
+
+        public void ConnectToServerWithSdkLoginCtrl(ConnectionDetail detail, CrmServiceClient crmSvc, object connectionParameter)
+        {
+            var parameters = new List<object> { detail, connectionParameter, 1 };
+
+            if (crmSvc.IsReady)
+            {
+                SendSuccessMessage(crmSvc, parameters);
+            }
+            else
+            {
+                SendFailureMessage(parameters, crmSvc.LastCrmError);
+            }
+        }
     }
 }

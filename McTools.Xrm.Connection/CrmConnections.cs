@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -41,24 +42,29 @@ namespace McTools.Xrm.Connection
         /// </summary>
         public List<ConnectionDetail> Connections { get; set; }
 
+        /// <summary>
+        /// Indicates if this connection list can be updated
+        /// </summary>
+        public bool IsReadOnly { get; private set; }
+
         public string Name { get; set; }
 
         public string Password
         {
-            get { return _password; }
-            set { _password = value; }
+            get => _password;
+            set => _password = value;
         }
 
         public string ProxyAddress
         {
-            get { return _proxyAddress; }
-            set { _proxyAddress = value; }
+            get => _proxyAddress;
+            set => _proxyAddress = value;
         }
 
         public bool UseCustomProxy
         {
-            get { return _useCustomProxy; }
-            set { _useCustomProxy = value; }
+            get => _useCustomProxy;
+            set => _useCustomProxy = value;
         }
 
         public bool UseDefaultCredentials { get; set; }
@@ -69,8 +75,8 @@ namespace McTools.Xrm.Connection
 
         public string UserName
         {
-            get { return _userName; }
-            set { _userName = value; }
+            get => _userName;
+            set => _userName = value;
         }
 
         #endregion Propriétés
@@ -81,14 +87,16 @@ namespace McTools.Xrm.Connection
         {
             var crmConnections = new CrmConnections("Default");
 
-            if (!File.Exists(filePath))
+            if (!Uri.IsWellFormedUriString(filePath, UriKind.Absolute) && !File.Exists(filePath))
             {
                 return crmConnections;
             }
 
-            using (var fStream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (var fStream = OpenStream(filePath))
             {
-                if (fStream.Length == 0)
+                crmConnections.IsReadOnly = Uri.IsWellFormedUriString(filePath, UriKind.Absolute);
+
+                if (fStream.CanSeek && fStream.Length == 0)
                 {
                     return crmConnections;
                 }
@@ -253,7 +261,7 @@ namespace McTools.Xrm.Connection
                     cd.UseMfa = useMfaElement != null && useMfaElement.Value == "true";
 
                     var userDomainElement = elt.Element("UserDomain");
-                    if (timeOutElement != null)
+                    if (userDomainElement != null)
                     {
                         cd.UserDomain = userDomainElement.Value;
                     }
@@ -318,6 +326,24 @@ namespace McTools.Xrm.Connection
                         cd.LastUsedOn = DateTime.Parse(lastUsedOnElt.Value, CultureInfo.InvariantCulture.DateTimeFormat);
                     }
 
+                    var refreshTokenElt = elt.Element("RefreshToken");
+                    if (refreshTokenElt != null)
+                    {
+                        cd.RefreshToken = refreshTokenElt.Value;
+                    }
+
+                    var s2sClientSecretElt = elt.Element("S2SClientSecret");
+                    if (s2sClientSecretElt != null)
+                    {
+                        cd.SetClientSecret(s2sClientSecretElt.Value, true);
+                    }
+
+                    var isFromSdkLoginCtrlElt = elt.Element("IsFromSdkLoginCtrl");
+                    if (isFromSdkLoginCtrlElt != null)
+                    {
+                        cd.IsFromSdkLoginCtrl = isFromSdkLoginCtrlElt.Value == "true";
+                    }
+
                     var customInfo = elt.Element("CustomInformation");
                     if (customInfo != null)
                     {
@@ -357,6 +383,9 @@ namespace McTools.Xrm.Connection
 
         public void SerializeToFile(string filePath)
         {
+            if (Uri.IsWellFormedUriString(filePath, UriKind.Absolute))
+                return;
+
             lock (_fileAccess)
             {
                 var listElement = new XElement("Connections",
@@ -395,6 +424,19 @@ namespace McTools.Xrm.Connection
         public override string ToString()
         {
             return Name;
+        }
+
+        private static Stream OpenStream(string filePath)
+        {
+            if (Uri.IsWellFormedUriString(filePath, UriKind.Absolute))
+            {
+                var req = WebRequest.Create(filePath);
+                req.Credentials = CredentialCache.DefaultCredentials;
+                var resp = req.GetResponse();
+                return resp.GetResponseStream();
+            }
+
+            return File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
         }
 
         #endregion methods

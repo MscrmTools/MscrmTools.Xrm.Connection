@@ -17,6 +17,11 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
             set => txtConnectionString.Text = value;
         }
 
+        private void ConnectionStringControl_Load(object sender, System.EventArgs e)
+        {
+            txtConnectionString.Focus();
+        }
+
         private void llConnectionStringHelp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start($"https://msdn.microsoft.com/{CultureInfo.CurrentUICulture.Name}/library/mt608573.aspx");

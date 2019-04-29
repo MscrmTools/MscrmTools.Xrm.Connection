@@ -43,7 +43,7 @@
             this.llConnectionStringHelp.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.llConnectionStringHelp.Name = "llConnectionStringHelp";
             this.llConnectionStringHelp.Size = new System.Drawing.Size(307, 25);
-            this.llConnectionStringHelp.TabIndex = 21;
+            this.llConnectionStringHelp.TabIndex = 2;
             this.llConnectionStringHelp.TabStop = true;
             this.llConnectionStringHelp.Text = "Help me with the connection string";
             this.llConnectionStringHelp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llConnectionStringHelp_LinkClicked);
@@ -68,7 +68,7 @@
             this.txtConnectionString.Multiline = true;
             this.txtConnectionString.Name = "txtConnectionString";
             this.txtConnectionString.Size = new System.Drawing.Size(880, 204);
-            this.txtConnectionString.TabIndex = 22;
+            this.txtConnectionString.TabIndex = 1;
             // 
             // pnlMain
             // 
@@ -89,6 +89,7 @@
             this.Controls.Add(this.lblConnectionString);
             this.Name = "ConnectionStringControl";
             this.Size = new System.Drawing.Size(900, 274);
+            this.Load += new System.EventHandler(this.ConnectionStringControl_Load);
             this.pnlMain.ResumeLayout(false);
             this.pnlMain.PerformLayout();
             this.ResumeLayout(false);

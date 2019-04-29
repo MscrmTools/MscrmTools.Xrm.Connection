@@ -64,7 +64,7 @@
             this.txtHomeRealm.Margin = new System.Windows.Forms.Padding(4);
             this.txtHomeRealm.Name = "txtHomeRealm";
             this.txtHomeRealm.Size = new System.Drawing.Size(877, 29);
-            this.txtHomeRealm.TabIndex = 12;
+            this.txtHomeRealm.TabIndex = 3;
             // 
             // rbIfdNo
             // 
@@ -74,7 +74,7 @@
             this.rbIfdNo.Margin = new System.Windows.Forms.Padding(4);
             this.rbIfdNo.Name = "rbIfdNo";
             this.rbIfdNo.Size = new System.Drawing.Size(62, 29);
-            this.rbIfdNo.TabIndex = 9;
+            this.rbIfdNo.TabIndex = 1;
             this.rbIfdNo.TabStop = true;
             this.rbIfdNo.Text = "No";
             this.rbIfdNo.UseVisualStyleBackColor = true;
@@ -87,7 +87,7 @@
             this.rbIfdYes.Margin = new System.Windows.Forms.Padding(4);
             this.rbIfdYes.Name = "rbIfdYes";
             this.rbIfdYes.Size = new System.Drawing.Size(71, 29);
-            this.rbIfdYes.TabIndex = 10;
+            this.rbIfdYes.TabIndex = 2;
             this.rbIfdYes.Text = "Yes";
             this.rbIfdYes.UseVisualStyleBackColor = true;
             // 
