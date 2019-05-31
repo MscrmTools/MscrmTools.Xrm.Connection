@@ -7,9 +7,9 @@ namespace McTools.Xrm.Connection.WinForms
 {
     public class FormHelper
     {
-        private readonly Form innerAppForm;
+        private readonly ContainerControl innerAppForm;
 
-        public FormHelper(Form innerAppForm)
+        public FormHelper(ContainerControl innerAppForm)
         {
             this.innerAppForm = innerAppForm;
         }
