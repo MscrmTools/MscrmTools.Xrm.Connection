@@ -14,6 +14,11 @@ namespace McTools.Xrm.Connection.WinForms
             this.innerAppForm = innerAppForm;
         }
 
+        public FormHelper(Control innerAppControl)
+        {
+            this.innerAppForm = innerAppControl.FindForm();
+        }
+
         /// <summary>
         /// Asks this manager to select a Crm connection to use
         /// </summary>
