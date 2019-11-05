@@ -20,7 +20,7 @@ namespace McTools.Xrm.Connection.WinForms
         /// <param name="connectionParameter">The connection parameter.</param>
         /// <param name="preConnectionRequestAction">The action to be performed before the async call to create the connection.  Useful to display a please wait message</param>
         /// <returns></returns>
-        public bool AskForConnection(object connectionParameter, Action preConnectionRequestAction)
+        public bool AskForConnection(object connectionParameter, Action<List<ConnectionDetail>> preConnectionRequestAction)
         {
             var cs = new ConnectionSelector
             {
@@ -61,7 +61,7 @@ namespace McTools.Xrm.Connection.WinForms
                     }
                 }
 
-                preConnectionRequestAction?.Invoke();
+                preConnectionRequestAction?.Invoke(cs.SelectedConnections);
 
                 if (cs.SelectedConnections.First().IsFromSdkLoginCtrl)
                 {

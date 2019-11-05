@@ -234,16 +234,26 @@ namespace McTools.Xrm.Connection
 
             if (UseConnectionString || !string.IsNullOrEmpty(ConnectionString))
             {
-                if (ConnectionString.IndexOf("RequireNewInstance=", StringComparison.Ordinal) < 0)
+                var csb = new DbConnectionStringBuilder { ConnectionString = ConnectionString };
+                if (csb.ContainsKey("timeout"))
                 {
-                    if (!ConnectionString.EndsWith(";"))
-                    {
-                        ConnectionString += ";";
-                    }
-                    ConnectionString += "RequireNewInstance=True;";
+                    var csTimeout = TimeSpan.Parse(csb["timeout"].ToString());
+                    csb.Remove("timeout");
+                    CrmServiceClient.MaxConnectionTimeout = csTimeout;
                 }
 
-                crmSvc = new CrmServiceClient(ConnectionString);
+                var cs = csb.ToString();
+
+                if (cs.IndexOf("RequireNewInstance=", StringComparison.Ordinal) < 0)
+                {
+                    if (!cs.EndsWith(";"))
+                    {
+                        cs += ";";
+                    }
+                    cs += "RequireNewInstance=True;";
+                }
+
+                crmSvc = new CrmServiceClient(cs);
 
                 if (crmSvc.IsReady)
                 {
@@ -293,6 +303,8 @@ namespace McTools.Xrm.Connection
                 return crmSvc;
             }
 
+            CrmServiceClient.MaxConnectionTimeout = Timeout;
+
             if (!string.IsNullOrEmpty(clientSecret))
             {
                 ConnectOAuth();
@@ -315,11 +327,6 @@ namespace McTools.Xrm.Connection
                 var error = crmSvc.LastCrmError;
                 crmSvc = null;
                 throw new Exception(error);
-            }
-
-            if (crmSvc.OrganizationServiceProxy != null)
-            {
-                crmSvc.OrganizationServiceProxy.Timeout = Timeout;
             }
 
             return crmSvc;
@@ -454,6 +461,11 @@ namespace McTools.Xrm.Connection
         private void ConnectOnline()
         {
             AuthType = AuthenticationProviderType.OnlineFederation;
+
+            if (string.IsNullOrEmpty(userPassword))
+            {
+                throw new Exception("Unable to read user password");
+            }
 
             var password = CryptoManager.Decrypt(userPassword, ConnectionManager.CryptoPassPhrase,
                  ConnectionManager.CryptoSaltValue,

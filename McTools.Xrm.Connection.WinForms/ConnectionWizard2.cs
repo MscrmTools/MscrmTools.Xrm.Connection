@@ -325,17 +325,7 @@ Note that this is required to validate this wizard",
                     CrmConnectionDetail.ReplyUrl = slcc.ConnectionManager.RedirectUri.AbsoluteUri;
                 }
 
-                if (CrmConnectionDetail.ServiceClient.OrganizationServiceProxy != null)
-                {
-                    CrmConnectionDetail.UserName =
-                        CrmConnectionDetail.ServiceClient.OrganizationServiceProxy.ClientCredentials.UserName.UserName ??
-                        CrmConnectionDetail.ServiceClient.OrganizationServiceProxy.ClientCredentials.Windows.ClientCredential
-                            .UserName;
-                }
-                else if (CrmConnectionDetail.ServiceClient.OrganizationWebProxyClient != null)
-                {
-                    CrmConnectionDetail.UserName = CrmConnectionDetail.ServiceClient.OAuthUserId;
-                }
+                CrmConnectionDetail.UserName = CrmConnectionDetail.ServiceClient.OAuthUserId;
 
                 DisplayControl<ConnectionSucceededControl>();
             }

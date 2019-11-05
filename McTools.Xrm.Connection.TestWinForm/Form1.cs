@@ -2,6 +2,7 @@
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
 using System;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace McTools.Xrm.Connection.TestWinForm
@@ -128,7 +129,10 @@ namespace McTools.Xrm.Connection.TestWinForm
         {
             if (this.service == null)
             {
-                formHelper.AskForConnection("WhoAmI");
+                formHelper.AskForConnection("WhoAmI", (listDetails) =>
+                    {
+                        MessageBox.Show(listDetails.First().ConnectionName);
+                    });
             }
             else
             {
