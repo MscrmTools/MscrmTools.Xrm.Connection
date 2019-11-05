@@ -429,6 +429,9 @@
   <ItemGroup>
     <None Include="Resources\ConnectionStringImage1.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\powerapps16.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
