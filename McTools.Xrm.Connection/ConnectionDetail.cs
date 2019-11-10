@@ -1,5 +1,4 @@
-﻿using McTools.Xrm.Connection.Utils;
-using Microsoft.Xrm.Sdk.Client;
+﻿using Microsoft.Xrm.Sdk.Client;
 using Microsoft.Xrm.Sdk.Discovery;
 using Microsoft.Xrm.Tooling.Connector;
 using System;
@@ -448,14 +447,7 @@ namespace McTools.Xrm.Connection
 
         private void ConnectOAuth()
         {
-            if (!String.IsNullOrEmpty(RefreshToken))
-                CrmServiceClient.AuthOverrideHook = new RefreshTokenAuthOverride(this);
-            else
-                CrmServiceClient.AuthOverrideHook = new S2SAuthOverride(this);
-
-            crmSvc = new CrmServiceClient(new Uri($"https://{ServerName}:{ServerPort}"), true);
-
-            CrmServiceClient.AuthOverrideHook = null;
+            crmSvc = new CrmServiceClient(new Uri($"https://{ServerName}:{ServerPort}"), AzureAdAppId.ToString(), CrmServiceClient.MakeSecureString(clientSecret), true, "oauth-cache.txt");
         }
 
         private void ConnectOnline()
