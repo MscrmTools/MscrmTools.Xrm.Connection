@@ -464,8 +464,8 @@ namespace McTools.Xrm.Connection
                      ConnectionManager.CryptoInitVector,
                      ConnectionManager.CryptoKeySize);
 
-                var cachePath = Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName, "oauth-cache.txt");
-                crmSvc = new CrmServiceClient(new Uri($"https://{ServerName}:{ServerPort}"), AzureAdAppId.ToString(), CrmServiceClient.MakeSecureString(secret), true, cachePath);
+                var path = Path.Combine(Path.GetTempPath(), ConnectionId.Value.ToString("B"), "oauth-cache.txt");
+                crmSvc = new CrmServiceClient(new Uri($"https://{ServerName}:{ServerPort}"), AzureAdAppId.ToString(), CrmServiceClient.MakeSecureString(secret), true, path);
             }
         }
 
