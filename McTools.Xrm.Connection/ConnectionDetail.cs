@@ -3,34 +3,62 @@ using Microsoft.Xrm.Sdk.Client;
 using Microsoft.Xrm.Sdk.Discovery;
 using Microsoft.Xrm.Tooling.Connector;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.Common;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Reflection;
-using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace McTools.Xrm.Connection
 {
+    public class CertificateInfo
+    {
+        public string Issuer { get; set; }
+        public string Name { get; set; }
+        public string Thumbprint { get; set; }
+    }
+
     /// <summary>
     /// Stores data regarding a specific connection to Crm server
     /// </summary>
+    [XmlInclude(typeof(CertificateInfo))]
+    [XmlInclude(typeof(EnvironmentHighlighting))]
     public class ConnectionDetail : IComparable, ICloneable
     {
         private string clientSecret;
         private string userPassword;
 
+        #region Constructeur
+
+        public ConnectionDetail()
+        {
+        }
+
+        public ConnectionDetail(bool createNewId = false)
+        {
+            if (createNewId)
+            {
+                ConnectionId = Guid.NewGuid();
+            }
+        }
+
+        #endregion Constructeur
+
         #region Propriétés
 
+        [XmlIgnore]
         private CrmServiceClient crmSvc;
 
         public AuthenticationProviderType AuthType { get; set; }
+
         public Guid AzureAdAppId { get; set; }
 
+        [XmlElement("CertificateInfo")]
+        public CertificateInfo Certificate { get; set; }
+
+        [XmlIgnore]
         public bool ClientSecretIsEmpty => string.IsNullOrEmpty(clientSecret);
 
         /// <summary>
@@ -45,18 +73,19 @@ namespace McTools.Xrm.Connection
 
         public string ConnectionString { get; set; }
 
-        /// <summary>
-        /// Get or set the Crm Ticket
-        /// </summary>
-        public string CrmTicket { get; set; }
-
-        /// <summary>
-        /// Gets or sets custom information for use by consuming application
-        /// </summary>
-        public Dictionary<string, string> CustomInformation { get; set; }
-
+        [XmlIgnore]
         public Color? EnvironmentColor { get; set; }
+
+        ///// <summary>
+        ///// Gets or sets custom information for use by consuming application
+        ///// </summary>
+        //public Dictionary<string, string> CustomInformation { get; set; }
+        public EnvironmentHighlighting EnvironmentHighlightingInfo { get; set; }
+
+        [XmlIgnore]
         public string EnvironmentText { get; set; }
+
+        [XmlIgnore]
         public Color? EnvironmentTextColor { get; set; }
 
         /// <summary>
@@ -67,12 +96,34 @@ namespace McTools.Xrm.Connection
         /// <summary>
         /// Get or set flag to know if custom authentication
         /// </summary>
-        public bool IsCustomAuth { get; set; }
+        [XmlIgnore]
+        public bool IsCustomAuth => !string.IsNullOrEmpty(UserName) && !PasswordIsEmpty || ConnectionString?.IndexOf("username=", StringComparison.InvariantCultureIgnoreCase) >= 0;
 
-        public bool IsEnvironmentHighlightSet { get; set; }
+        [XmlIgnore] public bool IsEnvironmentHighlightSet => EnvironmentHighlightingInfo != null;
         public bool IsFromSdkLoginCtrl { get; set; }
 
+        [XmlIgnore]
         public DateTime LastUsedOn { get; set; }
+
+        [XmlElement("LastUsedOn")]
+        public string LastUsedOnString
+        {
+            get => LastUsedOn.ToString("yyyy-MM-dd HH:mm:ss");
+            set
+            {
+                //if (DateTime.TryParse(value, CultureInfo.CurrentUICulture, DateTimeStyles.AssumeLocal, out DateTime parsed))
+                if (DateTime.TryParseExact(value, "MM/dd/yyyy HH:mm:ss", CultureInfo.CurrentUICulture, DateTimeStyles.AssumeLocal, out DateTime parsed))
+                {
+                    LastUsedOn = parsed;
+                }
+                else
+                {
+                    LastUsedOn = DateTime.Parse(value);
+                }
+            }
+        }
+
+        public AuthenticationType NewAuthType { get; set; }
 
         /// <summary>
         /// Get or set the organization name
@@ -86,21 +137,9 @@ namespace McTools.Xrm.Connection
         /// </summary>
         public string OrganizationFriendlyName { get; set; }
 
-        public int OrganizationMajorVersion
-        {
-            get
-            {
-                return OrganizationVersion != null ? int.Parse(OrganizationVersion.Split('.')[0]) : -1;
-            }
-        }
+        public int OrganizationMajorVersion => OrganizationVersion != null ? int.Parse(OrganizationVersion.Split('.')[0]) : -1;
 
-        public int OrganizationMinorVersion
-        {
-            get
-            {
-                return OrganizationVersion != null ? int.Parse(OrganizationVersion.Split('.')[1]) : -1;
-            }
-        }
+        public int OrganizationMinorVersion => OrganizationVersion != null ? int.Parse(OrganizationVersion.Split('.')[1]) : -1;
 
         /// <summary>
         /// Gets or sets the Crm Service Url
@@ -118,11 +157,12 @@ namespace McTools.Xrm.Connection
         /// <summary>
         /// Gets an information if the password is empty
         /// </summary>
-        public bool PasswordIsEmpty { get { return string.IsNullOrEmpty(userPassword); } }
+        public bool PasswordIsEmpty => string.IsNullOrEmpty(userPassword);
 
         /// <summary>
         /// OAuth Refresh Token
         /// </summary>
+        [XmlIgnore]
         public string RefreshToken { get; set; }
 
         public string ReplyUrl { get; set; }
@@ -143,6 +183,7 @@ namespace McTools.Xrm.Connection
         [DefaultValue(80)]
         public int? ServerPort { get; set; }
 
+        [XmlIgnore]
         public CrmServiceClient ServiceClient
         {
             get { return GetCrmServiceClient(); }
@@ -157,7 +198,8 @@ namespace McTools.Xrm.Connection
             set { Timeout = new TimeSpan(value); }
         }
 
-        public bool UseConnectionString { get; set; }
+        [XmlIgnore]
+        public bool UseConnectionString => !string.IsNullOrEmpty(ConnectionString);
 
         /// <summary>
         /// Get or set flag to know if we use IFD
@@ -172,12 +214,13 @@ namespace McTools.Xrm.Connection
         /// <summary>
         /// Get or set flag to know if we use CRM Online
         /// </summary>
-        public bool UseOnline { get; set; }
+        [XmlIgnore]
+        public bool UseOnline => OriginalUrl.IndexOf(".dynamics.com", StringComparison.InvariantCultureIgnoreCase) > 0;
 
         /// <summary>
         /// Get or set flag to know if we use Online Services
         /// </summary>
-        public bool UseOsdp { get; set; }
+        //public bool UseOsdp { get; set; }
 
         /// <summary>
         /// Get or set the user domain name
@@ -189,10 +232,18 @@ namespace McTools.Xrm.Connection
         /// </summary>
         public string UserName { get; set; }
 
+        [XmlElement("UserPassword")]
+        public string UserPasswordEncrypted
+        {
+            get => userPassword;
+            set => userPassword = value;
+        }
+
         /// <summary>
         /// Get or set the use of SSL connection
         /// </summary>
-        public bool UseSsl { get; set; }
+        [XmlIgnore]
+        public bool UseSsl => WebApplicationUrl.StartsWith("https://", StringComparison.InvariantCultureIgnoreCase);
 
         public string WebApplicationUrl { get; set; }
 
@@ -207,18 +258,6 @@ namespace McTools.Xrm.Connection
 
         #endregion Propriétés
 
-        #region Constructeur
-
-        public ConnectionDetail(bool createNewId = false)
-        {
-            if (createNewId)
-            {
-                ConnectionId = Guid.NewGuid();
-            }
-        }
-
-        #endregion Constructeur
-
         #region Méthodes
 
         public void ErasePassword()
@@ -232,81 +271,23 @@ namespace McTools.Xrm.Connection
             {
                 return crmSvc;
             }
-
-            if (UseConnectionString || !string.IsNullOrEmpty(ConnectionString))
+            if (Timeout.Ticks == 0)
             {
-                var csb = new DbConnectionStringBuilder { ConnectionString = ConnectionString };
-                if (csb.ContainsKey("timeout"))
-                {
-                    var csTimeout = TimeSpan.Parse(csb["timeout"].ToString());
-                    csb.Remove("timeout");
-                    CrmServiceClient.MaxConnectionTimeout = csTimeout;
-                }
-
-                var cs = csb.ToString();
-
-                if (cs.IndexOf("RequireNewInstance=", StringComparison.Ordinal) < 0)
-                {
-                    if (!cs.EndsWith(";"))
-                    {
-                        cs += ";";
-                    }
-                    cs += "RequireNewInstance=True;";
-                }
-
-                crmSvc = new CrmServiceClient(cs);
-
-                if (crmSvc.IsReady)
-                {
-                    OrganizationFriendlyName = crmSvc.ConnectedOrgFriendlyName;
-                    OrganizationDataServiceUrl = crmSvc.ConnectedOrgPublishedEndpoints[EndpointType.OrganizationDataService];
-                    OrganizationServiceUrl = crmSvc.ConnectedOrgPublishedEndpoints[EndpointType.OrganizationService];
-                    WebApplicationUrl = crmSvc.ConnectedOrgPublishedEndpoints[EndpointType.WebApplication];
-                    Organization = crmSvc.ConnectedOrgUniqueName;
-                    OrganizationVersion = crmSvc.ConnectedOrgVersion.ToString();
-
-                    var webAppURi = new Uri(WebApplicationUrl);
-                    ServerName = webAppURi.Host;
-                    ServerPort = webAppURi.Port;
-
-                    UseOnline = crmSvc.CrmConnectOrgUriActual.Host.Contains(".dynamics.com");
-                    UseOsdp = crmSvc.CrmConnectOrgUriActual.Host.Contains(".dynamics.com");
-                    UseSsl = crmSvc.CrmConnectOrgUriActual.AbsoluteUri.ToLower().StartsWith("https");
-                    UseIfd = crmSvc.ActiveAuthenticationType == AuthenticationType.IFD;
-
-                    switch (crmSvc.ActiveAuthenticationType)
-                    {
-                        case AuthenticationType.AD:
-                        case AuthenticationType.Claims:
-                            AuthType = AuthenticationProviderType.ActiveDirectory;
-                            break;
-
-                        case AuthenticationType.IFD:
-                            AuthType = AuthenticationProviderType.Federation;
-                            break;
-
-                        case AuthenticationType.Live:
-                            AuthType = AuthenticationProviderType.LiveId;
-                            break;
-
-                        case AuthenticationType.OAuth:
-                            // TODO add new property in ConnectionDetail class?
-                            break;
-
-                        case AuthenticationType.Office365:
-                            AuthType = AuthenticationProviderType.OnlineFederation;
-                            break;
-                    }
-
-                    IsCustomAuth = ConnectionString.ToLower().Contains("username=");
-                }
-
-                return crmSvc;
+                Timeout = new TimeSpan(0, 2, 0);
             }
-
             CrmServiceClient.MaxConnectionTimeout = Timeout;
 
-            if (!string.IsNullOrEmpty(clientSecret))
+            if (Certificate != null)
+            {
+                var cs = HandleConnectionString($"AuthType=Certificate;url={OriginalUrl};thumbprint={Certificate.Thumbprint};ClientId={AzureAdAppId};");
+                crmSvc = new CrmServiceClient(cs);
+            }
+            else if (!string.IsNullOrEmpty(ConnectionString))
+            {
+                var cs = HandleConnectionString(ConnectionString);
+                crmSvc = new CrmServiceClient(cs);
+            }
+            else if (!string.IsNullOrEmpty(clientSecret))
             {
                 ConnectOAuth();
             }
@@ -328,6 +309,43 @@ namespace McTools.Xrm.Connection
                 var error = crmSvc.LastCrmError;
                 crmSvc = null;
                 throw new Exception(error);
+            }
+
+            OrganizationFriendlyName = crmSvc.ConnectedOrgFriendlyName;
+            OrganizationDataServiceUrl = crmSvc.ConnectedOrgPublishedEndpoints[EndpointType.OrganizationDataService];
+            OrganizationServiceUrl = crmSvc.ConnectedOrgPublishedEndpoints[EndpointType.OrganizationService];
+            WebApplicationUrl = crmSvc.ConnectedOrgPublishedEndpoints[EndpointType.WebApplication];
+            Organization = crmSvc.ConnectedOrgUniqueName;
+            OrganizationVersion = crmSvc.ConnectedOrgVersion.ToString();
+
+            var webAppURi = new Uri(WebApplicationUrl);
+            ServerName = webAppURi.Host;
+            ServerPort = webAppURi.Port;
+
+            UseIfd = crmSvc.ActiveAuthenticationType == AuthenticationType.IFD;
+
+            switch (crmSvc.ActiveAuthenticationType)
+            {
+                case AuthenticationType.AD:
+                case AuthenticationType.Claims:
+                    AuthType = AuthenticationProviderType.ActiveDirectory;
+                    break;
+
+                case AuthenticationType.IFD:
+                    AuthType = AuthenticationProviderType.Federation;
+                    break;
+
+                case AuthenticationType.Live:
+                    AuthType = AuthenticationProviderType.LiveId;
+                    break;
+
+                case AuthenticationType.OAuth:
+                    // TODO add new property in ConnectionDetail class?
+                    break;
+
+                case AuthenticationType.Office365:
+                    AuthType = AuthenticationProviderType.OnlineFederation;
+                    break;
             }
 
             return crmSvc;
@@ -388,19 +406,14 @@ namespace McTools.Xrm.Connection
             ConnectionString = editedConnection.ConnectionString;
             OrganizationServiceUrl = editedConnection.OrganizationServiceUrl;
             OrganizationDataServiceUrl = editedConnection.OrganizationDataServiceUrl;
-            CrmTicket = editedConnection.CrmTicket;
-            IsCustomAuth = editedConnection.IsCustomAuth;
             Organization = editedConnection.Organization;
             OrganizationFriendlyName = editedConnection.OrganizationFriendlyName;
             ServerName = editedConnection.ServerName;
             ServerPort = editedConnection.ServerPort;
             UseIfd = editedConnection.UseIfd;
-            UseOnline = editedConnection.UseOnline;
-            UseOsdp = editedConnection.UseOsdp;
             UserDomain = editedConnection.UserDomain;
             UserName = editedConnection.UserName;
             userPassword = editedConnection.userPassword;
-            UseSsl = editedConnection.UseSsl;
             HomeRealmUrl = editedConnection.HomeRealmUrl;
             Timeout = editedConnection.Timeout;
             UseMfa = editedConnection.UseMfa;
@@ -408,7 +421,6 @@ namespace McTools.Xrm.Connection
             AzureAdAppId = editedConnection.AzureAdAppId;
             clientSecret = editedConnection.clientSecret;
             RefreshToken = editedConnection.RefreshToken;
-            IsEnvironmentHighlightSet = editedConnection.IsEnvironmentHighlightSet;
             EnvironmentText = editedConnection.EnvironmentText;
             EnvironmentColor = editedConnection.EnvironmentColor;
             EnvironmentTextColor = editedConnection.EnvironmentTextColor;
@@ -449,7 +461,7 @@ namespace McTools.Xrm.Connection
 
         private void ConnectOAuth()
         {
-            if (!String.IsNullOrEmpty(RefreshToken))
+            if (!string.IsNullOrEmpty(RefreshToken))
             {
                 CrmServiceClient.AuthOverrideHook = new RefreshTokenAuthOverride(this);
                 crmSvc = new CrmServiceClient(new Uri($"https://{ServerName}:{ServerPort}"), true);
@@ -502,14 +514,16 @@ namespace McTools.Xrm.Connection
                     path,
                     null);
             }
-
-            crmSvc = new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password),
-                region,
-                orgName,
-                true,
-                true,
-                null,
-                true);
+            else
+            {
+                crmSvc = new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password),
+                    region,
+                    orgName,
+                    true,
+                    true,
+                    null,
+                    true);
+            }
         }
 
         private void ConnectOnprem()
@@ -542,20 +556,46 @@ namespace McTools.Xrm.Connection
                 UseSsl);
         }
 
+        private string HandleConnectionString(string connectionString)
+        {
+            var csb = new DbConnectionStringBuilder { ConnectionString = connectionString };
+            if (csb.ContainsKey("timeout"))
+            {
+                var csTimeout = TimeSpan.Parse(csb["timeout"].ToString());
+                csb.Remove("timeout");
+                CrmServiceClient.MaxConnectionTimeout = csTimeout;
+            }
+
+            var cs = csb.ToString();
+
+            if (cs.IndexOf("RequireNewInstance=", StringComparison.Ordinal) < 0)
+            {
+                if (!cs.EndsWith(";"))
+                {
+                    cs += ";";
+                }
+
+                cs += "RequireNewInstance=True;";
+            }
+
+            OriginalUrl = csb["Url"].ToString();
+            UserName = csb.ContainsKey("username") ? csb["username"].ToString() :
+                csb.ContainsKey("clientid") ? csb["clientid"].ToString() : null;
+
+            return cs;
+        }
+
         #endregion Méthodes
 
         public object Clone()
         {
-            return new ConnectionDetail
+            var cd = new ConnectionDetail
             {
                 AuthType = AuthType,
                 ConnectionId = Guid.NewGuid(),
                 ConnectionName = ConnectionName,
                 ConnectionString = ConnectionString,
-                UseConnectionString = UseConnectionString,
-                CrmTicket = CrmTicket,
                 HomeRealmUrl = HomeRealmUrl,
-                IsCustomAuth = IsCustomAuth,
                 Organization = Organization,
                 OrganizationFriendlyName = OrganizationFriendlyName,
                 OrganizationServiceUrl = OrganizationServiceUrl,
@@ -567,9 +607,6 @@ namespace McTools.Xrm.Connection
                 ServerPort = ServerPort,
                 TimeoutTicks = TimeoutTicks,
                 UseIfd = UseIfd,
-                UseOnline = UseOnline,
-                UseOsdp = UseOsdp,
-                UseSsl = UseSsl,
                 UserDomain = UserDomain,
                 UserName = UserName,
                 userPassword = userPassword,
@@ -579,14 +616,25 @@ namespace McTools.Xrm.Connection
                 UseMfa = UseMfa,
                 AzureAdAppId = AzureAdAppId,
                 ReplyUrl = ReplyUrl,
-                IsEnvironmentHighlightSet = IsEnvironmentHighlightSet,
                 EnvironmentText = EnvironmentText,
                 EnvironmentColor = EnvironmentColor,
                 EnvironmentTextColor = EnvironmentTextColor,
                 RefreshToken = RefreshToken,
                 S2SClientSecret = S2SClientSecret,
-                IsFromSdkLoginCtrl = IsFromSdkLoginCtrl
+                IsFromSdkLoginCtrl = IsFromSdkLoginCtrl,
             };
+
+            if (Certificate != null)
+            {
+                cd.Certificate = new CertificateInfo
+                {
+                    Issuer = Certificate.Issuer,
+                    Thumbprint = Certificate.Thumbprint,
+                    Name = Certificate.Name
+                };
+            }
+
+            return cd;
         }
 
         public void CopyClientSecretTo(ConnectionDetail detail)
@@ -619,6 +667,15 @@ namespace McTools.Xrm.Connection
             }
 
             csb["Url"] = WebApplicationUrl;
+
+            if (Certificate != null)
+            {
+                csb["AuthType"] = "Certificate";
+                csb["ClientId"] = AzureAdAppId;
+                csb["Thumbprint"] = Certificate.Thumbprint;
+
+                return csb.ToString();
+            }
 
             if (!string.IsNullOrEmpty(UserDomain))
                 csb["Domain"] = UserDomain;
@@ -655,7 +712,6 @@ namespace McTools.Xrm.Connection
                 || originalDetail.ServerPort != ServerPort
                 || originalDetail.UseIfd != UseIfd
                 || originalDetail.UseOnline != UseOnline
-                || originalDetail.UseOsdp != UseOsdp
                 || originalDetail.UseSsl != UseSsl
                 || originalDetail.UseMfa != UseMfa
                 || originalDetail.clientSecret != clientSecret
@@ -663,7 +719,8 @@ namespace McTools.Xrm.Connection
                 || originalDetail.ReplyUrl != ReplyUrl
                 || originalDetail.UserDomain?.ToLower() != UserDomain?.ToLower()
                 || originalDetail.UserName?.ToLower() != UserName?.ToLower()
-                || SavePassword && !string.IsNullOrEmpty(userPassword) && originalDetail.userPassword != userPassword)
+                || SavePassword && !string.IsNullOrEmpty(userPassword) && originalDetail.userPassword != userPassword
+                || originalDetail.Certificate.Thumbprint != Certificate.Thumbprint)
             {
                 return true;
             }
@@ -686,57 +743,30 @@ namespace McTools.Xrm.Connection
         }
 
         #endregion IComparable Members
+    }
 
-        internal XElement GetXElement()
+    public class EnvironmentHighlighting
+    {
+        [XmlIgnore]
+        public Color? Color { get; set; }
+
+        [XmlElement("Color")]
+        public string ColorString
         {
-            return new XElement("ConnectionDetail",
-                    new XElement("AuthType", AuthType),
-                    new XElement("ConnectionId", ConnectionId),
-                    new XElement("ConnectionName", ConnectionName),
-                    new XElement("ConnectionString", ConnectionString),
-                    new XElement("UseConnectionString", UseConnectionString),
-                    new XElement("IsCustomAuth", IsCustomAuth),
-                    new XElement("UseMfa", UseMfa), new XElement("UseIfd", UseIfd),
-                    new XElement("UseOnline", UseOnline),
-                    new XElement("UseOsdp", UseOsdp),
-                    new XElement("UserDomain", UserDomain),
-                    new XElement("UserName", UserName),
-                    new XElement("UserPassword", SavePassword ? userPassword : string.Empty),
-                    new XElement("SavePassword", SavePassword),
-                    new XElement("UseSsl", UseSsl),
-                    new XElement("AzureAdAppId", AzureAdAppId),
-                    new XElement("ReplyUrl", ReplyUrl),
-                    new XElement("UseIfd", UseIfd),
-                    new XElement("ServerName", ServerName),
-                    new XElement("ServerPort", ServerPort),
-                    new XElement("OriginalUrl", OriginalUrl),
-                    new XElement("Organization", Organization),
-                    new XElement("OrganizationUrlName", OrganizationUrlName),
-                    new XElement("OrganizationFriendlyName", OrganizationFriendlyName),
-                    new XElement("OrganizationServiceUrl", OrganizationServiceUrl),
-                    new XElement("OrganizationDataServiceUrl", OrganizationDataServiceUrl),
-                    new XElement("OrganizationVersion", OrganizationVersion),
-                    new XElement("HomeRealmUrl", HomeRealmUrl),
-                    new XElement("Timeout", TimeoutTicks),
-                    new XElement("WebApplicationUrl", WebApplicationUrl),
-                    new XElement("IsEnvironmentHighlightSet", IsEnvironmentHighlightSet),
-                    new XElement("EnvironmentText", EnvironmentText),
-                    new XElement("EnvironmentColor", ColorTranslator.ToHtml(EnvironmentColor ?? Color.FromArgb(255, 255, 0, 255))),
-                    new XElement("EnvironmentTextColor", ColorTranslator.ToHtml(EnvironmentTextColor ?? Color.FromArgb(255, 255, 255, 255))),
-                    new XElement("IsFromSdkLoginCtrl", IsFromSdkLoginCtrl),
-                    new XElement("LastUsedOn", LastUsedOn.ToString(CultureInfo.InvariantCulture.DateTimeFormat)),
-                    new XElement("RefreshToken", RefreshToken),
-                    new XElement("S2SClientSecret", S2SClientSecret),
-                    GetCustomInfoXElement());
+            get => ColorTranslator.ToHtml(Color ?? System.Drawing.Color.Black);
+            set => Color = ColorTranslator.FromHtml(value);
         }
 
-        private XElement GetCustomInfoXElement()
+        public string Text { get; set; }
+
+        [XmlIgnore]
+        public Color? TextColor { get; set; }
+
+        [XmlElement("TextColor")]
+        public string TextColorString
         {
-            if (CustomInformation == null)
-            {
-                return null;
-            }
-            return new XElement("CustomInformation", CustomInformation.Select(i => new XElement(i.Key, i.Value)));
+            get => ColorTranslator.ToHtml(TextColor ?? System.Drawing.Color.Black);
+            set => TextColor = ColorTranslator.FromHtml(value);
         }
     }
 }

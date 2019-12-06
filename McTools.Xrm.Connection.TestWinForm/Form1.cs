@@ -94,6 +94,13 @@ namespace McTools.Xrm.Connection.TestWinForm
             // Clear the current action message
             this.ccsb.SetMessage(string.Empty);
 
+            lbLogs.Items.Add($"Connected to {e.ConnectionDetail.ConnectionName}");
+
+            if (connectionCount == e.NumberOfConnectionsRequested && e.NumberOfConnectionsRequested > 1)
+            {
+                lbLogs.Items.Add("All connections done!");
+            }
+
             // Do action if needed
             if (e.Parameter != null)
             {
@@ -101,13 +108,6 @@ namespace McTools.Xrm.Connection.TestWinForm
                 {
                     WhoAmI();
                 }
-            }
-
-            MessageBox.Show($"Connected to {e.ConnectionDetail.ConnectionName}");
-
-            if (connectionCount == e.NumberOfConnectionsRequested)
-            {
-                MessageBox.Show("All connections done!");
             }
         }
 
@@ -131,7 +131,7 @@ namespace McTools.Xrm.Connection.TestWinForm
             {
                 formHelper.AskForConnection("WhoAmI", (listDetails) =>
                     {
-                        MessageBox.Show(listDetails.First().ConnectionName);
+                        lbLogs.Items.Add($"Connection requested to {listDetails.First().ConnectionName}");
                     });
             }
             else
@@ -154,7 +154,7 @@ namespace McTools.Xrm.Connection.TestWinForm
                 ccsb.SetMessage("Doing...");
                 ccsb.SetProgress(i * 10);
 
-                MessageBox.Show(this, "Your ID is: " + response.UserId.ToString("B"));
+                lbLogs.Items.Add("Your ID is: " + response.UserId.ToString("B"));
             } while (i < 1);
 
             ccsb.SetMessage("Done");
@@ -162,6 +162,11 @@ namespace McTools.Xrm.Connection.TestWinForm
         }
 
         #endregion WhoAmI Sample methods
+
+        private void tsbClearLogs_Click(object sender, EventArgs e)
+        {
+            lbLogs.Items.Clear();
+        }
 
         private void tsbManageConnections_Click(object sender, EventArgs e)
         {

@@ -27,14 +27,14 @@ namespace McTools.Xrm.Connection
 
         public override string ToString()
         {
-            return Name;
+            return Name?.Length > 0 ? Name : "N/A";
         }
     }
 
     public class ConnectionsList
     {
-        private static string connectionsListFilePath = "MscrmTools.ConnectionsList.xml";
-        private static ConnectionsList instance;
+        private static string _connectionsListFilePath = "MscrmTools.ConnectionsList.xml";
+        private static ConnectionsList _instance;
 
         private ConnectionsList()
         {
@@ -43,24 +43,24 @@ namespace McTools.Xrm.Connection
 
         public static string ConnectionsListFilePath
         {
-            get => connectionsListFilePath;
-            set => connectionsListFilePath = value;
+            get => _connectionsListFilePath;
+            set => _connectionsListFilePath = value;
         }
 
         public static ConnectionsList Instance
         {
             get
             {
-                if (instance == null)
+                if (_instance == null)
                 {
-                    var filename = Path.IsPathRooted(connectionsListFilePath) ? connectionsListFilePath : Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName,
-                        connectionsListFilePath);
+                    var filename = Path.IsPathRooted(_connectionsListFilePath) ? _connectionsListFilePath : Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName,
+                        _connectionsListFilePath);
 
                     if (File.Exists(filename))
                     {
                         using (var sr = new StreamReader(filename))
                         {
-                            instance = (ConnectionsList)XmlSerializerHelper.Deserialize(sr.ReadToEnd(), typeof(ConnectionsList));
+                            _instance = (ConnectionsList)XmlSerializerHelper.Deserialize(sr.ReadToEnd(), typeof(ConnectionsList));
                         }
                     }
                     else
@@ -77,13 +77,13 @@ namespace McTools.Xrm.Connection
                         CrmConnections cc = new CrmConnections("Default");
                         cc.SerializeToFile(defaultFilePath);
 
-                        instance = new ConnectionsList();
-                        instance.Files.Add(new ConnectionFile(cc) { Path = defaultFilePath });
-                        instance.Save();
+                        _instance = new ConnectionsList();
+                        _instance.Files.Add(new ConnectionFile(cc) { Path = defaultFilePath });
+                        _instance.Save();
                     }
                 }
 
-                return instance;
+                return _instance;
             }
         }
 
@@ -91,10 +91,10 @@ namespace McTools.Xrm.Connection
 
         public void Save()
         {
-            var filename = Path.IsPathRooted(connectionsListFilePath) ? connectionsListFilePath : Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName,
-                       connectionsListFilePath);
+            var filename = Path.IsPathRooted(_connectionsListFilePath) ? _connectionsListFilePath : Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName,
+                       _connectionsListFilePath);
 
-            XmlSerializerHelper.SerializeToFile(instance, filename);
+            XmlSerializerHelper.SerializeToFile(_instance, filename);
         }
     }
 }

@@ -26,6 +26,20 @@ namespace McTools.Xrm.Connection
         }
 
         /// <summary>
+        /// Deserialize un contenu xml de type chaine de caractère en
+        /// une instance de la classe du type spécifié
+        /// </summary>
+        /// <param name="stream">Flux à desérialiser</param>
+        /// <param name="objectType">Type de l'objet de destination</param>
+        /// <param name="types">Types supplémentaires</param>
+        /// <returns>Objet déserialisé</returns>
+        public static object Deserialize(Stream stream, Type objectType, params Type[] types)
+        {
+            XmlSerializer s = new XmlSerializer(objectType, types);
+            return s.Deserialize(stream);
+        }
+
+        /// <summary>
         /// Sérialise un objet sous forme de chaine de caractère Xml
         /// </summary>
         /// <param name="o">Objet à sérialiser</param>
@@ -49,6 +63,30 @@ namespace McTools.Xrm.Connection
         }
 
         /// <summary>
+        /// Sérialise un objet sous forme de chaine de caractère Xml
+        /// </summary>
+        /// <param name="o">Objet à sérialiser</param>
+        /// <param name="type">Types supplémentaires</param>
+        /// <returns>Chaine résultante</returns>
+        public static string Serialize(object o, params Type[] type)
+        {
+            try
+            {
+                XmlSerializer s = new XmlSerializer(o.GetType(), type);
+                StringBuilder builder = new StringBuilder();
+                using (StringWriter writer = new StringWriter(builder))
+                {
+                    s.Serialize(writer, o);
+                }
+                return builder.ToString();
+            }
+            catch (Exception error)
+            {
+                throw new Exception("Error while serializing: " + error.Message);
+            }
+        }
+
+        /// <summary>
         /// Sérialize un objet dans un fichier
         /// </summary>
         /// <param name="o">Objet à sérialiser</param>
@@ -58,6 +96,37 @@ namespace McTools.Xrm.Connection
             try
             {
                 XmlSerializer s = new XmlSerializer(o.GetType());
+
+                using (var fStream = File.Open(path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite))
+                {
+                    fStream.SetLength(0);
+                }
+
+                using (var fStream = File.Open(path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite))
+                {
+                    using (StreamWriter writer = new StreamWriter(fStream))
+                    {
+                        s.Serialize(writer, o);
+                    }
+                }
+            }
+            catch (Exception error)
+            {
+                throw new Exception("Error while serializing: " + error.Message);
+            }
+        }
+
+        /// <summary>
+        /// Sérialize un objet dans un fichier
+        /// </summary>
+        /// <param name="o">Objet à sérialiser</param>
+        /// <param name="path">Chemin du fichier de destination</param>
+        /// <param name="type">Types supplémentaires</param>
+        public static void SerializeToFile(object o, string path, params Type[] type)
+        {
+            try
+            {
+                XmlSerializer s = new XmlSerializer(o.GetType(), type);
 
                 using (var fStream = File.Open(path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite))
                 {

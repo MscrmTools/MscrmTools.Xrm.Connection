@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
 
 namespace McTools.Xrm.Connection.WinForms
@@ -76,14 +77,11 @@ namespace McTools.Xrm.Connection.WinForms
             if (ctrl is ConnectionFirstStepControl cfsc)
             {
                 CrmConnectionDetail.OriginalUrl = cfsc.Url;
-                CrmConnectionDetail.IsCustomAuth = !cfsc.UseIntegratedAuth;
+                //CrmConnectionDetail.IsCustomAuth = !cfsc.UseIntegratedAuth;
                 CrmConnectionDetail.UseMfa = cfsc.UseMfa;
-                CrmConnectionDetail.UseSsl = cfsc.UseSsl;
                 CrmConnectionDetail.ServerName = cfsc.HostName;
                 CrmConnectionDetail.ServerPort = cfsc.HostPort;
                 CrmConnectionDetail.OrganizationUrlName = cfsc.OrganizationUrlName;
-                CrmConnectionDetail.UseOnline = CrmConnectionDetail.OriginalUrl.ToLower().Contains(".dynamics.com");
-                CrmConnectionDetail.UseOsdp = CrmConnectionDetail.UseOnline;
                 CrmConnectionDetail.Timeout = cfsc.Timeout;
 
                 if (CrmConnectionDetail.Timeout.Ticks == 0 || CrmConnectionDetail.ServerName == null) return;
@@ -98,7 +96,7 @@ namespace McTools.Xrm.Connection.WinForms
 
                     if (CrmConnectionDetail.UseOnline)
                     {
-                        if (CrmConnectionDetail.IsCustomAuth)
+                        if (!cfsc.UseIntegratedAuth)
                         {
                             if (CrmConnectionDetail.UseMfa)
                             {
@@ -226,6 +224,8 @@ Note that this is required to validate this wizard",
                     }
                 }
 
+                CrmConnectionDetail.NewAuthType = cic.IsIfd ? AuthenticationType.IFD : AuthenticationType.AD;
+
                 if (CrmConnectionDetail.IsCustomAuth)
                 {
                     DisplayControl<ConnectionCredentialsControl>();
@@ -278,7 +278,6 @@ Note that this is required to validate this wizard",
 
                 if (!CrmConnectionDetail.ClientSecretIsEmpty)
                 {
-                    CrmConnectionDetail.IsCustomAuth = false;
                     DisplayControl<ConnectionLoadingControl>();
                     Connect();
                 }
@@ -290,7 +289,6 @@ Note that this is required to validate this wizard",
             else if (ctrl is ConnectionStringControl csc)
             {
                 CrmConnectionDetail.ConnectionString = csc.ConnectionString;
-                CrmConnectionDetail.UseConnectionString = true;
 
                 DisplayControl<ConnectionLoadingControl>();
                 Connect();
@@ -306,7 +304,6 @@ Note that this is required to validate this wizard",
             {
                 CrmConnectionDetail.IsFromSdkLoginCtrl = true;
                 CrmConnectionDetail.AuthType = slcc.AuthType;
-                CrmConnectionDetail.UseOnline = slcc.AuthType == AuthenticationProviderType.OnlineFederation;
                 CrmConnectionDetail.UseIfd = slcc.AuthType == AuthenticationProviderType.Federation;
                 CrmConnectionDetail.Organization = slcc.ConnectionManager.ConnectedOrgUniqueName;
                 CrmConnectionDetail.OrganizationFriendlyName = slcc.ConnectionManager.ConnectedOrgFriendlyName;
@@ -328,6 +325,48 @@ Note that this is required to validate this wizard",
                 CrmConnectionDetail.UserName = CrmConnectionDetail.ServiceClient.OAuthUserId;
 
                 DisplayControl<ConnectionSucceededControl>();
+            }
+            else if (ctrl is ConnectionUrlControl cuc)
+            {
+                if (string.IsNullOrEmpty(cuc.Url) || !Uri.TryCreate(cuc.Url, UriKind.Absolute, out _))
+                {
+                    MessageBox.Show(this, @"Please provide a valid url", @"Warning", MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                    return;
+                }
+
+                CrmConnectionDetail.OriginalUrl = cuc.Url;
+                CrmConnectionDetail.Timeout = cuc.Timeout;
+
+                DisplayControl<ConnectionCertificateControl>();
+            }
+            else if (ctrl is ConnectionCertificateControl ccertc)
+            {
+                CrmConnectionDetail.Certificate = new CertificateInfo
+                {
+                    Thumbprint = ccertc.Certificate.Thumbprint,
+                    Issuer = ccertc.Certificate.Issuer,
+                    Name = ccertc.Certificate.GetNameInfo(X509NameType.SimpleName, false)
+                };
+
+                CrmConnectionDetail.NewAuthType = AuthenticationType.Certificate;
+
+                DisplayControl<ConnectionAppIdControl>();
+            }
+            else if (ctrl is ConnectionAppIdControl cac)
+            {
+                if (Guid.TryParse(cac.AppId, out Guid appId))
+                {
+                    CrmConnectionDetail.AzureAdAppId = appId;
+
+                    DisplayControl<ConnectionLoadingControl>();
+                    Connect();
+                }
+                else
+                {
+                    MessageBox.Show(this, @"Invalid Application Id", @"Error", MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }
             }
         }
 
@@ -403,6 +442,10 @@ Note that this is required to validate this wizard",
                     // is handled in ConnectionSelector class
                     DisplayControl<SdkLoginControlControl>();
                 }
+                else if (CrmConnectionDetail.Certificate != null)
+                {
+                    DisplayControl<ConnectionUrlControl>();
+                }
                 else
                 {
                     DisplayControl<ConnectionFirstStepControl>();
@@ -441,6 +484,10 @@ Note that this is required to validate this wizard",
 
                        case ConnectionType.ConnectionString:
                            DisplayControl<ConnectionStringControl>();
+                           break;
+
+                       case ConnectionType.Certificate:
+                           DisplayControl<ConnectionUrlControl>();
                            break;
                    }
                };
@@ -513,6 +560,7 @@ Note that this is required to validate this wizard",
 
                 ctrl = new ConnectionLoadingControl();
 
+                btnBack.Visible = false;
                 btnReset.Visible = false;
                 btnNext.Visible = false;
                 btnNext.Text = @"Next";
@@ -528,6 +576,7 @@ Note that this is required to validate this wizard",
                     ConnectionDetail = CrmConnectionDetail
                 };
 
+                btnBack.Visible = true;
                 btnReset.Visible = false;
                 btnNext.Visible = true;
                 btnNext.Text = @"Finish";
@@ -542,6 +591,7 @@ Note that this is required to validate this wizard",
                     ErrorMEssage = lastError
                 };
 
+                btnBack.Visible = true;
                 btnReset.Visible = true;
                 btnNext.Visible = false;
                 btnNext.Text = @"Finish";
@@ -592,8 +642,60 @@ Note that this is required to validate this wizard",
                 btnReset.Visible = true;
                 btnNext.Visible = false;
             }
+            else if (typeof(T) == typeof(ConnectionUrlControl))
+            {
+                pnlFooter.Visible = true;
+                lblHeader.Text = @"Provide environment information";
 
-        ((UserControl)ctrl).Dock = DockStyle.Fill;
+                if (!CrmConnectionDetail.ConnectionId.HasValue)
+                {
+                    CrmConnectionDetail.ConnectionId = Guid.NewGuid();
+                }
+
+                ctrl = new ConnectionUrlControl(CrmConnectionDetail);
+
+                btnReset.Visible = true;
+                btnNext.Visible = true;
+                btnNext.Text = @"Next";
+            }
+            else if (typeof(T) == typeof(ConnectionCertificateControl))
+            {
+                pnlFooter.Visible = true;
+                lblHeader.Text = @"Connection with certificate";
+
+                if (!CrmConnectionDetail.ConnectionId.HasValue)
+                {
+                    CrmConnectionDetail.ConnectionId = Guid.NewGuid();
+                }
+
+                ctrl = new ConnectionCertificateControl(CrmConnectionDetail);
+
+                btnReset.Visible = true;
+                btnNext.Visible = true;
+                btnNext.Text = @"Next";
+            }
+            else if (typeof(T) == typeof(ConnectionAppIdControl))
+            {
+                pnlFooter.Visible = true;
+                lblHeader.Text = @"Application user Application ID";
+
+                if (!CrmConnectionDetail.ConnectionId.HasValue)
+                {
+                    CrmConnectionDetail.ConnectionId = Guid.NewGuid();
+                }
+
+                ctrl = new ConnectionAppIdControl();
+                if (CrmConnectionDetail.AzureAdAppId != Guid.Empty)
+                {
+                    ((ConnectionAppIdControl)ctrl).AppId = CrmConnectionDetail.AzureAdAppId.ToString("B");
+                }
+
+                btnReset.Visible = true;
+                btnNext.Visible = true;
+                btnNext.Text = @"Next";
+            }
+
+            ((UserControl)ctrl).Dock = DockStyle.Fill;
             pnlMain.Controls.Clear();
             pnlMain.Controls.Add((UserControl)ctrl);
         }

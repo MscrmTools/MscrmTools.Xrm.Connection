@@ -179,11 +179,23 @@
     <Compile Include="CustomControls\ConnectionFailedControl.Designer.cs">
       <DependentUpon>ConnectionFailedControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="CustomControls\ConnectionUrlControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControls\ConnectionUrlControl.Designer.cs">
+      <DependentUpon>ConnectionUrlControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="CustomControls\ConnectionFirstStepControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="CustomControls\ConnectionFirstStepControl.Designer.cs">
       <DependentUpon>ConnectionFirstStepControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\ConnectionAppIdControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControls\ConnectionAppIdControl.Designer.cs">
+      <DependentUpon>ConnectionAppIdControl.cs</DependentUpon>
     </Compile>
     <Compile Include="CustomControls\ConnectionIfdControl.cs">
       <SubType>UserControl</SubType>
@@ -202,6 +214,12 @@
     </Compile>
     <Compile Include="CustomControls\ConnectionOauthControl.Designer.cs">
       <DependentUpon>ConnectionOauthControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\ConnectionCertificateControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControls\ConnectionCertificateControl.Designer.cs">
+      <DependentUpon>ConnectionCertificateControl.cs</DependentUpon>
     </Compile>
     <Compile Include="CustomControls\StartPageControl.cs">
       <SubType>UserControl</SubType>
@@ -252,7 +270,6 @@
     <Compile Include="ConnectionSelector.designer.cs">
       <DependentUpon>ConnectionSelector.cs</DependentUpon>
     </Compile>
-    <Compile Include="ConnectionSettings.cs" />
     <Compile Include="CrmConnectionStatusBar.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -306,8 +323,14 @@
     <EmbeddedResource Include="CustomControls\ConnectionFailedControl.resx">
       <DependentUpon>ConnectionFailedControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="CustomControls\ConnectionUrlControl.resx">
+      <DependentUpon>ConnectionUrlControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CustomControls\ConnectionFirstStepControl.resx">
       <DependentUpon>ConnectionFirstStepControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControls\ConnectionAppIdControl.resx">
+      <DependentUpon>ConnectionAppIdControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CustomControls\ConnectionIfdControl.resx">
       <DependentUpon>ConnectionIfdControl.cs</DependentUpon>
@@ -317,6 +340,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CustomControls\ConnectionOauthControl.resx">
       <DependentUpon>ConnectionOauthControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControls\ConnectionCertificateControl.resx">
+      <DependentUpon>ConnectionCertificateControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CustomControls\StartPageControl.resx">
       <DependentUpon>StartPageControl.cs</DependentUpon>
@@ -431,6 +457,18 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\powerapps16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ConnectionStringImage32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\logo_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LogoDyn365_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Certificate32.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
