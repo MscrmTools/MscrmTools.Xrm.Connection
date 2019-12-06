@@ -264,7 +264,7 @@ namespace McTools.Xrm.Connection.WinForms
         {
             string groupName;
 
-            if (detail.UseOsdp || detail.UseOnline)
+            if (detail.UseOnline)
             {
                 groupName = "Online";
             }
@@ -290,11 +290,6 @@ namespace McTools.Xrm.Connection.WinForms
         private int GetImageIndex(ConnectionDetail detail)
         {
             if (detail.UseOnline)
-            {
-                return 2;
-            }
-
-            if (detail.UseOsdp)
             {
                 return 2;
             }

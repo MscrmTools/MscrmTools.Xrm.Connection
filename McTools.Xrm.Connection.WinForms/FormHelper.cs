@@ -41,7 +41,7 @@ namespace McTools.Xrm.Connection.WinForms
                 {
                     if (!connectionDetail.UseConnectionString && connectionDetail.IsCustomAuth)
                     {
-                        if (connectionDetail.PasswordIsEmpty)
+                        if (connectionDetail.PasswordIsEmpty && connectionDetail.Certificate == null)
                         {
                             var pForm = new PasswordForm(connectionDetail)
                             {
@@ -101,7 +101,7 @@ namespace McTools.Xrm.Connection.WinForms
         {
             if (!connectionDetail.UseConnectionString && connectionDetail.IsCustomAuth)
             {
-                if (connectionDetail.PasswordIsEmpty)
+                if (connectionDetail.PasswordIsEmpty && connectionDetail.Certificate == null)
                 {
                     var pForm = new PasswordForm(connectionDetail)
                     {
@@ -255,7 +255,7 @@ namespace McTools.Xrm.Connection.WinForms
             if (!string.IsNullOrEmpty(detail.ConnectionString))
                 return true;
 
-            if (!detail.PasswordIsEmpty)
+            if (!detail.PasswordIsEmpty || detail.Certificate != null)
                 return true;
 
             bool returnValue = false;

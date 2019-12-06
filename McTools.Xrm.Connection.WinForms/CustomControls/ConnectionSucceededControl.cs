@@ -19,10 +19,10 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
 
         private void btnClearEnvHighlight_Click(object sender, System.EventArgs e)
         {
-            ConnectionDetail.IsEnvironmentHighlightSet = false;
-            ConnectionDetail.EnvironmentColor = null;
-            ConnectionDetail.EnvironmentTextColor = null;
-            ConnectionDetail.EnvironmentText = null;
+            ConnectionDetail.EnvironmentHighlightingInfo = null;
+            //ConnectionDetail.EnvironmentColor = null;
+            //ConnectionDetail.EnvironmentTextColor = null;
+            //ConnectionDetail.EnvironmentText = null;
 
             btnClearEnvHighlight.Visible = false;
         }
@@ -32,10 +32,12 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
             var dialog = new EnvHighlightDialog(ConnectionDetail);
             if (dialog.ShowDialog(this) == DialogResult.OK)
             {
-                ConnectionDetail.IsEnvironmentHighlightSet = true;
-                ConnectionDetail.EnvironmentColor = dialog.BackColorSelected;
-                ConnectionDetail.EnvironmentTextColor = dialog.TextColorSelected;
-                ConnectionDetail.EnvironmentText = dialog.TextSelected;
+                ConnectionDetail.EnvironmentHighlightingInfo = new EnvironmentHighlighting
+                {
+                    Color = dialog.BackColorSelected,
+                    TextColor = dialog.TextColorSelected,
+                    Text = dialog.TextSelected
+                };
 
                 btnClearEnvHighlight.Visible = true;
             }

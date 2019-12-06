@@ -194,4 +194,16 @@ Expected format : HH:mm:ss</value>
   <data name="ConnectionStringImage1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ConnectionStringImage1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Certificate32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Certificate32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ConnectionStringImage32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ConnectionStringImage32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="LogoDyn365_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LogoDyn365_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="logo_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\logo_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>
