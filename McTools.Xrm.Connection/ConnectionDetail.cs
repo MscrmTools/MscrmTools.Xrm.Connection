@@ -96,8 +96,7 @@ namespace McTools.Xrm.Connection
         /// <summary>
         /// Get or set flag to know if custom authentication
         /// </summary>
-        [XmlIgnore]
-        public bool IsCustomAuth => !string.IsNullOrEmpty(UserName) && !PasswordIsEmpty || ConnectionString?.IndexOf("username=", StringComparison.InvariantCultureIgnoreCase) >= 0;
+        public bool IsCustomAuth { get; set; }
 
         [XmlIgnore] public bool IsEnvironmentHighlightSet => EnvironmentHighlightingInfo != null;
         public bool IsFromSdkLoginCtrl { get; set; }
@@ -181,6 +180,7 @@ namespace McTools.Xrm.Connection
         /// Get or set the server port
         /// </summary>
         [DefaultValue(80)]
+        [XmlIgnore]
         public int? ServerPort { get; set; }
 
         [XmlIgnore]
@@ -218,15 +218,14 @@ namespace McTools.Xrm.Connection
         public bool UseOnline => OriginalUrl.IndexOf(".dynamics.com", StringComparison.InvariantCultureIgnoreCase) > 0;
 
         /// <summary>
-        /// Get or set flag to know if we use Online Services
-        /// </summary>
-        //public bool UseOsdp { get; set; }
-
-        /// <summary>
         /// Get or set the user domain name
         /// </summary>
         public string UserDomain { get; set; }
 
+        /// <summary>
+        /// Get or set flag to know if we use Online Services
+        /// </summary>
+        //public bool UseOsdp { get; set; }
         /// <summary>
         /// Get or set user login
         /// </summary>
@@ -254,6 +253,13 @@ namespace McTools.Xrm.Connection
         {
             get => clientSecret;
             set => clientSecret = value;
+        }
+
+        [XmlElement("ServerPort")]
+        private string ServerPortString
+        {
+            get => ServerPort.ToString();
+            set => ServerPort = string.IsNullOrEmpty(value) ? 80 : int.Parse(value);
         }
 
         #endregion Propriétés
@@ -285,6 +291,18 @@ namespace McTools.Xrm.Connection
             else if (!string.IsNullOrEmpty(ConnectionString))
             {
                 var cs = HandleConnectionString(ConnectionString);
+                crmSvc = new CrmServiceClient(cs);
+            }
+            else if (NewAuthType == AuthenticationType.ClientSecret)
+            {
+                var cs = HandleConnectionString($"AuthType=ClientSecret;url={OriginalUrl};ClientId={AzureAdAppId};ClientSecret={clientSecret}");
+                crmSvc = new CrmServiceClient(cs);
+            }
+            else if (NewAuthType == AuthenticationType.OAuth && UseMfa)
+            {
+                var path = Path.Combine(Path.GetTempPath(), ConnectionId.Value.ToString("B"));
+
+                var cs = HandleConnectionString($"AuthType=OAuth;Username={UserName};Url={OriginalUrl};AppId={AzureAdAppId};RedirectUri={ReplyUrl};TokenCacheStorePath={path};LoginPrompt=Auto");
                 crmSvc = new CrmServiceClient(cs);
             }
             else if (!string.IsNullOrEmpty(clientSecret))

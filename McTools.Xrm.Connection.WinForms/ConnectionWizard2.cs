@@ -19,6 +19,7 @@ namespace McTools.Xrm.Connection.WinForms
         private IConnectionWizardControl ctrl;
         private string lastError;
         private ConnectionDetail originalDetail;
+        private ConnectionType type;
 
         public ConnectionWizard2(ConnectionDetail detail = null)
         {
@@ -70,6 +71,16 @@ namespace McTools.Xrm.Connection.WinForms
                 DisplayControl<SdkLoginControlControl>();
             else if (type == typeof(StartPageControl))
                 DisplayControl<StartPageControl>();
+            else if (type == typeof(ConnectionCertificateControl))
+                DisplayControl<ConnectionCertificateControl>();
+            else if (type == typeof(ConnectionUrlControl))
+                DisplayControl<ConnectionUrlControl>();
+            else if (type == typeof(ConnectionClientSecretControl))
+                DisplayControl<ConnectionClientSecretControl>();
+            else if (type == typeof(ConnectionAppIdControl))
+                DisplayControl<ConnectionAppIdControl>();
+            else if (type == typeof(ConnectionMfaControl))
+                DisplayControl<ConnectionMfaControl>();
         }
 
         private void btnNext_Click(object sender, EventArgs e)
@@ -77,7 +88,7 @@ namespace McTools.Xrm.Connection.WinForms
             if (ctrl is ConnectionFirstStepControl cfsc)
             {
                 CrmConnectionDetail.OriginalUrl = cfsc.Url;
-                //CrmConnectionDetail.IsCustomAuth = !cfsc.UseIntegratedAuth;
+                CrmConnectionDetail.IsCustomAuth = !cfsc.UseIntegratedAuth;
                 CrmConnectionDetail.UseMfa = cfsc.UseMfa;
                 CrmConnectionDetail.ServerName = cfsc.HostName;
                 CrmConnectionDetail.ServerPort = cfsc.HostPort;
@@ -313,6 +324,7 @@ Note that this is required to validate this wizard",
                     slcc.ConnectionManager.ConnectedOrgPublishedEndpoints[EndpointType.OrganizationService];
                 CrmConnectionDetail.WebApplicationUrl =
                     slcc.ConnectionManager.ConnectedOrgPublishedEndpoints[EndpointType.WebApplication];
+                CrmConnectionDetail.OriginalUrl = CrmConnectionDetail.WebApplicationUrl;
                 CrmConnectionDetail.ServerName = new Uri(CrmConnectionDetail.WebApplicationUrl).Host;
                 CrmConnectionDetail.OrganizationVersion = slcc.ConnectionManager.CrmSvc.ConnectedOrgVersion.ToString();
                 CrmConnectionDetail.ServiceClient = slcc.ConnectionManager.CrmSvc;
@@ -338,7 +350,70 @@ Note that this is required to validate this wizard",
                 CrmConnectionDetail.OriginalUrl = cuc.Url;
                 CrmConnectionDetail.Timeout = cuc.Timeout;
 
-                DisplayControl<ConnectionCertificateControl>();
+                if (type == ConnectionType.Certificate)
+                {
+                    DisplayControl<ConnectionCertificateControl>();
+                }
+                else if (type == ConnectionType.ClientSecret)
+                {
+                    DisplayControl<ConnectionClientSecretControl>();
+                }
+                else if (type == ConnectionType.Mfa)
+                {
+                    DisplayControl<ConnectionMfaControl>();
+                }
+            }
+            else if (ctrl is ConnectionClientSecretControl ccsc)
+            {
+                CrmConnectionDetail.AzureAdAppId = ccsc.AzureAdAppId;
+                CrmConnectionDetail.NewAuthType = AuthenticationType.ClientSecret;
+
+                if (ccsc.ClientSecretChanged)
+                {
+                    CrmConnectionDetail.SetClientSecret(ccsc.ClientSecret);
+                }
+
+                if (CrmConnectionDetail.AzureAdAppId == Guid.Empty
+                    || string.IsNullOrEmpty(CrmConnectionDetail.ReplyUrl))
+                {
+                    MessageBox.Show(this,
+                        @"Please provide all information for Client Id/Secret authentication",
+                        @"Warning",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+
+                    return;
+                }
+
+                if (!CrmConnectionDetail.ClientSecretIsEmpty)
+                {
+                    DisplayControl<ConnectionLoadingControl>();
+                    Connect();
+                }
+            }
+            else if (ctrl is ConnectionMfaControl cmfac)
+            {
+                CrmConnectionDetail.AzureAdAppId = cmfac.AzureAdAppId;
+                CrmConnectionDetail.ReplyUrl = cmfac.ReplyUrl;
+                CrmConnectionDetail.UserName = cmfac.Username;
+                CrmConnectionDetail.AzureAdAppId = cmfac.AzureAdAppId;
+                CrmConnectionDetail.NewAuthType = AuthenticationType.OAuth;
+                CrmConnectionDetail.UseMfa = true;
+
+                if (CrmConnectionDetail.AzureAdAppId == Guid.Empty
+                    || string.IsNullOrEmpty(CrmConnectionDetail.ReplyUrl))
+                {
+                    MessageBox.Show(this,
+                        @"Please provide at least Application Id and Reply Url for multi factor authentication",
+                        @"Warning",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+
+                    return;
+                }
+
+                DisplayControl<ConnectionLoadingControl>();
+                Connect();
             }
             else if (ctrl is ConnectionCertificateControl ccertc)
             {
@@ -444,6 +519,17 @@ Note that this is required to validate this wizard",
                 }
                 else if (CrmConnectionDetail.Certificate != null)
                 {
+                    type = ConnectionType.Certificate;
+                    DisplayControl<ConnectionUrlControl>();
+                }
+                else if (CrmConnectionDetail.NewAuthType == AuthenticationType.ClientSecret)
+                {
+                    type = ConnectionType.ClientSecret;
+                    DisplayControl<ConnectionUrlControl>();
+                }
+                else if (CrmConnectionDetail.UseMfa)
+                {
+                    type = ConnectionType.Mfa;
                     DisplayControl<ConnectionUrlControl>();
                 }
                 else
@@ -471,26 +557,36 @@ Note that this is required to validate this wizard",
 
                 ctrl = new StartPageControl();
                 ((StartPageControl)ctrl).TypeSelected += (sender, e) =>
-               {
-                   switch (((StartPageControl)ctrl).Type)
-                   {
-                       case ConnectionType.Wizard:
-                           DisplayControl<ConnectionFirstStepControl>();
-                           break;
+                {
+                    type = ((StartPageControl)ctrl).Type;
 
-                       case ConnectionType.Sdk:
-                           DisplayControl<SdkLoginControlControl>();
-                           break;
+                    switch (((StartPageControl)ctrl).Type)
+                    {
+                        case ConnectionType.Wizard:
+                            DisplayControl<ConnectionFirstStepControl>();
+                            break;
 
-                       case ConnectionType.ConnectionString:
-                           DisplayControl<ConnectionStringControl>();
-                           break;
+                        case ConnectionType.Sdk:
+                            DisplayControl<SdkLoginControlControl>();
+                            break;
 
-                       case ConnectionType.Certificate:
-                           DisplayControl<ConnectionUrlControl>();
-                           break;
-                   }
-               };
+                        case ConnectionType.ConnectionString:
+                            DisplayControl<ConnectionStringControl>();
+                            break;
+
+                        case ConnectionType.Certificate:
+                            DisplayControl<ConnectionUrlControl>();
+                            break;
+
+                        case ConnectionType.ClientSecret:
+                            DisplayControl<ConnectionUrlControl>();
+                            break;
+
+                        case ConnectionType.Mfa:
+                            DisplayControl<ConnectionUrlControl>();
+                            break;
+                    }
+                };
 
                 btnReset.Visible = false;
                 btnNext.Visible = false;
@@ -688,6 +784,49 @@ Note that this is required to validate this wizard",
                 if (CrmConnectionDetail.AzureAdAppId != Guid.Empty)
                 {
                     ((ConnectionAppIdControl)ctrl).AppId = CrmConnectionDetail.AzureAdAppId.ToString("B");
+                }
+
+                btnReset.Visible = true;
+                btnNext.Visible = true;
+                btnNext.Text = @"Next";
+            }
+            else if (typeof(T) == typeof(ConnectionClientSecretControl))
+            {
+                pnlFooter.Visible = true;
+                lblHeader.Text = @"Client Id / Secret";
+
+                if (!CrmConnectionDetail.ConnectionId.HasValue)
+                {
+                    CrmConnectionDetail.ConnectionId = Guid.NewGuid();
+                }
+
+                ctrl = new ConnectionClientSecretControl();
+                ((ConnectionClientSecretControl)ctrl).HasClientSecret = !CrmConnectionDetail.ClientSecretIsEmpty;
+                if (CrmConnectionDetail.AzureAdAppId != Guid.Empty)
+                {
+                    ((ConnectionClientSecretControl)ctrl).AzureAdAppId = CrmConnectionDetail.AzureAdAppId;
+                }
+
+                btnReset.Visible = true;
+                btnNext.Visible = true;
+                btnNext.Text = @"Next";
+            }
+            else if (typeof(T) == typeof(ConnectionMfaControl))
+            {
+                pnlFooter.Visible = true;
+                lblHeader.Text = @"Mutli Factor Authentication";
+
+                if (!CrmConnectionDetail.ConnectionId.HasValue)
+                {
+                    CrmConnectionDetail.ConnectionId = Guid.NewGuid();
+                }
+
+                ctrl = new ConnectionMfaControl();
+                ((ConnectionMfaControl)ctrl).Username = CrmConnectionDetail.UserName;
+                ((ConnectionMfaControl)ctrl).ReplyUrl = CrmConnectionDetail.ReplyUrl;
+                if (CrmConnectionDetail.AzureAdAppId != Guid.Empty)
+                {
+                    ((ConnectionMfaControl)ctrl).AzureAdAppId = CrmConnectionDetail.AzureAdAppId;
                 }
 
                 btnReset.Visible = true;

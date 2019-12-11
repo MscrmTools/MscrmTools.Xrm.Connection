@@ -18,7 +18,7 @@ namespace McTools.Xrm.Connection.WinForms
             var sfd = new SaveFileDialog
             {
                 FileName = string.Format("{0}.xml", txtConnectionName.Text),
-                Filter = "XML file|*.xml",
+                Filter = @"XML file|*.xml",
             };
 
             if (sfd.ShowDialog(this) == DialogResult.OK)
@@ -29,8 +29,8 @@ namespace McTools.Xrm.Connection.WinForms
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
 
         private void btnOk_Click(object sender, EventArgs e)
@@ -39,13 +39,14 @@ namespace McTools.Xrm.Connection.WinForms
             var file = new ConnectionFile(cc)
             {
                 Path = txtFilePath.Text,
+                Name = txtConnectionName.Text,
                 LastUsed = DateTime.Now
             };
-            
+
             if (ConnectionsList.Instance.Files.Any(f => f.Name == cc.Name))
             {
                 int cloneId = 1;
-                string newName = cc.Name;
+                string newName = file.Name;
 
                 while (ConnectionsList.Instance.Files.FirstOrDefault(f => f.Name == newName) != null)
                 {
@@ -62,8 +63,8 @@ namespace McTools.Xrm.Connection.WinForms
                 }
 
                 file.Name = newName;
-              
-                MessageBox.Show(this, $"A connection file with this name already exists!\n\nIt has been renamed to '{newName}'", "Warning",
+
+                MessageBox.Show(this, $@"A connection file with this name already exists!\n\nIt has been renamed to '{newName}'", "Warning",
                   MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             cc.SerializeToFile(txtFilePath.Text);
@@ -71,8 +72,8 @@ namespace McTools.Xrm.Connection.WinForms
 
             CreatedFilePath = txtFilePath.Text;
 
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            DialogResult = DialogResult.OK;
+            Close();
         }
     }
 }

@@ -5,13 +5,11 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
 {
     public partial class ConnectionUrlControl : UserControl, IConnectionWizardControl
     {
-        private bool invalidUrlWarned;
-
         public ConnectionUrlControl(ConnectionDetail detail)
         {
             InitializeComponent();
 
-            txtOrganizationUrl.Text = detail.OriginalUrl;
+            txtOrganizationUrl.Text = string.IsNullOrEmpty(detail.OriginalUrl) ? "https://organization.crm.dynamics.com" : detail.OriginalUrl;
         }
 
         public TimeSpan Timeout
@@ -43,6 +41,11 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
 
         private void ConnectionUrlControl_Load(object sender, EventArgs e)
         {
+            if (txtOrganizationUrl.Text == @"https://organization.crm.dynamics.com")
+            {
+                txtOrganizationUrl.Select(8, 12);
+            }
+
             txtOrganizationUrl.Focus();
         }
     }
