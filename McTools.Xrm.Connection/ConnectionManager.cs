@@ -595,6 +595,8 @@ namespace McTools.Xrm.Connection
 
             var parameters = new List<object> { detail, connectionParameter, 1 };
 
+            if (crmSvc == null) return;
+
             if (crmSvc.IsReady)
             {
                 SendSuccessMessage(crmSvc, parameters);

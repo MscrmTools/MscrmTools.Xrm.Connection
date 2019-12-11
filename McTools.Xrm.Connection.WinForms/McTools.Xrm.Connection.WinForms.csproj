@@ -179,6 +179,18 @@
     <Compile Include="CustomControls\ConnectionFailedControl.Designer.cs">
       <DependentUpon>ConnectionFailedControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="CustomControls\ConnectionClientSecretControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControls\ConnectionClientSecretControl.Designer.cs">
+      <DependentUpon>ConnectionClientSecretControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\ConnectionMfaControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControls\ConnectionMfaControl.Designer.cs">
+      <DependentUpon>ConnectionMfaControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="CustomControls\ConnectionUrlControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -322,6 +334,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CustomControls\ConnectionFailedControl.resx">
       <DependentUpon>ConnectionFailedControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControls\ConnectionClientSecretControl.resx">
+      <DependentUpon>ConnectionClientSecretControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControls\ConnectionMfaControl.resx">
+      <DependentUpon>ConnectionMfaControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CustomControls\ConnectionUrlControl.resx">
       <DependentUpon>ConnectionUrlControl.cs</DependentUpon>

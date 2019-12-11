@@ -94,9 +94,13 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
                 }
 
                 var urlWithoutProtocol = txtOrganizationUrl.Text.Remove(0, UseSsl ? 8 : 7);
+                if (urlWithoutProtocol.EndsWith("/"))
+                {
+                    urlWithoutProtocol = urlWithoutProtocol.Substring(0, urlWithoutProtocol.Length - 1);
+                }
                 var urlParts = urlWithoutProtocol.Split('/');
 
-                return urlParts.Length > 1 && !urlParts[1].ToLower().StartsWith("main.aspx") ? urlParts[1] : null;
+                return urlParts.Length > 1 && !urlParts[1].ToLower().StartsWith("main.aspx") ? urlParts[1] : urlParts[0].Split('.')[0];
             }
         }
 
@@ -122,7 +126,7 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
         public string Url
         {
             get => txtOrganizationUrl.Text.ToLower();
-            set => txtOrganizationUrl.Text = value;
+            set => txtOrganizationUrl.Text = string.IsNullOrEmpty(value) ? txtOrganizationUrl.Text : value;
         }
 
         public bool UseIntegratedAuth
@@ -141,6 +145,11 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
 
         private void ConnectionFirstStepControl_Load(object sender, EventArgs e)
         {
+            if (txtOrganizationUrl.Text == "https://organization.crm.dynamics.com")
+            {
+                txtOrganizationUrl.Select(8, 12);
+            }
+
             txtOrganizationUrl.Focus();
         }
     }
