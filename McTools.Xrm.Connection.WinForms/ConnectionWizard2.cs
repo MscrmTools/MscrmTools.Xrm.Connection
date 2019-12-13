@@ -329,6 +329,39 @@ Note that this is required to validate this wizard",
 
                 DisplayControl<ConnectionSucceededControl>();
             }
+            else if (ctrl is ConnectionServicePrincipalControl spc)
+            {
+                CrmConnectionDetail.AzureAdAppId = spc.AzureAdAppId;
+                if (spc.ClientSecretChanged)
+                {
+                    CrmConnectionDetail.SetClientSecret(spc.ClientSecret, true);
+                }
+
+                if (CrmConnectionDetail.AzureAdAppId == Guid.Empty)
+                {
+                    MessageBox.Show(this,
+                        @"Please provide all information for MFA authentication",
+                        @"Warning",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+
+                    return;
+                }
+
+                if (!CrmConnectionDetail.ClientSecretIsEmpty)
+                {
+                    CrmConnectionDetail.IsCustomAuth = false;
+                    CrmConnectionDetail.UseServicePrincipal = true;
+                    CrmConnectionDetail.WebApplicationUrl = spc.Url;
+                    
+                    DisplayControl<ConnectionLoadingControl>();
+                    Connect();
+                }
+                else
+                {
+                    DisplayControl<ConnectionCredentialsControl>();
+                }
+            }
         }
 
         private void btnReset_Click(object sender, EventArgs e)
@@ -403,6 +436,10 @@ Note that this is required to validate this wizard",
                     // is handled in ConnectionSelector class
                     DisplayControl<SdkLoginControlControl>();
                 }
+                else if (CrmConnectionDetail.UseServicePrincipal)
+                {
+                    DisplayControl<ConnectionServicePrincipalControl>();
+                }
                 else
                 {
                     DisplayControl<ConnectionFirstStepControl>();
@@ -441,6 +478,10 @@ Note that this is required to validate this wizard",
 
                        case ConnectionType.ConnectionString:
                            DisplayControl<ConnectionStringControl>();
+                           break;
+
+                       case ConnectionType.ServicePrincipal:
+                           DisplayControl<ConnectionServicePrincipalControl>();
                            break;
                    }
                };
@@ -592,7 +633,21 @@ Note that this is required to validate this wizard",
                 btnReset.Visible = true;
                 btnNext.Visible = false;
             }
-
+            else if (typeof(T) == typeof(ConnectionServicePrincipalControl))
+            {
+                pnlFooter.Visible = true;
+                lblHeader.Text = @"Service Principal Connection";
+                ctrl = new ConnectionServicePrincipalControl()
+                {
+                    AzureAdAppId = CrmConnectionDetail.AzureAdAppId,
+                    Url = CrmConnectionDetail.WebApplicationUrl,
+                    HasClientSecret = !CrmConnectionDetail.ClientSecretIsEmpty,
+                };
+                
+                btnReset.Visible = true;
+                btnNext.Visible = true;
+                btnNext.Text = @"Next";
+            }
         ((UserControl)ctrl).Dock = DockStyle.Fill;
             pnlMain.Controls.Clear();
             pnlMain.Controls.Add((UserControl)ctrl);
