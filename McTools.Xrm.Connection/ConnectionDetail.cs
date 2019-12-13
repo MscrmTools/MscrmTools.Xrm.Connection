@@ -548,19 +548,17 @@ namespace McTools.Xrm.Connection
         }
         private void ConnectServicePrincipal()
         {
-            //AuthType = AuthenticationProviderType.OnlineFederation;
-            //crmSvc = new CrmServiceClient()
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-            var tokenCachePath = Path.Combine(Environment.CurrentDirectory + @"\TokenCache");
-            if (!Directory.Exists(tokenCachePath))
+            var tokenDirectory = Path.Combine(Environment.CurrentDirectory, "TokenCache");
+            if (!Directory.Exists(tokenDirectory))
             {
-                Directory.CreateDirectory(tokenCachePath);
+                Directory.CreateDirectory(tokenDirectory);
             }
-            //string tokenCachePath = filePath; //Path.Combine(Environment.CurrentDirectory + @"\TokenCache");
-            Uri instanceUrl = new Uri(WebApplicationUrl, UriKind.Absolute); //new Uri($"https://{ServerName}:{ServerPort}");
+            var tokenCachePath = Path.Combine(tokenDirectory, "serviceprincipal-cache.txt");
+            
+            Uri instanceUrl = new Uri(WebApplicationUrl, UriKind.Absolute);
             string clientId = AzureAdAppId.ToString();
-            //var clientSecret = CrmServiceClient.MakeSecureString(clientSecret);
-            crmSvc = new CrmServiceClient(instanceUrl, clientId, clientSecret, true, tokenCachePath);
+          
+            crmSvc = new CrmServiceClient(instanceUrl, clientId, CrmServiceClient.MakeSecureString(clientSecret), true, tokenCachePath);
 
         }
         #endregion Méthodes
