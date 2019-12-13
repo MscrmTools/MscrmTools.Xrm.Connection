@@ -25,6 +25,7 @@ namespace McTools.Xrm.Connection
         #region Propriétés
 
         private CrmServiceClient crmSvc;
+       
 
         public AuthenticationProviderType AuthType { get; set; }
         public Guid AzureAdAppId { get; set; }
@@ -192,6 +193,11 @@ namespace McTools.Xrm.Connection
         /// </summary>
         public bool UseSsl { get; set; }
 
+        /// <summary>
+        /// Get or set the use of Service Principal
+        /// </summary>
+        public bool UseServicePrincipal { get; set; }
+
         public string WebApplicationUrl { get; set; }
 
         /// <summary>
@@ -271,7 +277,7 @@ namespace McTools.Xrm.Connection
                     UseOsdp = crmSvc.CrmConnectOrgUriActual.Host.Contains(".dynamics.com");
                     UseSsl = crmSvc.CrmConnectOrgUriActual.AbsoluteUri.ToLower().StartsWith("https");
                     UseIfd = crmSvc.ActiveAuthenticationType == AuthenticationType.IFD;
-
+                    
                     switch (crmSvc.ActiveAuthenticationType)
                     {
                         case AuthenticationType.AD:
@@ -302,19 +308,18 @@ namespace McTools.Xrm.Connection
                 return crmSvc;
             }
 
-            CrmServiceClient.MaxConnectionTimeout = Timeout;
-
-            if (!string.IsNullOrEmpty(clientSecret))
-            {
-                ConnectOAuth();
-            }
-            else if (UseOnline)
+           
+           if (UseOnline)
             {
                 ConnectOnline();
             }
             else if (UseIfd)
             {
                 ConnectIfd();
+            }
+            else if (UseServicePrincipal)
+            {
+                ConnectServicePrincipal();
             }
             else
             {
@@ -522,7 +527,23 @@ namespace McTools.Xrm.Connection
                 true,
                 UseSsl);
         }
+        private void ConnectServicePrincipal()
+        {
+            //AuthType = AuthenticationProviderType.OnlineFederation;
+            //crmSvc = new CrmServiceClient()
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            var tokenCachePath = Path.Combine(Environment.CurrentDirectory + @"\TokenCache");
+            if (!Directory.Exists(tokenCachePath))
+            {
+                Directory.CreateDirectory(tokenCachePath);
+            }
+            //string tokenCachePath = filePath; //Path.Combine(Environment.CurrentDirectory + @"\TokenCache");
+            Uri instanceUrl = new Uri(WebApplicationUrl, UriKind.Absolute); //new Uri($"https://{ServerName}:{ServerPort}");
+            string clientId = AzureAdAppId.ToString();
+            //var clientSecret = CrmServiceClient.MakeSecureString(clientSecret);
+            crmSvc = new CrmServiceClient(instanceUrl, clientId, clientSecret, true, tokenCachePath);
 
+        }
         #endregion Méthodes
 
         public object Clone()
@@ -677,6 +698,7 @@ namespace McTools.Xrm.Connection
                     new XElement("ConnectionString", ConnectionString),
                     new XElement("UseConnectionString", UseConnectionString),
                     new XElement("IsCustomAuth", IsCustomAuth),
+                    new XElement("UseServicePrincipal", UseServicePrincipal),
                     new XElement("UseMfa", UseMfa), new XElement("UseIfd", UseIfd),
                     new XElement("UseOnline", UseOnline),
                     new XElement("UseOsdp", UseOsdp),
