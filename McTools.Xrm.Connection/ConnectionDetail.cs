@@ -295,7 +295,13 @@ namespace McTools.Xrm.Connection
             }
             else if (NewAuthType == AuthenticationType.ClientSecret)
             {
-                var cs = HandleConnectionString($"AuthType=ClientSecret;url={OriginalUrl};ClientId={AzureAdAppId};ClientSecret={clientSecret}");
+                var decryptedSecret = CryptoManager.Decrypt(clientSecret, ConnectionManager.CryptoPassPhrase,
+                    ConnectionManager.CryptoSaltValue,
+                    ConnectionManager.CryptoHashAlgorythm,
+                    ConnectionManager.CryptoPasswordIterations,
+                    ConnectionManager.CryptoInitVector,
+                    ConnectionManager.CryptoKeySize);
+                var cs = HandleConnectionString($"AuthType=ClientSecret;url={OriginalUrl};ClientId={AzureAdAppId};ClientSecret={decryptedSecret}");
                 crmSvc = new CrmServiceClient(cs);
             }
             else if (NewAuthType == AuthenticationType.OAuth && UseMfa)
