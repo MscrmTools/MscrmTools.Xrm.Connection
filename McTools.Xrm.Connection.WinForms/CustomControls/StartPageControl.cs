@@ -7,7 +7,8 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
     {
         Wizard,
         Sdk,
-        ConnectionString
+        ConnectionString,
+        ServicePrincipal,
     }
 
     public partial class StartPageControl : UserControl, IConnectionWizardControl
@@ -38,11 +39,14 @@ Connections created with this wizard cannot be transported across multiple compu
             {
                 Type = ConnectionType.Sdk;
             }
-            else
+            else if (sender == btnConnectionString)
             {
                 Type = ConnectionType.ConnectionString;
             }
-
+            else
+            {
+                Type = ConnectionType.ServicePrincipal;
+            }
             TypeSelected?.Invoke(this, new EventArgs());
         }
     }
