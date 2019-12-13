@@ -471,6 +471,7 @@ namespace McTools.Xrm.Connection.WinForms
             }
 
             lvConnections.Items.AddRange(newItems.ToArray());
+            ConnectionManager.Instance.SaveConnectionsFile();
         }
 
         private void tsbDeleteConnection_Click(object sender, EventArgs e)
@@ -508,6 +509,7 @@ namespace McTools.Xrm.Connection.WinForms
                 item.SubItems.Add(newConnection.Organization);
                 item.SubItems.Add(newConnection.UserName);
                 item.SubItems.Add(newConnection.OrganizationVersion);
+                item.SubItems.Add(newConnection.UseServicePrincipal.ToString());
                 item.Tag = newConnection;
                 item.Group = GetGroup(newConnection);
                 item.ImageIndex = GetImageIndex(newConnection);
@@ -589,7 +591,7 @@ namespace McTools.Xrm.Connection.WinForms
 
                     return;
                 }
-
+                
                 var cForm = new ConnectionWizard2(cd)
                 {
                     StartPosition = FormStartPosition.CenterParent
