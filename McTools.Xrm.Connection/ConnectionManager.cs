@@ -593,6 +593,8 @@ namespace McTools.Xrm.Connection
 
         public void ConnectToServerWithSdkLoginCtrl(ConnectionDetail detail, CrmServiceClient crmSvc, object connectionParameter)
         {
+            detail.ServiceClient = crmSvc;
+
             var parameters = new List<object> { detail, connectionParameter, 1 };
 
             if (crmSvc.IsReady)

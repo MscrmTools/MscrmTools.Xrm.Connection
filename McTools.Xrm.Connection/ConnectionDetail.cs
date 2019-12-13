@@ -1,4 +1,5 @@
-﻿using Microsoft.Xrm.Sdk.Client;
+﻿using McTools.Xrm.Connection.Utils;
+using Microsoft.Xrm.Sdk.Client;
 using Microsoft.Xrm.Sdk.Discovery;
 using Microsoft.Xrm.Tooling.Connector;
 using System;
@@ -10,6 +11,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Xml.Linq;
 
 namespace McTools.Xrm.Connection
@@ -447,7 +449,24 @@ namespace McTools.Xrm.Connection
 
         private void ConnectOAuth()
         {
-            crmSvc = new CrmServiceClient(new Uri($"https://{ServerName}:{ServerPort}"), AzureAdAppId.ToString(), CrmServiceClient.MakeSecureString(clientSecret), true, "oauth-cache.txt");
+            if (!String.IsNullOrEmpty(RefreshToken))
+            {
+                CrmServiceClient.AuthOverrideHook = new RefreshTokenAuthOverride(this);
+                crmSvc = new CrmServiceClient(new Uri($"https://{ServerName}:{ServerPort}"), true);
+                CrmServiceClient.AuthOverrideHook = null;
+            }
+            else
+            {
+                var secret = CryptoManager.Decrypt(clientSecret, ConnectionManager.CryptoPassPhrase,
+                     ConnectionManager.CryptoSaltValue,
+                     ConnectionManager.CryptoHashAlgorythm,
+                     ConnectionManager.CryptoPasswordIterations,
+                     ConnectionManager.CryptoInitVector,
+                     ConnectionManager.CryptoKeySize);
+
+                var path = Path.Combine(Path.GetTempPath(), ConnectionId.Value.ToString("B"), "oauth-cache.txt");
+                crmSvc = new CrmServiceClient(new Uri($"https://{ServerName}:{ServerPort}"), AzureAdAppId.ToString(), CrmServiceClient.MakeSecureString(secret), true, path);
+            }
         }
 
         private void ConnectOnline()
