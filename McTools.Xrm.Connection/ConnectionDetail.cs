@@ -295,13 +295,7 @@ namespace McTools.Xrm.Connection
             }
             else if (NewAuthType == AuthenticationType.ClientSecret)
             {
-                var decryptedSecret = CryptoManager.Decrypt(clientSecret, ConnectionManager.CryptoPassPhrase,
-                    ConnectionManager.CryptoSaltValue,
-                    ConnectionManager.CryptoHashAlgorythm,
-                    ConnectionManager.CryptoPasswordIterations,
-                    ConnectionManager.CryptoInitVector,
-                    ConnectionManager.CryptoKeySize);
-                var cs = HandleConnectionString($"AuthType=ClientSecret;url={OriginalUrl};ClientId={AzureAdAppId};ClientSecret={decryptedSecret}");
+                var cs = HandleConnectionString($"AuthType=ClientSecret;url={OriginalUrl};ClientId={AzureAdAppId};ClientSecret={clientSecret}");
                 crmSvc = new CrmServiceClient(cs);
             }
             else if (NewAuthType == AuthenticationType.OAuth && UseMfa)
@@ -393,6 +387,32 @@ namespace McTools.Xrm.Connection
                         ConnectionManager.CryptoKeySize);
                 }
             }
+        }
+
+        public void SetConnectionString(string connectionString)
+        {
+            var csb = new DbConnectionStringBuilder { ConnectionString = connectionString };
+
+            if (csb.ContainsKey("Password"))
+            {
+                csb["Password"] = CryptoManager.Encrypt(csb["Password"].ToString(), ConnectionManager.CryptoPassPhrase,
+                    ConnectionManager.CryptoSaltValue,
+                    ConnectionManager.CryptoHashAlgorythm,
+                    ConnectionManager.CryptoPasswordIterations,
+                    ConnectionManager.CryptoInitVector,
+                    ConnectionManager.CryptoKeySize);
+            }
+            if (csb.ContainsKey("ClientSecret"))
+            {
+                csb["ClientSecret"] = CryptoManager.Encrypt(csb["ClientSecret"].ToString(), ConnectionManager.CryptoPassPhrase,
+                    ConnectionManager.CryptoSaltValue,
+                    ConnectionManager.CryptoHashAlgorythm,
+                    ConnectionManager.CryptoPasswordIterations,
+                    ConnectionManager.CryptoInitVector,
+                    ConnectionManager.CryptoKeySize);
+            }
+
+            ConnectionString = csb.ToString();
         }
 
         public void SetPassword(string password, bool isEncrypted = false)
@@ -590,6 +610,29 @@ namespace McTools.Xrm.Connection
                 CrmServiceClient.MaxConnectionTimeout = csTimeout;
             }
 
+            OriginalUrl = csb["Url"].ToString();
+            UserName = csb.ContainsKey("username") ? csb["username"].ToString() :
+                csb.ContainsKey("clientid") ? csb["clientid"].ToString() : null;
+
+            if (csb.ContainsKey("Password"))
+            {
+                csb["Password"] = CryptoManager.Decrypt(csb["Password"].ToString(), ConnectionManager.CryptoPassPhrase,
+                    ConnectionManager.CryptoSaltValue,
+                    ConnectionManager.CryptoHashAlgorythm,
+                    ConnectionManager.CryptoPasswordIterations,
+                    ConnectionManager.CryptoInitVector,
+                    ConnectionManager.CryptoKeySize);
+            }
+            if (csb.ContainsKey("ClientSecret"))
+            {
+                csb["ClientSecret"] = CryptoManager.Decrypt(csb["ClientSecret"].ToString(), ConnectionManager.CryptoPassPhrase,
+                    ConnectionManager.CryptoSaltValue,
+                    ConnectionManager.CryptoHashAlgorythm,
+                    ConnectionManager.CryptoPasswordIterations,
+                    ConnectionManager.CryptoInitVector,
+                    ConnectionManager.CryptoKeySize);
+            }
+
             var cs = csb.ToString();
 
             if (cs.IndexOf("RequireNewInstance=", StringComparison.Ordinal) < 0)
@@ -601,10 +644,6 @@ namespace McTools.Xrm.Connection
 
                 cs += "RequireNewInstance=True;";
             }
-
-            OriginalUrl = csb["Url"].ToString();
-            UserName = csb.ContainsKey("username") ? csb["username"].ToString() :
-                csb.ContainsKey("clientid") ? csb["clientid"].ToString() : null;
 
             return cs;
         }

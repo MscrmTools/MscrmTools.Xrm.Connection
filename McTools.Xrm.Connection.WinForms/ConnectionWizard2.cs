@@ -299,7 +299,7 @@ Note that this is required to validate this wizard",
             }
             else if (ctrl is ConnectionStringControl csc)
             {
-                CrmConnectionDetail.ConnectionString = csc.ConnectionString;
+                CrmConnectionDetail.SetConnectionString(csc.ConnectionString);
 
                 DisplayControl<ConnectionLoadingControl>();
                 Connect();
