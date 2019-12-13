@@ -248,7 +248,8 @@ namespace McTools.Xrm.Connection
 
                         cd.TimeoutTicks = timeoutValue;
                     }
-
+                    var useServicePrincipal = elt.Element("UseServicePrincipal");
+                    cd.UseServicePrincipal = useServicePrincipal != null && useServicePrincipal.Value == "true";
                     var useIfdElement = elt.Element("UseIfd");
                     cd.UseIfd = useIfdElement != null && useIfdElement.Value == "true";
                     var useOnlineElement = elt.Element("UseOnline");
@@ -371,7 +372,7 @@ namespace McTools.Xrm.Connection
             do
             {
                 cloneId++;
-                newName = string.Format("{0} ({1})", newDetail.ConnectionName, cloneId);
+                newName = $"{newDetail.ConnectionName} ({cloneId})";
             } while (Connections.Any(c => c.ConnectionName == newName));
 
             newDetail.ConnectionName = newName;
