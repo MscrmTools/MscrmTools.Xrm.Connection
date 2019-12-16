@@ -22,6 +22,7 @@ namespace McTools.Xrm.Connection.TestWinForm
         private ConnectionManager cManager;
 
         private int connectionCount = 0;
+        private ConnectionDetail currentDetail;
         private FormHelper formHelper;
 
         /// <summary>
@@ -87,6 +88,7 @@ namespace McTools.Xrm.Connection.TestWinForm
 
             // Store connection Organization Service
             this.service = e.OrganizationService;
+            currentDetail = e.ConnectionDetail;
 
             // Displays connection status
             this.ccsb.SetConnectionStatus(true, e.ConnectionDetail);
@@ -176,6 +178,27 @@ namespace McTools.Xrm.Connection.TestWinForm
         private void tsbMergeConnectionsFiles_Click(object sender, EventArgs e)
         {
             ccsb.MergeConnectionsFiles = tsbMergeConnectionsFiles.Checked;
+        }
+
+        private void tsbRequestPassword_Click(object sender, EventArgs e)
+        {
+            if (currentDetail == null)
+            {
+                MessageBox.Show("Please connect first");
+                return;
+            }
+
+            var password = currentDetail.RequestPassword(this,
+                "This is a test to describe how to request the password for further processing");
+
+            if (password == null)
+            {
+                MessageBox.Show("You did not allow your password to be used");
+            }
+            else
+            {
+                MessageBox.Show($"The password is {password}");
+            }
         }
     }
 }

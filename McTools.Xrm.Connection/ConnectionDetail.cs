@@ -1,4 +1,5 @@
-﻿using McTools.Xrm.Connection.Utils;
+﻿using McTools.Xrm.Connection.Forms;
+using McTools.Xrm.Connection.Utils;
 using Microsoft.Xrm.Sdk.Client;
 using Microsoft.Xrm.Sdk.Discovery;
 using Microsoft.Xrm.Tooling.Connector;
@@ -9,6 +10,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Net;
+using System.Windows.Forms;
 using System.Xml.Serialization;
 
 namespace McTools.Xrm.Connection
@@ -50,6 +52,9 @@ namespace McTools.Xrm.Connection
 
         [XmlIgnore]
         private CrmServiceClient crmSvc;
+
+        [XmlIgnore]
+        public bool AllowPasswordSharing { get; set; }
 
         public AuthenticationProviderType AuthType { get; set; }
 
@@ -367,6 +372,52 @@ namespace McTools.Xrm.Connection
             }
 
             return crmSvc;
+        }
+
+        public string RequestClientSecret(Control parent, string clientSecretUsageDescription)
+        {
+            var prd = new PasswordRequestDialog(clientSecretUsageDescription, this, "client secret");
+            if (AllowPasswordSharing || prd.ShowDialog(parent) == DialogResult.OK)
+            {
+                if (string.IsNullOrEmpty(clientSecret))
+                {
+                    throw new Exception("Unable to read user password");
+                }
+
+                var password = CryptoManager.Decrypt(clientSecret, ConnectionManager.CryptoPassPhrase,
+                    ConnectionManager.CryptoSaltValue,
+                    ConnectionManager.CryptoHashAlgorythm,
+                    ConnectionManager.CryptoPasswordIterations,
+                    ConnectionManager.CryptoInitVector,
+                    ConnectionManager.CryptoKeySize);
+
+                return password;
+            }
+
+            return null;
+        }
+
+        public string RequestPassword(Control parent, string passwordUsageDescription)
+        {
+            var prd = new PasswordRequestDialog(passwordUsageDescription, this, "password");
+            if (AllowPasswordSharing || prd.ShowDialog(parent) == DialogResult.OK)
+            {
+                if (string.IsNullOrEmpty(userPassword))
+                {
+                    throw new Exception("Unable to read user password");
+                }
+
+                var password = CryptoManager.Decrypt(userPassword, ConnectionManager.CryptoPassPhrase,
+                    ConnectionManager.CryptoSaltValue,
+                    ConnectionManager.CryptoHashAlgorythm,
+                    ConnectionManager.CryptoPasswordIterations,
+                    ConnectionManager.CryptoInitVector,
+                    ConnectionManager.CryptoKeySize);
+
+                return password;
+            }
+
+            return null;
         }
 
         public void SetClientSecret(string secret, bool isEncrypted = false)
