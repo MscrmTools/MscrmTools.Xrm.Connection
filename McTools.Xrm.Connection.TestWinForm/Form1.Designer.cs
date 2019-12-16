@@ -61,6 +61,7 @@
             // 
             // toolStrip1
             // 
+            this.toolStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsbManageConnections,
             this.toolStripSeparator1,
@@ -82,7 +83,7 @@
             this.tsbManageConnections.Image = ((System.Drawing.Image)(resources.GetObject("tsbManageConnections.Image")));
             this.tsbManageConnections.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbManageConnections.Name = "tsbManageConnections";
-            this.tsbManageConnections.Size = new System.Drawing.Size(258, 44);
+            this.tsbManageConnections.Size = new System.Drawing.Size(274, 44);
             this.tsbManageConnections.Text = "Manage connections";
             this.tsbManageConnections.Click += new System.EventHandler(this.tsbManageConnections_Click);
             // 
@@ -97,7 +98,7 @@
             this.tsbMergeConnectionsFiles.Image = ((System.Drawing.Image)(resources.GetObject("tsbMergeConnectionsFiles.Image")));
             this.tsbMergeConnectionsFiles.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbMergeConnectionsFiles.Name = "tsbMergeConnectionsFiles";
-            this.tsbMergeConnectionsFiles.Size = new System.Drawing.Size(291, 44);
+            this.tsbMergeConnectionsFiles.Size = new System.Drawing.Size(307, 44);
             this.tsbMergeConnectionsFiles.Text = "Merge connections files";
             this.tsbMergeConnectionsFiles.Click += new System.EventHandler(this.tsbMergeConnectionsFiles_Click);
             // 

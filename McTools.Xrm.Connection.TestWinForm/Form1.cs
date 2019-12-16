@@ -188,16 +188,16 @@ namespace McTools.Xrm.Connection.TestWinForm
                 return;
             }
 
-            var password = currentDetail.RequestPassword(this,
-                "This is a test to describe how to request the password for further processing");
-
-            if (password == null)
+            if (currentDetail.TryRequestPassword(this,
+                "This is a test to describe how to request the password for further processing",
+                out string password,
+                out SensitiveDataNotFoundReason reason))
             {
-                MessageBox.Show("You did not allow your password to be used");
+                MessageBox.Show($"Password is {password}");
             }
             else
             {
-                MessageBox.Show($"The password is {password}");
+                MessageBox.Show($"Cannot get password for the following reason: {reason}");
             }
         }
     }

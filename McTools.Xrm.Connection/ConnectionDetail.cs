@@ -15,6 +15,13 @@ using System.Xml.Serialization;
 
 namespace McTools.Xrm.Connection
 {
+    public enum SensitiveDataNotFoundReason
+    {
+        NotAllowedByUser,
+        NotAccessible,
+        None
+    }
+
     public class CertificateInfo
     {
         public string Issuer { get; set; }
@@ -57,7 +64,6 @@ namespace McTools.Xrm.Connection
         public bool AllowPasswordSharing { get; set; }
 
         public AuthenticationProviderType AuthType { get; set; }
-
         public Guid AzureAdAppId { get; set; }
 
         [XmlElement("CertificateInfo")]
@@ -86,6 +92,8 @@ namespace McTools.Xrm.Connection
         ///// </summary>
         //public Dictionary<string, string> CustomInformation { get; set; }
         public EnvironmentHighlighting EnvironmentHighlightingInfo { get; set; }
+
+        public string EnvironmentId { get; set; }
 
         [XmlIgnore]
         public string EnvironmentText { get; set; }
@@ -142,7 +150,6 @@ namespace McTools.Xrm.Connection
         public string OrganizationFriendlyName { get; set; }
 
         public int OrganizationMajorVersion => OrganizationVersion != null ? int.Parse(OrganizationVersion.Split('.')[0]) : -1;
-
         public int OrganizationMinorVersion => OrganizationVersion != null ? int.Parse(OrganizationVersion.Split('.')[1]) : -1;
 
         /// <summary>
@@ -195,6 +202,7 @@ namespace McTools.Xrm.Connection
             set { crmSvc = value; }
         }
 
+        public Guid TenantId { get; set; }
         public TimeSpan Timeout { get; set; }
 
         public long TimeoutTicks
@@ -340,6 +348,8 @@ namespace McTools.Xrm.Connection
             WebApplicationUrl = crmSvc.ConnectedOrgPublishedEndpoints[EndpointType.WebApplication];
             Organization = crmSvc.ConnectedOrgUniqueName;
             OrganizationVersion = crmSvc.ConnectedOrgVersion.ToString();
+            TenantId = crmSvc.TenantId;
+            EnvironmentId = crmSvc.EnvironmentId;
 
             var webAppURi = new Uri(WebApplicationUrl);
             ServerName = webAppURi.Host;
@@ -372,52 +382,6 @@ namespace McTools.Xrm.Connection
             }
 
             return crmSvc;
-        }
-
-        public string RequestClientSecret(Control parent, string clientSecretUsageDescription)
-        {
-            var prd = new PasswordRequestDialog(clientSecretUsageDescription, this, "client secret");
-            if (AllowPasswordSharing || prd.ShowDialog(parent) == DialogResult.OK)
-            {
-                if (string.IsNullOrEmpty(clientSecret))
-                {
-                    throw new Exception("Unable to read user password");
-                }
-
-                var password = CryptoManager.Decrypt(clientSecret, ConnectionManager.CryptoPassPhrase,
-                    ConnectionManager.CryptoSaltValue,
-                    ConnectionManager.CryptoHashAlgorythm,
-                    ConnectionManager.CryptoPasswordIterations,
-                    ConnectionManager.CryptoInitVector,
-                    ConnectionManager.CryptoKeySize);
-
-                return password;
-            }
-
-            return null;
-        }
-
-        public string RequestPassword(Control parent, string passwordUsageDescription)
-        {
-            var prd = new PasswordRequestDialog(passwordUsageDescription, this, "password");
-            if (AllowPasswordSharing || prd.ShowDialog(parent) == DialogResult.OK)
-            {
-                if (string.IsNullOrEmpty(userPassword))
-                {
-                    throw new Exception("Unable to read user password");
-                }
-
-                var password = CryptoManager.Decrypt(userPassword, ConnectionManager.CryptoPassPhrase,
-                    ConnectionManager.CryptoSaltValue,
-                    ConnectionManager.CryptoHashAlgorythm,
-                    ConnectionManager.CryptoPasswordIterations,
-                    ConnectionManager.CryptoInitVector,
-                    ConnectionManager.CryptoKeySize);
-
-                return password;
-            }
-
-            return null;
         }
 
         public void SetClientSecret(string secret, bool isEncrypted = false)
@@ -493,6 +457,62 @@ namespace McTools.Xrm.Connection
         public override string ToString()
         {
             return ConnectionName;
+        }
+
+        public bool TryRequestClientSecret(Control parent, string secretUsageDescription, out string secret, out SensitiveDataNotFoundReason notFoundReason)
+        {
+            var prd = new PasswordRequestDialog(secretUsageDescription, this, "client secret");
+            if (AllowPasswordSharing || prd.ShowDialog(parent) == DialogResult.OK && prd.Accepted)
+            {
+                if (string.IsNullOrEmpty(clientSecret))
+                {
+                    secret = string.Empty;
+                    notFoundReason = SensitiveDataNotFoundReason.NotAccessible;
+                    return false;
+                }
+
+                secret = CryptoManager.Decrypt(clientSecret, ConnectionManager.CryptoPassPhrase,
+                    ConnectionManager.CryptoSaltValue,
+                    ConnectionManager.CryptoHashAlgorythm,
+                    ConnectionManager.CryptoPasswordIterations,
+                    ConnectionManager.CryptoInitVector,
+                    ConnectionManager.CryptoKeySize);
+
+                notFoundReason = SensitiveDataNotFoundReason.None;
+                return true;
+            }
+
+            notFoundReason = SensitiveDataNotFoundReason.NotAllowedByUser;
+            secret = string.Empty;
+            return false;
+        }
+
+        public bool TryRequestPassword(Control parent, string passwordUsageDescription, out string password, out SensitiveDataNotFoundReason notFoundReason)
+        {
+            var prd = new PasswordRequestDialog(passwordUsageDescription, this, "password");
+            if (AllowPasswordSharing || prd.ShowDialog(parent) == DialogResult.OK && prd.Accepted)
+            {
+                if (string.IsNullOrEmpty(userPassword))
+                {
+                    password = string.Empty;
+                    notFoundReason = SensitiveDataNotFoundReason.NotAccessible;
+                    return false;
+                }
+
+                password = CryptoManager.Decrypt(userPassword, ConnectionManager.CryptoPassPhrase,
+                    ConnectionManager.CryptoSaltValue,
+                    ConnectionManager.CryptoHashAlgorythm,
+                    ConnectionManager.CryptoPasswordIterations,
+                    ConnectionManager.CryptoInitVector,
+                    ConnectionManager.CryptoKeySize);
+
+                notFoundReason = SensitiveDataNotFoundReason.None;
+                return true;
+            }
+
+            notFoundReason = SensitiveDataNotFoundReason.NotAllowedByUser;
+            password = string.Empty;
+            return false;
         }
 
         public void UpdateAfterEdit(ConnectionDetail editedConnection)
