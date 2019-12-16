@@ -155,6 +155,12 @@
     <Compile Include="CrmConnections.cs" />
     <Compile Include="CrmExceptionHelper.cs" />
     <Compile Include="CryptoManager.cs" />
+    <Compile Include="Forms\PasswordRequestDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PasswordRequestDialog.Designer.cs">
+      <DependentUpon>PasswordRequestDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\AutoRefreshSecurityToken.cs" />
     <Compile Include="Utils\ManagedTokenDiscoveryServiceProxy.cs" />
@@ -183,10 +189,15 @@
     <None Include="McTools.Xrm.Connection.pfx" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Forms\PasswordRequestDialog.resx">
+      <DependentUpon>PasswordRequestDialog.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2012/1/1" BuildVersion_BuildVersioningStyle="None.None.DeltaBaseDate.Increment" BuildVersion_UpdateFileVersion="False" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_ConfigurationName="Release" />
+      <UserProperties BuildVersion_ConfigurationName="Release" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_UpdateFileVersion="False" BuildVersion_BuildVersioningStyle="None.None.DeltaBaseDate.Increment" BuildVersion_StartDate="2012/1/1" />
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>

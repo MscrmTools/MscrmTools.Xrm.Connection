@@ -102,7 +102,7 @@
             this.lvConnections.Location = new System.Drawing.Point(9, 8);
             this.lvConnections.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.lvConnections.Name = "lvConnections";
-            this.lvConnections.Size = new System.Drawing.Size(1286, 669);
+            this.lvConnections.Size = new System.Drawing.Size(1286, 661);
             this.lvConnections.TabIndex = 2;
             this.lvConnections.UseCompatibleStateImageBehavior = false;
             this.lvConnections.View = System.Windows.Forms.View.Details;
@@ -140,7 +140,6 @@
             // menu
             // 
             this.menu.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.menu.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.menu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsbNewConnection,
             this.tsbUpdateConnection,
@@ -160,7 +159,7 @@
             this.tsbRenameFile});
             this.menu.Location = new System.Drawing.Point(0, 0);
             this.menu.Name = "menu";
-            this.menu.Size = new System.Drawing.Size(1304, 42);
+            this.menu.Size = new System.Drawing.Size(1304, 50);
             this.menu.TabIndex = 1;
             this.menu.Text = "tsMain";
             // 
@@ -169,7 +168,7 @@
             this.tsbNewConnection.Image = ((System.Drawing.Image)(resources.GetObject("tsbNewConnection.Image")));
             this.tsbNewConnection.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbNewConnection.Name = "tsbNewConnection";
-            this.tsbNewConnection.Size = new System.Drawing.Size(225, 36);
+            this.tsbNewConnection.Size = new System.Drawing.Size(209, 44);
             this.tsbNewConnection.Text = "New connection";
             this.tsbNewConnection.Click += new System.EventHandler(this.tsbNewConnection_Click);
             // 
@@ -179,7 +178,7 @@
             this.tsbUpdateConnection.Image = ((System.Drawing.Image)(resources.GetObject("tsbUpdateConnection.Image")));
             this.tsbUpdateConnection.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbUpdateConnection.Name = "tsbUpdateConnection";
-            this.tsbUpdateConnection.Size = new System.Drawing.Size(46, 36);
+            this.tsbUpdateConnection.Size = new System.Drawing.Size(46, 44);
             this.tsbUpdateConnection.Text = "Update connection";
             this.tsbUpdateConnection.Click += new System.EventHandler(this.tsbUpdateConnection_Click);
             // 
@@ -189,7 +188,7 @@
             this.tsbCloneConnection.Image = ((System.Drawing.Image)(resources.GetObject("tsbCloneConnection.Image")));
             this.tsbCloneConnection.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbCloneConnection.Name = "tsbCloneConnection";
-            this.tsbCloneConnection.Size = new System.Drawing.Size(46, 36);
+            this.tsbCloneConnection.Size = new System.Drawing.Size(46, 44);
             this.tsbCloneConnection.Text = "Clone connection";
             this.tsbCloneConnection.Click += new System.EventHandler(this.tsbCloneConnection_Click);
             // 
@@ -199,14 +198,14 @@
             this.tsbDeleteConnection.Image = ((System.Drawing.Image)(resources.GetObject("tsbDeleteConnection.Image")));
             this.tsbDeleteConnection.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbDeleteConnection.Name = "tsbDeleteConnection";
-            this.tsbDeleteConnection.Size = new System.Drawing.Size(46, 36);
+            this.tsbDeleteConnection.Size = new System.Drawing.Size(46, 44);
             this.tsbDeleteConnection.Text = "Delete connection";
             this.tsbDeleteConnection.Click += new System.EventHandler(this.tsbDeleteConnection_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 42);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 50);
             // 
             // tsbUpdatePassword
             // 
@@ -214,7 +213,7 @@
             this.tsbUpdatePassword.Image = ((System.Drawing.Image)(resources.GetObject("tsbUpdatePassword.Image")));
             this.tsbUpdatePassword.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbUpdatePassword.Name = "tsbUpdatePassword";
-            this.tsbUpdatePassword.Size = new System.Drawing.Size(46, 36);
+            this.tsbUpdatePassword.Size = new System.Drawing.Size(46, 44);
             this.tsbUpdatePassword.Text = "Update password";
             this.tsbUpdatePassword.ToolTipText = "Update password for selected connection(s)";
             this.tsbUpdatePassword.Click += new System.EventHandler(this.tsbUpdatePassword_Click);
@@ -222,7 +221,7 @@
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 42);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 50);
             // 
             // tsbShowConnectionString
             // 
@@ -230,7 +229,7 @@
             this.tsbShowConnectionString.Image = global::McTools.Xrm.Connection.WinForms.Properties.Resources.database_link;
             this.tsbShowConnectionString.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbShowConnectionString.Name = "tsbShowConnectionString";
-            this.tsbShowConnectionString.Size = new System.Drawing.Size(46, 36);
+            this.tsbShowConnectionString.Size = new System.Drawing.Size(46, 44);
             this.tsbShowConnectionString.Text = "Show connection string";
             this.tsbShowConnectionString.ToolTipText = "Show connection string for this connection";
             this.tsbShowConnectionString.Click += new System.EventHandler(this.tsbShowConnectionString_Click);
@@ -238,7 +237,7 @@
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 42);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 50);
             // 
             // tsb_UseMru
             // 
@@ -247,20 +246,20 @@
             this.tsb_UseMru.Image = ((System.Drawing.Image)(resources.GetObject("tsb_UseMru.Image")));
             this.tsb_UseMru.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsb_UseMru.Name = "tsb_UseMru";
-            this.tsb_UseMru.Size = new System.Drawing.Size(46, 36);
+            this.tsb_UseMru.Size = new System.Drawing.Size(46, 44);
             this.tsb_UseMru.Text = "Display MRU first";
             this.tsb_UseMru.ToolTipText = "Display Most Recently Used connections first";
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 42);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 50);
             // 
             // tscbbConnectionsFile
             // 
             this.tscbbConnectionsFile.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.tscbbConnectionsFile.Name = "tscbbConnectionsFile";
-            this.tscbbConnectionsFile.Size = new System.Drawing.Size(372, 42);
+            this.tscbbConnectionsFile.Size = new System.Drawing.Size(372, 50);
             this.tscbbConnectionsFile.SelectedIndexChanged += new System.EventHandler(this.tscbbConnectionsFile_SelectedIndexChanged);
             // 
             // tsbRemoveConnectionList
@@ -269,7 +268,7 @@
             this.tsbRemoveConnectionList.Image = ((System.Drawing.Image)(resources.GetObject("tsbRemoveConnectionList.Image")));
             this.tsbRemoveConnectionList.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbRemoveConnectionList.Name = "tsbRemoveConnectionList";
-            this.tsbRemoveConnectionList.Size = new System.Drawing.Size(46, 36);
+            this.tsbRemoveConnectionList.Size = new System.Drawing.Size(46, 44);
             this.tsbRemoveConnectionList.Text = "Remove selected connection list";
             this.tsbRemoveConnectionList.Click += new System.EventHandler(this.tsbRemoveConnectionList_Click);
             // 
@@ -279,7 +278,7 @@
             this.tsbMoveToNewFile.Image = ((System.Drawing.Image)(resources.GetObject("tsbMoveToNewFile.Image")));
             this.tsbMoveToNewFile.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbMoveToNewFile.Name = "tsbMoveToNewFile";
-            this.tsbMoveToNewFile.Size = new System.Drawing.Size(46, 36);
+            this.tsbMoveToNewFile.Size = new System.Drawing.Size(46, 44);
             this.tsbMoveToNewFile.Text = "Move selected connections to a new file";
             this.tsbMoveToNewFile.Visible = false;
             this.tsbMoveToNewFile.Click += new System.EventHandler(this.tsbMoveToNewFile_Click);
@@ -290,7 +289,7 @@
             this.tsbMoveToExistingFile.Image = ((System.Drawing.Image)(resources.GetObject("tsbMoveToExistingFile.Image")));
             this.tsbMoveToExistingFile.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbMoveToExistingFile.Name = "tsbMoveToExistingFile";
-            this.tsbMoveToExistingFile.Size = new System.Drawing.Size(54, 36);
+            this.tsbMoveToExistingFile.Size = new System.Drawing.Size(38, 44);
             this.tsbMoveToExistingFile.Text = "Move selected connections to existing file";
             this.tsbMoveToExistingFile.Visible = false;
             this.tsbMoveToExistingFile.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.tsbMoveToExistingFile_DropDownItemClicked);
@@ -301,7 +300,7 @@
             this.tsbRenameFile.Image = ((System.Drawing.Image)(resources.GetObject("tsbRenameFile.Image")));
             this.tsbRenameFile.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbRenameFile.Name = "tsbRenameFile";
-            this.tsbRenameFile.Size = new System.Drawing.Size(46, 36);
+            this.tsbRenameFile.Size = new System.Drawing.Size(46, 44);
             this.tsbRenameFile.Text = "Change the name of the current connection file";
             this.tsbRenameFile.Click += new System.EventHandler(this.tsbRenameFile_Click);
             // 
@@ -319,10 +318,10 @@
             // 
             this.pnlMain.Controls.Add(this.lvConnections);
             this.pnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlMain.Location = new System.Drawing.Point(0, 42);
+            this.pnlMain.Location = new System.Drawing.Point(0, 50);
             this.pnlMain.Name = "pnlMain";
             this.pnlMain.Padding = new System.Windows.Forms.Padding(9, 8, 9, 8);
-            this.pnlMain.Size = new System.Drawing.Size(1304, 685);
+            this.pnlMain.Size = new System.Drawing.Size(1304, 677);
             this.pnlMain.TabIndex = 6;
             // 
             // ConnectionSelector
