@@ -173,7 +173,6 @@ namespace McTools.Xrm.Connection
         /// <summary>
         /// OAuth Refresh Token
         /// </summary>
-        [XmlIgnore]
         public string RefreshToken { get; set; }
 
         public string ReplyUrl { get; set; }
@@ -262,7 +261,7 @@ namespace McTools.Xrm.Connection
         /// <summary>
         /// Client Secret used for S2S Auth
         /// </summary>
-        internal string S2SClientSecret
+        public string S2SClientSecret
         {
             get => clientSecret;
             set => clientSecret = value;
