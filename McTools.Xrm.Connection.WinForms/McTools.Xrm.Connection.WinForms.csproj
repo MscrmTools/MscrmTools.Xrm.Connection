@@ -497,6 +497,21 @@
   <ItemGroup>
     <None Include="Resources\Certificate32.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\connection-wizard-32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\connection-certificate-32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\connection-secret-32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\connection-mfa-32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\connection-string-32.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
