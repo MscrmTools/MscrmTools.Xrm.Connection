@@ -56,7 +56,7 @@
             this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlHeader.Location = new System.Drawing.Point(0, 0);
             this.pnlHeader.Name = "pnlHeader";
-            this.pnlHeader.Size = new System.Drawing.Size(800, 100);
+            this.pnlHeader.Size = new System.Drawing.Size(894, 100);
             this.pnlHeader.TabIndex = 0;
             // 
             // label2
@@ -85,14 +85,14 @@
             this.pnlFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pnlFooter.Location = new System.Drawing.Point(0, 501);
             this.pnlFooter.Name = "pnlFooter";
-            this.pnlFooter.Size = new System.Drawing.Size(800, 60);
+            this.pnlFooter.Size = new System.Drawing.Size(894, 60);
             this.pnlFooter.TabIndex = 1;
             // 
             // bCancel
             // 
             this.bCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.bCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.bCancel.Location = new System.Drawing.Point(633, 9);
+            this.bCancel.Location = new System.Drawing.Point(727, 9);
             this.bCancel.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             this.bCancel.Name = "bCancel";
             this.bCancel.Size = new System.Drawing.Size(151, 44);
@@ -104,7 +104,7 @@
             // 
             this.bValidate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.bValidate.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.bValidate.Location = new System.Drawing.Point(468, 9);
+            this.bValidate.Location = new System.Drawing.Point(562, 9);
             this.bValidate.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             this.bValidate.Name = "bValidate";
             this.bValidate.Size = new System.Drawing.Size(151, 44);
@@ -121,7 +121,7 @@
             this.pnlMain.Location = new System.Drawing.Point(0, 100);
             this.pnlMain.Name = "pnlMain";
             this.pnlMain.Padding = new System.Windows.Forms.Padding(10);
-            this.pnlMain.Size = new System.Drawing.Size(800, 401);
+            this.pnlMain.Size = new System.Drawing.Size(894, 401);
             this.pnlMain.TabIndex = 2;
             // 
             // pnlReason
@@ -131,7 +131,7 @@
             this.pnlReason.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlReason.Location = new System.Drawing.Point(10, 10);
             this.pnlReason.Name = "pnlReason";
-            this.pnlReason.Size = new System.Drawing.Size(780, 257);
+            this.pnlReason.Size = new System.Drawing.Size(874, 257);
             this.pnlReason.TabIndex = 2;
             // 
             // lblReason
@@ -139,7 +139,7 @@
             this.lblReason.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblReason.Location = new System.Drawing.Point(0, 0);
             this.lblReason.Name = "lblReason";
-            this.lblReason.Size = new System.Drawing.Size(780, 257);
+            this.lblReason.Size = new System.Drawing.Size(874, 257);
             this.lblReason.TabIndex = 0;
             this.lblReason.Text = "[reason]";
             // 
@@ -152,7 +152,7 @@
             this.pnlDecision.Location = new System.Drawing.Point(10, 267);
             this.pnlDecision.Name = "pnlDecision";
             this.pnlDecision.Padding = new System.Windows.Forms.Padding(10);
-            this.pnlDecision.Size = new System.Drawing.Size(780, 124);
+            this.pnlDecision.Size = new System.Drawing.Size(874, 124);
             this.pnlDecision.TabIndex = 1;
             // 
             // rdbThisSession
@@ -161,9 +161,9 @@
             this.rdbThisSession.Dock = System.Windows.Forms.DockStyle.Top;
             this.rdbThisSession.Location = new System.Drawing.Point(10, 68);
             this.rdbThisSession.Name = "rdbThisSession";
-            this.rdbThisSession.Size = new System.Drawing.Size(760, 29);
+            this.rdbThisSession.Size = new System.Drawing.Size(854, 29);
             this.rdbThisSession.TabIndex = 2;
-            this.rdbThisSession.Text = "I share my password for this session";
+            this.rdbThisSession.Text = "Share my password with ALL tools for this XrmToolBox instance that request it";
             this.rdbThisSession.UseVisualStyleBackColor = true;
             // 
             // rdbThisTimeOnly
@@ -173,10 +173,10 @@
             this.rdbThisTimeOnly.Dock = System.Windows.Forms.DockStyle.Top;
             this.rdbThisTimeOnly.Location = new System.Drawing.Point(10, 39);
             this.rdbThisTimeOnly.Name = "rdbThisTimeOnly";
-            this.rdbThisTimeOnly.Size = new System.Drawing.Size(760, 29);
+            this.rdbThisTimeOnly.Size = new System.Drawing.Size(854, 29);
             this.rdbThisTimeOnly.TabIndex = 1;
             this.rdbThisTimeOnly.TabStop = true;
-            this.rdbThisTimeOnly.Text = "I share my password just for now";
+            this.rdbThisTimeOnly.Text = "Share my password this time only";
             this.rdbThisTimeOnly.UseVisualStyleBackColor = true;
             // 
             // rdbDoNotAllow
@@ -185,16 +185,16 @@
             this.rdbDoNotAllow.Dock = System.Windows.Forms.DockStyle.Top;
             this.rdbDoNotAllow.Location = new System.Drawing.Point(10, 10);
             this.rdbDoNotAllow.Name = "rdbDoNotAllow";
-            this.rdbDoNotAllow.Size = new System.Drawing.Size(760, 29);
+            this.rdbDoNotAllow.Size = new System.Drawing.Size(854, 29);
             this.rdbDoNotAllow.TabIndex = 0;
-            this.rdbDoNotAllow.Text = "I don\'t want to share my password";
+            this.rdbDoNotAllow.Text = "Do NOT share my password";
             this.rdbDoNotAllow.UseVisualStyleBackColor = true;
             // 
             // PasswordRequestDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 561);
+            this.ClientSize = new System.Drawing.Size(894, 561);
             this.Controls.Add(this.pnlMain);
             this.Controls.Add(this.pnlFooter);
             this.Controls.Add(this.pnlHeader);
