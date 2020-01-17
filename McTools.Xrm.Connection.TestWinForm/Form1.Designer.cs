@@ -38,7 +38,6 @@
             this.tsbClearLogs = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbRequestPassword = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.lbLogs = new System.Windows.Forms.ListBox();
@@ -61,7 +60,6 @@
             // 
             // toolStrip1
             // 
-            this.toolStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsbManageConnections,
             this.toolStripSeparator1,
@@ -69,12 +67,11 @@
             this.toolStripSeparator2,
             this.tsbClearLogs,
             this.toolStripSeparator3,
-            this.tsbRequestPassword,
-            this.toolStripButton1});
+            this.tsbRequestPassword});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 3, 0);
-            this.toolStrip1.Size = new System.Drawing.Size(1373, 50);
+            this.toolStrip1.Size = new System.Drawing.Size(1373, 42);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "tsMain";
             // 
@@ -83,14 +80,14 @@
             this.tsbManageConnections.Image = ((System.Drawing.Image)(resources.GetObject("tsbManageConnections.Image")));
             this.tsbManageConnections.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbManageConnections.Name = "tsbManageConnections";
-            this.tsbManageConnections.Size = new System.Drawing.Size(274, 44);
+            this.tsbManageConnections.Size = new System.Drawing.Size(274, 36);
             this.tsbManageConnections.Text = "Manage connections";
             this.tsbManageConnections.Click += new System.EventHandler(this.tsbManageConnections_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 50);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 42);
             // 
             // tsbMergeConnectionsFiles
             // 
@@ -98,14 +95,14 @@
             this.tsbMergeConnectionsFiles.Image = ((System.Drawing.Image)(resources.GetObject("tsbMergeConnectionsFiles.Image")));
             this.tsbMergeConnectionsFiles.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbMergeConnectionsFiles.Name = "tsbMergeConnectionsFiles";
-            this.tsbMergeConnectionsFiles.Size = new System.Drawing.Size(307, 44);
+            this.tsbMergeConnectionsFiles.Size = new System.Drawing.Size(307, 36);
             this.tsbMergeConnectionsFiles.Text = "Merge connections files";
             this.tsbMergeConnectionsFiles.Click += new System.EventHandler(this.tsbMergeConnectionsFiles_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 50);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 42);
             // 
             // tsbClearLogs
             // 
@@ -113,14 +110,14 @@
             this.tsbClearLogs.Image = ((System.Drawing.Image)(resources.GetObject("tsbClearLogs.Image")));
             this.tsbClearLogs.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbClearLogs.Name = "tsbClearLogs";
-            this.tsbClearLogs.Size = new System.Drawing.Size(124, 44);
+            this.tsbClearLogs.Size = new System.Drawing.Size(124, 36);
             this.tsbClearLogs.Text = "Clear logs";
             this.tsbClearLogs.Click += new System.EventHandler(this.tsbClearLogs_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 50);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 42);
             // 
             // tsbRequestPassword
             // 
@@ -128,24 +125,15 @@
             this.tsbRequestPassword.Image = ((System.Drawing.Image)(resources.GetObject("tsbRequestPassword.Image")));
             this.tsbRequestPassword.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbRequestPassword.Name = "tsbRequestPassword";
-            this.tsbRequestPassword.Size = new System.Drawing.Size(208, 44);
+            this.tsbRequestPassword.Size = new System.Drawing.Size(208, 36);
             this.tsbRequestPassword.Text = "Request Password";
             this.tsbRequestPassword.Click += new System.EventHandler(this.tsbRequestPassword_Click);
-            // 
-            // toolStripButton1
-            // 
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(46, 44);
-            this.toolStripButton1.Text = "toolStripButton1";
             // 
             // panel1
             // 
             this.panel1.Controls.Add(this.btnWhoAmI);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 50);
+            this.panel1.Location = new System.Drawing.Point(0, 42);
             this.panel1.Name = "panel1";
             this.panel1.Padding = new System.Windows.Forms.Padding(10);
             this.panel1.Size = new System.Drawing.Size(1373, 66);
@@ -155,10 +143,10 @@
             // 
             this.panel2.Controls.Add(this.lbLogs);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(0, 116);
+            this.panel2.Location = new System.Drawing.Point(0, 108);
             this.panel2.Name = "panel2";
             this.panel2.Padding = new System.Windows.Forms.Padding(10);
-            this.panel2.Size = new System.Drawing.Size(1373, 406);
+            this.panel2.Size = new System.Drawing.Size(1373, 414);
             this.panel2.TabIndex = 3;
             // 
             // lbLogs
@@ -168,7 +156,7 @@
             this.lbLogs.ItemHeight = 25;
             this.lbLogs.Location = new System.Drawing.Point(10, 10);
             this.lbLogs.Name = "lbLogs";
-            this.lbLogs.Size = new System.Drawing.Size(1353, 386);
+            this.lbLogs.Size = new System.Drawing.Size(1353, 394);
             this.lbLogs.TabIndex = 0;
             // 
             // Form1
@@ -205,7 +193,6 @@
         private System.Windows.Forms.ListBox lbLogs;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripButton tsbRequestPassword;
-        private System.Windows.Forms.ToolStripButton toolStripButton1;
     }
 }
 

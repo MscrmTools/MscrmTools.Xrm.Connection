@@ -18,9 +18,6 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
             {
                 if (!Guid.TryParse(txtAzureAdAppId.Text, out Guid id))
                 {
-                    MessageBox.Show(this, @"The Azure AD Application Id is not a valid GUID!", @"Error",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-
                     return Guid.Empty;
                 }
 
