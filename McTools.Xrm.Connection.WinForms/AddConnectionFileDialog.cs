@@ -48,7 +48,7 @@ namespace McTools.Xrm.Connection.WinForms
                 if (ConnectionsList.Instance.Files.Any(f => f.Name == OpenedFile.Name))
                 {
                     int cloneId = 1;
-                    string newName = OpenedFile.Name;
+                    string newName = OpenedFile.Name ?? "New File";
 
                     while (ConnectionsList.Instance.Files.FirstOrDefault(f => f.Name == newName) != null)
                     {
