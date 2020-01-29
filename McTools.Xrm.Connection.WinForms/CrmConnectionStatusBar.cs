@@ -210,12 +210,6 @@ namespace McTools.Xrm.Connection.WinForms
                             RessourceManager.GetImage(
                                 "McTools.Xrm.Connection.WinForms.Resources.CRMOnlineLive_16.png");
                     }
-                    else if (cDetail.UseOsdp)
-                    {
-                        item.Image =
-                            RessourceManager.GetImage(
-                                "McTools.Xrm.Connection.WinForms.Resources.CRMOnlineLive_16.png");
-                    }
                     else if (cDetail.UseIfd)
                     {
                         item.Image =
@@ -430,12 +424,6 @@ namespace McTools.Xrm.Connection.WinForms
                 item.Tag = detail;
 
                 if (detail.UseOnline)
-                {
-                    item.Image =
-                        RessourceManager.GetImage(
-                            "McTools.Xrm.Connection.WinForms.Resources.CRMOnlineLive_16.png");
-                }
-                else if (detail.UseOsdp)
                 {
                     item.Image =
                         RessourceManager.GetImage(

@@ -22,6 +22,7 @@ namespace McTools.Xrm.Connection.TestWinForm
         private ConnectionManager cManager;
 
         private int connectionCount = 0;
+        private ConnectionDetail currentDetail;
         private FormHelper formHelper;
 
         /// <summary>
@@ -87,12 +88,20 @@ namespace McTools.Xrm.Connection.TestWinForm
 
             // Store connection Organization Service
             this.service = e.OrganizationService;
+            currentDetail = e.ConnectionDetail;
 
             // Displays connection status
             this.ccsb.SetConnectionStatus(true, e.ConnectionDetail);
 
             // Clear the current action message
             this.ccsb.SetMessage(string.Empty);
+
+            lbLogs.Items.Add($"Connected to {e.ConnectionDetail.ConnectionName}");
+
+            if (connectionCount == e.NumberOfConnectionsRequested && e.NumberOfConnectionsRequested > 1)
+            {
+                lbLogs.Items.Add("All connections done!");
+            }
 
             // Do action if needed
             if (e.Parameter != null)
@@ -101,13 +110,6 @@ namespace McTools.Xrm.Connection.TestWinForm
                 {
                     WhoAmI();
                 }
-            }
-
-            MessageBox.Show($"Connected to {e.ConnectionDetail.ConnectionName}");
-
-            if (connectionCount == e.NumberOfConnectionsRequested)
-            {
-                MessageBox.Show("All connections done!");
             }
         }
 
@@ -131,7 +133,7 @@ namespace McTools.Xrm.Connection.TestWinForm
             {
                 formHelper.AskForConnection("WhoAmI", (listDetails) =>
                     {
-                        MessageBox.Show(listDetails.First().ConnectionName);
+                        lbLogs.Items.Add($"Connection requested to {listDetails.First().ConnectionName}");
                     });
             }
             else
@@ -154,7 +156,7 @@ namespace McTools.Xrm.Connection.TestWinForm
                 ccsb.SetMessage("Doing...");
                 ccsb.SetProgress(i * 10);
 
-                MessageBox.Show(this, "Your ID is: " + response.UserId.ToString("B"));
+                lbLogs.Items.Add("Your ID is: " + response.UserId.ToString("B"));
             } while (i < 1);
 
             ccsb.SetMessage("Done");
@@ -162,6 +164,11 @@ namespace McTools.Xrm.Connection.TestWinForm
         }
 
         #endregion WhoAmI Sample methods
+
+        private void tsbClearLogs_Click(object sender, EventArgs e)
+        {
+            lbLogs.Items.Clear();
+        }
 
         private void tsbManageConnections_Click(object sender, EventArgs e)
         {
@@ -171,6 +178,27 @@ namespace McTools.Xrm.Connection.TestWinForm
         private void tsbMergeConnectionsFiles_Click(object sender, EventArgs e)
         {
             ccsb.MergeConnectionsFiles = tsbMergeConnectionsFiles.Checked;
+        }
+
+        private void tsbRequestPassword_Click(object sender, EventArgs e)
+        {
+            if (currentDetail == null)
+            {
+                MessageBox.Show("Please connect first");
+                return;
+            }
+
+            if (currentDetail.TryRequestPassword(this,
+                "This is a test to describe how to request the password for further processing",
+                out string password,
+                out SensitiveDataNotFoundReason reason))
+            {
+                MessageBox.Show($"Password is {password}");
+            }
+            else
+            {
+                MessageBox.Show($"Cannot get password for the following reason: {reason}");
+            }
         }
     }
 }

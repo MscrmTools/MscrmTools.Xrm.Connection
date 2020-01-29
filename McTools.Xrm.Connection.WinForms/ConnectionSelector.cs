@@ -264,7 +264,7 @@ namespace McTools.Xrm.Connection.WinForms
         {
             string groupName;
 
-            if (detail.UseOsdp || detail.UseOnline)
+            if (detail.UseOnline)
             {
                 groupName = "Online";
             }
@@ -290,11 +290,6 @@ namespace McTools.Xrm.Connection.WinForms
         private int GetImageIndex(ConnectionDetail detail)
         {
             if (detail.UseOnline)
-            {
-                return 2;
-            }
-
-            if (detail.UseOsdp)
             {
                 return 2;
             }
@@ -747,6 +742,22 @@ namespace McTools.Xrm.Connection.WinForms
             tscbbConnectionsFile.SelectedIndex = tscbbConnectionsFile.Items.Count - 3;
 
             tsbMoveToExistingFile.Enabled = tscbbConnectionsFile.Items.Count > 3;
+        }
+
+        private void tsbRenameFile_Click(object sender, EventArgs e)
+        {
+            var index = tscbbConnectionsFile.SelectedIndex;
+            var item = (ConnectionFile)tscbbConnectionsFile.SelectedItem;
+            var dialog = new RenameConnectionFileDialog(item.Name ?? "N/A");
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                item.Name = dialog.NewName;
+                ConnectionsList.Instance.Save();
+
+                tscbbConnectionsFile.Items.Remove(item);
+                tscbbConnectionsFile.Items.Insert(index, item);
+                tscbbConnectionsFile.SelectedIndex = index;
+            }
         }
 
         #endregion Connection file actions

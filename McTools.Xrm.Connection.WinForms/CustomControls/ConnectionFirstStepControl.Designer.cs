@@ -84,6 +84,7 @@
             this.txtOrganizationUrl.Name = "txtOrganizationUrl";
             this.txtOrganizationUrl.Size = new System.Drawing.Size(625, 31);
             this.txtOrganizationUrl.TabIndex = 1;
+            this.txtOrganizationUrl.Text = "https://organization.crm.dynamics.com";
             // 
             // lblWindowsAuth
             // 

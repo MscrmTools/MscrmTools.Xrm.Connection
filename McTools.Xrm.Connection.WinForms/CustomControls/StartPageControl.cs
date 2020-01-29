@@ -7,7 +7,10 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
     {
         Wizard,
         Sdk,
-        ConnectionString
+        ConnectionString,
+        Certificate,
+        ClientSecret,
+        Mfa
     }
 
     public partial class StartPageControl : UserControl, IConnectionWizardControl
@@ -37,6 +40,18 @@ Connections created with this wizard cannot be transported across multiple compu
             else if (sender == btnSdkLoginControl)
             {
                 Type = ConnectionType.Sdk;
+            }
+            else if (sender == btnCertificate)
+            {
+                Type = ConnectionType.Certificate;
+            }
+            else if (sender == btnClientSecret)
+            {
+                Type = ConnectionType.ClientSecret;
+            }
+            else if (sender == btnMfa)
+            {
+                Type = ConnectionType.Mfa;
             }
             else
             {

@@ -11,9 +11,8 @@ namespace McTools.Xrm.Connection.WinForms
             InitializeComponent();
         }
 
-        public string OpenedFilePath { get; private set; }
-
         public ConnectionFile OpenedFile { get; private set; }
+        public string OpenedFilePath { get; private set; }
 
         private void btnBrowse_Click(object sender, EventArgs e)
         {
@@ -42,13 +41,14 @@ namespace McTools.Xrm.Connection.WinForms
                 OpenedFile = new ConnectionFile(newCc)
                 {
                     Path = txtFilePath.Text,
+                    Name = newCc.Name,
                     LastUsed = DateTime.Now
                 };
 
                 if (ConnectionsList.Instance.Files.Any(f => f.Name == OpenedFile.Name))
                 {
                     int cloneId = 1;
-                    string newName = OpenedFile.Name;
+                    string newName = OpenedFile.Name ?? "New File";
 
                     while (ConnectionsList.Instance.Files.FirstOrDefault(f => f.Name == newName) != null)
                     {
@@ -56,7 +56,7 @@ namespace McTools.Xrm.Connection.WinForms
                         if (rule.IsMatch(newName))
                         {
                             cloneId++;
-                            newName = $"{OpenedFile.Name.Replace($" ({cloneId-1})","")} ({cloneId})";
+                            newName = $"{OpenedFile.Name.Replace($" ({cloneId - 1})", "")} ({cloneId})";
                         }
                         else
                         {

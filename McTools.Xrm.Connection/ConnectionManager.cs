@@ -145,8 +145,6 @@ namespace McTools.Xrm.Connection
             if (e.ChangeType == WatcherChangeTypes.Changed)
             {
                 ConnectionsList = LoadConnectionsList();
-
-                // ConnectionListUpdated(null, new EventArgs());
             }
         }
 
@@ -328,7 +326,7 @@ namespace McTools.Xrm.Connection
                         // Fix for new connection code
                         if (string.IsNullOrEmpty(detail.OrganizationUrlName))
                         {
-                            if (detail.UseIfd || detail.UseOnline || detail.UseOsdp)
+                            if (detail.UseIfd || detail.UseOnline)
                             {
                                 var uri = new Uri(detail.OrganizationServiceUrl);
                                 detail.OrganizationUrlName = uri.Host.Split('.')[0];
@@ -596,6 +594,8 @@ namespace McTools.Xrm.Connection
             detail.ServiceClient = crmSvc;
 
             var parameters = new List<object> { detail, connectionParameter, 1 };
+
+            if (crmSvc == null) return;
 
             if (crmSvc.IsReady)
             {
