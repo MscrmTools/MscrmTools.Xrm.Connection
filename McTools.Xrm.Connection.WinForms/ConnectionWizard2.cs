@@ -374,7 +374,7 @@ Note that this is required to validate this wizard",
                 }
 
                 if (CrmConnectionDetail.AzureAdAppId == Guid.Empty
-                    || string.IsNullOrEmpty(CrmConnectionDetail.ReplyUrl))
+                    || CrmConnectionDetail.ClientSecretIsEmpty)
                 {
                     MessageBox.Show(this,
                         @"Please provide all information for Client Id/Secret authentication",
