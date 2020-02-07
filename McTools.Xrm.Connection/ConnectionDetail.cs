@@ -203,6 +203,13 @@ namespace McTools.Xrm.Connection
         [XmlIgnore]
         public int? ServerPort { get; set; }
 
+        [XmlElement("ServerPort")]
+        public string ServerPortString
+        {
+            get => ServerPort.ToString();
+            set => ServerPort = string.IsNullOrEmpty(value) ? 80 : int.Parse(value);
+        }
+
         [XmlIgnore]
         public CrmServiceClient ServiceClient
         {
@@ -266,13 +273,6 @@ namespace McTools.Xrm.Connection
         public bool UseSsl => WebApplicationUrl?.StartsWith("https://", StringComparison.InvariantCultureIgnoreCase) ?? OriginalUrl.StartsWith("https://", StringComparison.InvariantCultureIgnoreCase);
 
         public string WebApplicationUrl { get; set; }
-
-        [XmlElement("ServerPort")]
-        private string ServerPortString
-        {
-            get => ServerPort.ToString();
-            set => ServerPort = string.IsNullOrEmpty(value) ? 80 : int.Parse(value);
-        }
 
         #endregion Propriétés
 
