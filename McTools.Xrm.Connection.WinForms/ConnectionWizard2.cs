@@ -466,7 +466,7 @@ Note that this is required to validate this wizard",
             {
                 if (evt.Error != null)
                 {
-                    lastError = evt.Error.Message;
+                    lastError = evt.Error.ToString();
                     DisplayControl<ConnectionFailedControl>();
 
                     return;

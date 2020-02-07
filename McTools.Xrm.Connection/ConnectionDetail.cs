@@ -178,6 +178,15 @@ namespace McTools.Xrm.Connection
         public string ReplyUrl { get; set; }
 
         /// <summary>
+        /// Client Secret used for S2S Auth
+        /// </summary>
+        public string S2SClientSecret
+        {
+            get => clientSecret;
+            set => clientSecret = value;
+        }
+
+        /// <summary>
         /// Gets or sets the information if the password must be saved
         /// </summary>
         public bool SavePassword { get; set; }
@@ -254,18 +263,9 @@ namespace McTools.Xrm.Connection
         /// Get or set the use of SSL connection
         /// </summary>
         [XmlIgnore]
-        public bool UseSsl => WebApplicationUrl.StartsWith("https://", StringComparison.InvariantCultureIgnoreCase);
+        public bool UseSsl => WebApplicationUrl?.StartsWith("https://", StringComparison.InvariantCultureIgnoreCase) ?? OriginalUrl.StartsWith("https://", StringComparison.InvariantCultureIgnoreCase);
 
         public string WebApplicationUrl { get; set; }
-
-        /// <summary>
-        /// Client Secret used for S2S Auth
-        /// </summary>
-        public string S2SClientSecret
-        {
-            get => clientSecret;
-            set => clientSecret = value;
-        }
 
         [XmlElement("ServerPort")]
         private string ServerPortString
