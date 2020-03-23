@@ -814,7 +814,7 @@ Note that this is required to validate this wizard",
             else if (typeof(T) == typeof(ConnectionMfaControl))
             {
                 pnlFooter.Visible = true;
-                lblHeader.Text = @"Mutli Factor Authentication";
+                lblHeader.Text = @"Multi Factor Authentication";
 
                 if (!CrmConnectionDetail.ConnectionId.HasValue)
                 {
