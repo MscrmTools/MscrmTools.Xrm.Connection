@@ -39,10 +39,10 @@
             // 
             this.llConnectionStringHelp.AutoSize = true;
             this.llConnectionStringHelp.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.llConnectionStringHelp.Location = new System.Drawing.Point(0, 249);
+            this.llConnectionStringHelp.Location = new System.Drawing.Point(0, 260);
             this.llConnectionStringHelp.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.llConnectionStringHelp.Name = "llConnectionStringHelp";
-            this.llConnectionStringHelp.Size = new System.Drawing.Size(307, 25);
+            this.llConnectionStringHelp.Size = new System.Drawing.Size(341, 25);
             this.llConnectionStringHelp.TabIndex = 2;
             this.llConnectionStringHelp.TabStop = true;
             this.llConnectionStringHelp.Text = "Help me with the connection string";
@@ -55,7 +55,7 @@
             this.lblConnectionString.Location = new System.Drawing.Point(0, 0);
             this.lblConnectionString.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lblConnectionString.Name = "lblConnectionString";
-            this.lblConnectionString.Size = new System.Drawing.Size(164, 25);
+            this.lblConnectionString.Size = new System.Drawing.Size(180, 25);
             this.lblConnectionString.TabIndex = 19;
             this.lblConnectionString.Text = "Connection string";
             // 
@@ -63,11 +63,11 @@
             // 
             this.txtConnectionString.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtConnectionString.Font = new System.Drawing.Font("Consolas", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtConnectionString.Location = new System.Drawing.Point(10, 10);
+            this.txtConnectionString.Location = new System.Drawing.Point(11, 10);
             this.txtConnectionString.Margin = new System.Windows.Forms.Padding(5);
             this.txtConnectionString.Multiline = true;
             this.txtConnectionString.Name = "txtConnectionString";
-            this.txtConnectionString.Size = new System.Drawing.Size(880, 204);
+            this.txtConnectionString.Size = new System.Drawing.Size(960, 215);
             this.txtConnectionString.TabIndex = 1;
             // 
             // pnlMain
@@ -76,19 +76,19 @@
             this.pnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlMain.Location = new System.Drawing.Point(0, 25);
             this.pnlMain.Name = "pnlMain";
-            this.pnlMain.Padding = new System.Windows.Forms.Padding(10);
-            this.pnlMain.Size = new System.Drawing.Size(900, 224);
+            this.pnlMain.Padding = new System.Windows.Forms.Padding(11, 10, 11, 10);
+            this.pnlMain.Size = new System.Drawing.Size(982, 235);
             this.pnlMain.TabIndex = 23;
             // 
             // ConnectionStringControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.pnlMain);
             this.Controls.Add(this.llConnectionStringHelp);
             this.Controls.Add(this.lblConnectionString);
             this.Name = "ConnectionStringControl";
-            this.Size = new System.Drawing.Size(900, 274);
+            this.Size = new System.Drawing.Size(982, 285);
             this.Load += new System.EventHandler(this.ConnectionStringControl_Load);
             this.pnlMain.ResumeLayout(false);
             this.pnlMain.PerformLayout();

@@ -35,8 +35,8 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
             }
             else
             {
-                ctrl.AppId = "2ad88395-b77d-4561-9441-d0e40824f9bc";
-                ctrl.RedirectUri = new Uri("app://5d3e90d6-aa8e-48a8-8f2c-58b45cc67315");
+                ctrl.AppId = "51f81489-12ee-4a9e-aaae-a2591f45987d";
+                ctrl.RedirectUri = new Uri("app://58145B91-0C36-4500-8554-080854F2AC97");
             }
             ctrl.ConnectionToCrmCompleted += (loginCtrl, evt) =>
             {

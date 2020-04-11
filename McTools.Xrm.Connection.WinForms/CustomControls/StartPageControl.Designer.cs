@@ -123,7 +123,7 @@
             this.btnMfa.Name = "btnMfa";
             this.btnMfa.Size = new System.Drawing.Size(471, 75);
             this.btnMfa.TabIndex = 5;
-            this.btnMfa.Text = "Multi Factor Auth.";
+            this.btnMfa.Text = "OAuth / MFA";
             this.btnMfa.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnMfa.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnMfa.UseVisualStyleBackColor = true;

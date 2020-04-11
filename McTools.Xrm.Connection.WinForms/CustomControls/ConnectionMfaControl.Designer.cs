@@ -37,6 +37,7 @@
             this.lblReplyUrl = new System.Windows.Forms.Label();
             this.txtReplyUrl = new System.Windows.Forms.TextBox();
             this.lblUsername = new System.Windows.Forms.Label();
+            this.btnUseDevAzureAdApp = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -75,6 +76,7 @@
             this.tableLayoutPanel1.Controls.Add(this.lblReplyUrl, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.txtReplyUrl, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.lblUsername, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.btnUseDevAzureAdApp, 1, 3);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 45);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -145,6 +147,17 @@
             this.lblUsername.Text = "Username / Email address";
             this.lblUsername.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // btnUseDevAzureAdApp
+            // 
+            this.btnUseDevAzureAdApp.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnUseDevAzureAdApp.Location = new System.Drawing.Point(330, 144);
+            this.btnUseDevAzureAdApp.Name = "btnUseDevAzureAdApp";
+            this.btnUseDevAzureAdApp.Size = new System.Drawing.Size(649, 59);
+            this.btnUseDevAzureAdApp.TabIndex = 17;
+            this.btnUseDevAzureAdApp.Text = "Use development Azure AD App";
+            this.btnUseDevAzureAdApp.UseVisualStyleBackColor = true;
+            this.btnUseDevAzureAdApp.Click += new System.EventHandler(this.btnUseDevAzureAdApp_Click);
+            // 
             // ConnectionMfaControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -172,5 +185,6 @@
         private System.Windows.Forms.TextBox txtReplyUrl;
         private System.Windows.Forms.TextBox txtUsername;
         private System.Windows.Forms.Label lblUsername;
+        private System.Windows.Forms.Button btnUseDevAzureAdApp;
     }
 }

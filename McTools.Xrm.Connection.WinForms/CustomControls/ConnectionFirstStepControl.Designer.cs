@@ -33,8 +33,6 @@
             this.txtOrganizationUrl = new System.Windows.Forms.TextBox();
             this.lblWindowsAuth = new System.Windows.Forms.Label();
             this.chkUseIntegratedAuthentication = new System.Windows.Forms.CheckBox();
-            this.lblUseMfa = new System.Windows.Forms.Label();
-            this.chkUseMfa = new System.Windows.Forms.CheckBox();
             this.label4 = new System.Windows.Forms.Label();
             this.txtTimeout = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1.SuspendLayout();
@@ -49,10 +47,8 @@
             this.tableLayoutPanel1.Controls.Add(this.txtOrganizationUrl, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.lblWindowsAuth, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.chkUseIntegratedAuthentication, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.lblUseMfa, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.chkUseMfa, 1, 2);
-            this.tableLayoutPanel1.Controls.Add(this.label4, 0, 3);
-            this.tableLayoutPanel1.Controls.Add(this.txtTimeout, 1, 3);
+            this.tableLayoutPanel1.Controls.Add(this.label4, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.txtTimeout, 1, 2);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -109,34 +105,11 @@
             this.chkUseIntegratedAuthentication.Text = "(AD and IFD instances only)";
             this.chkUseIntegratedAuthentication.UseVisualStyleBackColor = true;
             // 
-            // lblUseMfa
-            // 
-            this.lblUseMfa.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblUseMfa.Location = new System.Drawing.Point(4, 104);
-            this.lblUseMfa.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblUseMfa.Name = "lblUseMfa";
-            this.lblUseMfa.Size = new System.Drawing.Size(341, 52);
-            this.lblUseMfa.TabIndex = 16;
-            this.lblUseMfa.Text = "Use OAuth, MFA, S2S or Application user";
-            this.lblUseMfa.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // chkUseMfa
-            // 
-            this.chkUseMfa.AutoSize = true;
-            this.chkUseMfa.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkUseMfa.Location = new System.Drawing.Point(353, 108);
-            this.chkUseMfa.Margin = new System.Windows.Forms.Padding(4);
-            this.chkUseMfa.Name = "chkUseMfa";
-            this.chkUseMfa.Size = new System.Drawing.Size(625, 44);
-            this.chkUseMfa.TabIndex = 3;
-            this.chkUseMfa.Text = "(CRM online only - preview)";
-            this.chkUseMfa.UseVisualStyleBackColor = true;
-            // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label4.Location = new System.Drawing.Point(4, 156);
+            this.label4.Location = new System.Drawing.Point(4, 104);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(341, 52);
@@ -147,7 +120,7 @@
             // txtTimeout
             // 
             this.txtTimeout.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtTimeout.Location = new System.Drawing.Point(353, 166);
+            this.txtTimeout.Location = new System.Drawing.Point(353, 114);
             this.txtTimeout.Margin = new System.Windows.Forms.Padding(4, 10, 4, 4);
             this.txtTimeout.Name = "txtTimeout";
             this.txtTimeout.Size = new System.Drawing.Size(91, 31);
@@ -175,8 +148,6 @@
         private System.Windows.Forms.TextBox txtOrganizationUrl;
         private System.Windows.Forms.Label lblWindowsAuth;
         private System.Windows.Forms.CheckBox chkUseIntegratedAuthentication;
-        private System.Windows.Forms.Label lblUseMfa;
-        private System.Windows.Forms.CheckBox chkUseMfa;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txtTimeout;
     }

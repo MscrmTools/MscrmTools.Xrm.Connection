@@ -36,33 +36,33 @@
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.label3.Location = new System.Drawing.Point(0, 154);
+            this.label3.Location = new System.Drawing.Point(0, 160);
             this.label3.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(900, 40);
+            this.label3.Size = new System.Drawing.Size(982, 42);
             this.label3.TabIndex = 3;
-            this.label3.Text = "Trying to connect to your Microsoft Dynamics CRM organization";
+            this.label3.Text = "Trying to connect to your {0}";
             this.label3.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // progressBar1
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(0, 91);
+            this.progressBar1.Location = new System.Drawing.Point(0, 95);
             this.progressBar1.Margin = new System.Windows.Forms.Padding(4);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(900, 37);
+            this.progressBar1.Size = new System.Drawing.Size(982, 39);
             this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.progressBar1.TabIndex = 2;
             // 
             // ConnectionLoadingControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.label3);
             this.Controls.Add(this.progressBar1);
             this.Name = "ConnectionLoadingControl";
-            this.Size = new System.Drawing.Size(900, 274);
+            this.Size = new System.Drawing.Size(982, 285);
             this.ResumeLayout(false);
 
         }

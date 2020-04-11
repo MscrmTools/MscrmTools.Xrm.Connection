@@ -135,11 +135,11 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
             set => chkUseIntegratedAuthentication.Checked = value;
         }
 
-        public bool UseMfa
-        {
-            get => chkUseMfa.Checked;
-            set => chkUseMfa.Checked = value;
-        }
+        //public bool UseMfa
+        //{
+        //    get => chkUseMfa.Checked;
+        //    set => chkUseMfa.Checked = value;
+        //}
 
         public bool UseSsl => Url.StartsWith("https://");
 

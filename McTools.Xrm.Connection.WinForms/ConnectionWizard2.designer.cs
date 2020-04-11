@@ -35,6 +35,7 @@
             this.btnBack = new System.Windows.Forms.Button();
             this.btnNext = new System.Windows.Forms.Button();
             this.pnlMain = new System.Windows.Forms.Panel();
+            this.btnHelp = new System.Windows.Forms.Button();
             this.pnlHeader.SuspendLayout();
             this.pnlFooter.SuspendLayout();
             this.SuspendLayout();
@@ -45,41 +46,42 @@
             this.pnlHeader.Controls.Add(this.lblHeader);
             this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlHeader.Location = new System.Drawing.Point(0, 0);
-            this.pnlHeader.Margin = new System.Windows.Forms.Padding(4);
+            this.pnlHeader.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
             this.pnlHeader.Name = "pnlHeader";
-            this.pnlHeader.Size = new System.Drawing.Size(985, 74);
+            this.pnlHeader.Size = new System.Drawing.Size(1126, 85);
             this.pnlHeader.TabIndex = 9;
             // 
             // lblHeader
             // 
             this.lblHeader.AutoSize = true;
             this.lblHeader.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblHeader.Location = new System.Drawing.Point(14, 10);
-            this.lblHeader.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblHeader.Location = new System.Drawing.Point(16, 11);
+            this.lblHeader.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lblHeader.Name = "lblHeader";
-            this.lblHeader.Size = new System.Drawing.Size(256, 45);
+            this.lblHeader.Size = new System.Drawing.Size(295, 51);
             this.lblHeader.TabIndex = 0;
             this.lblHeader.Text = "New connection";
             // 
             // pnlFooter
             // 
+            this.pnlFooter.Controls.Add(this.btnHelp);
             this.pnlFooter.Controls.Add(this.btnReset);
             this.pnlFooter.Controls.Add(this.btnBack);
             this.pnlFooter.Controls.Add(this.btnNext);
             this.pnlFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlFooter.Location = new System.Drawing.Point(0, 321);
+            this.pnlFooter.Location = new System.Drawing.Point(0, 367);
             this.pnlFooter.Name = "pnlFooter";
-            this.pnlFooter.Padding = new System.Windows.Forms.Padding(4);
-            this.pnlFooter.Size = new System.Drawing.Size(985, 50);
+            this.pnlFooter.Padding = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.pnlFooter.Size = new System.Drawing.Size(1126, 57);
             this.pnlFooter.TabIndex = 10;
             // 
             // btnReset
             // 
             this.btnReset.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnReset.Location = new System.Drawing.Point(615, 4);
-            this.btnReset.Margin = new System.Windows.Forms.Padding(4);
+            this.btnReset.Location = new System.Drawing.Point(704, 5);
+            this.btnReset.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
             this.btnReset.Name = "btnReset";
-            this.btnReset.Size = new System.Drawing.Size(122, 42);
+            this.btnReset.Size = new System.Drawing.Size(139, 47);
             this.btnReset.TabIndex = 8;
             this.btnReset.Text = "Reset";
             this.btnReset.UseVisualStyleBackColor = true;
@@ -88,10 +90,10 @@
             // btnBack
             // 
             this.btnBack.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnBack.Location = new System.Drawing.Point(737, 4);
-            this.btnBack.Margin = new System.Windows.Forms.Padding(4);
+            this.btnBack.Location = new System.Drawing.Point(843, 5);
+            this.btnBack.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
             this.btnBack.Name = "btnBack";
-            this.btnBack.Size = new System.Drawing.Size(122, 42);
+            this.btnBack.Size = new System.Drawing.Size(139, 47);
             this.btnBack.TabIndex = 7;
             this.btnBack.Text = "Back";
             this.btnBack.UseVisualStyleBackColor = true;
@@ -100,10 +102,10 @@
             // btnNext
             // 
             this.btnNext.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnNext.Location = new System.Drawing.Point(859, 4);
-            this.btnNext.Margin = new System.Windows.Forms.Padding(4);
+            this.btnNext.Location = new System.Drawing.Point(982, 5);
+            this.btnNext.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
             this.btnNext.Name = "btnNext";
-            this.btnNext.Size = new System.Drawing.Size(122, 42);
+            this.btnNext.Size = new System.Drawing.Size(139, 47);
             this.btnNext.TabIndex = 6;
             this.btnNext.Text = "Next";
             this.btnNext.UseVisualStyleBackColor = true;
@@ -112,22 +114,34 @@
             // pnlMain
             // 
             this.pnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlMain.Location = new System.Drawing.Point(0, 74);
+            this.pnlMain.Location = new System.Drawing.Point(0, 85);
             this.pnlMain.Name = "pnlMain";
-            this.pnlMain.Size = new System.Drawing.Size(985, 247);
+            this.pnlMain.Size = new System.Drawing.Size(1126, 282);
             this.pnlMain.TabIndex = 11;
+            // 
+            // btnHelp
+            // 
+            this.btnHelp.Dock = System.Windows.Forms.DockStyle.Left;
+            this.btnHelp.Location = new System.Drawing.Point(5, 5);
+            this.btnHelp.Margin = new System.Windows.Forms.Padding(5);
+            this.btnHelp.Name = "btnHelp";
+            this.btnHelp.Size = new System.Drawing.Size(139, 47);
+            this.btnHelp.TabIndex = 9;
+            this.btnHelp.Text = "Help";
+            this.btnHelp.UseVisualStyleBackColor = true;
+            this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
             // 
             // ConnectionWizard2
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(168F, 168F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(192F, 192F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(985, 371);
+            this.ClientSize = new System.Drawing.Size(1126, 424);
             this.Controls.Add(this.pnlMain);
             this.Controls.Add(this.pnlFooter);
             this.Controls.Add(this.pnlHeader);
             this.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Margin = new System.Windows.Forms.Padding(4);
+            this.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ConnectionWizard2";
@@ -148,6 +162,7 @@
         private System.Windows.Forms.Button btnReset;
         private System.Windows.Forms.Button btnBack;
         private System.Windows.Forms.Button btnNext;
+        private System.Windows.Forms.Button btnHelp;
     }
 }
 

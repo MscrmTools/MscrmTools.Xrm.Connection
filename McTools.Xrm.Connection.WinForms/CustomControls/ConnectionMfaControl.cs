@@ -38,6 +38,18 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
             set => txtUsername.Text = value;
         }
 
+        private void btnUseDevAzureAdApp_Click(object sender, EventArgs e)
+        {
+            var message = @"For development and prototyping purposes Microsoft has provided AppId or ClientId and Redirect URI for use in OAuth Flows.
+For production use, you should create an AppId or ClientId that is specific to your tenant in the Azure Management portal.";
+
+            if (MessageBox.Show(this, message, @"Information", MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.OK)
+            {
+                txtAzureAdAppId.Text = @"51f81489-12ee-4a9e-aaae-a2591f45987d";
+                txtReplyUrl.Text = new Uri("app://58145B91-0C36-4500-8554-080854F2AC97").ToString();
+            }
+        }
+
         private void ConnectionOauthControl_Load(object sender, EventArgs e)
         {
             txtAzureAdAppId.Focus();

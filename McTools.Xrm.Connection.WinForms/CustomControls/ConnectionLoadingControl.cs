@@ -4,9 +4,18 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
 {
     public partial class ConnectionLoadingControl : UserControl, IConnectionWizardControl
     {
-        public ConnectionLoadingControl()
+        public ConnectionLoadingControl(ConnectionDetail detail)
         {
             InitializeComponent();
+
+            if (detail.UseOnline)
+            {
+                label3.Text = string.Format(label3.Text, "Common Data Service environment");
+            }
+            else
+            {
+                label3.Text = string.Format(label3.Text, "Microsoft Dynamics CRM/365 organization");
+            }
         }
     }
 }

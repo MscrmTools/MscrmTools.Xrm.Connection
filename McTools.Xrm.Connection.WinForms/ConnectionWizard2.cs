@@ -5,6 +5,7 @@ using Microsoft.Xrm.Tooling.Connector;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
@@ -61,8 +62,8 @@ namespace McTools.Xrm.Connection.WinForms
                 DisplayControl<ConnectionIfdControl>();
             else if (type == typeof(ConnectionLoadingControl))
                 DisplayControl<ConnectionLoadingControl>();
-            else if (type == typeof(ConnectionOauthControl))
-                DisplayControl<ConnectionOauthControl>();
+            //else if (type == typeof(ConnectionOauthControl))
+            //    DisplayControl<ConnectionOauthControl>();
             else if (type == typeof(ConnectionStringControl))
                 DisplayControl<ConnectionStringControl>();
             else if (type == typeof(ConnectionSucceededControl))
@@ -89,7 +90,7 @@ namespace McTools.Xrm.Connection.WinForms
             {
                 CrmConnectionDetail.OriginalUrl = cfsc.Url;
                 CrmConnectionDetail.IsCustomAuth = !cfsc.UseIntegratedAuth;
-                CrmConnectionDetail.UseMfa = cfsc.UseMfa;
+                //CrmConnectionDetail.UseMfa = cfsc.UseMfa;
                 CrmConnectionDetail.ServerName = cfsc.HostName;
                 CrmConnectionDetail.ServerPort = cfsc.HostPort;
                 CrmConnectionDetail.OrganizationUrlName = cfsc.OrganizationUrlName;
@@ -109,11 +110,12 @@ namespace McTools.Xrm.Connection.WinForms
                     {
                         if (!cfsc.UseIntegratedAuth)
                         {
-                            if (CrmConnectionDetail.UseMfa)
-                            {
-                                DisplayControl<ConnectionOauthControl>();
-                            }
-                            else if (!CrmConnectionDetail.UseOnline && CrmConnectionDetail.OriginalUrl.Split('.').Length > 1)
+                            //if (CrmConnectionDetail.UseMfa)
+                            //{
+                            //    DisplayControl<ConnectionOauthControl>();
+                            //}
+                            //else
+                            if (!CrmConnectionDetail.UseOnline && CrmConnectionDetail.OriginalUrl.Split('.').Length > 1)
                             {
                                 DisplayControl<ConnectionIfdControl>();
                             }
@@ -137,11 +139,12 @@ namespace McTools.Xrm.Connection.WinForms
                 {
                     if (CrmConnectionDetail.IsCustomAuth)
                     {
-                        if (CrmConnectionDetail.UseMfa)
-                        {
-                            DisplayControl<ConnectionOauthControl>();
-                        }
-                        else if (!CrmConnectionDetail.UseOnline && CrmConnectionDetail.OriginalUrl.Split('.').Length > 1)
+                        //if (CrmConnectionDetail.UseMfa)
+                        //{
+                        //    DisplayControl<ConnectionOauthControl>();
+                        //}
+                        //else
+                        if (!CrmConnectionDetail.UseOnline && CrmConnectionDetail.OriginalUrl.Split('.').Length > 1)
                         {
                             DisplayControl<ConnectionIfdControl>();
                         }
@@ -265,38 +268,38 @@ Note that this is required to validate this wizard",
                     }
                 }
             }
-            else if (ctrl is ConnectionOauthControl coc)
-            {
-                CrmConnectionDetail.AzureAdAppId = coc.AzureAdAppId;
-                CrmConnectionDetail.ReplyUrl = coc.ReplyUrl;
+            //else if (ctrl is ConnectionOauthControl coc)
+            //{
+            //    CrmConnectionDetail.AzureAdAppId = coc.AzureAdAppId;
+            //    CrmConnectionDetail.ReplyUrl = coc.ReplyUrl;
 
-                if (coc.ClientSecretChanged)
-                {
-                    CrmConnectionDetail.SetClientSecret(coc.ClientSecret);
-                }
+            //    if (coc.ClientSecretChanged)
+            //    {
+            //        CrmConnectionDetail.SetClientSecret(coc.ClientSecret);
+            //    }
 
-                if (CrmConnectionDetail.AzureAdAppId == Guid.Empty
-                    || string.IsNullOrEmpty(CrmConnectionDetail.ReplyUrl))
-                {
-                    MessageBox.Show(this,
-                        @"Please provide all information for OAuth authentication",
-                        @"Warning",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
+            //    if (CrmConnectionDetail.AzureAdAppId == Guid.Empty
+            //        || string.IsNullOrEmpty(CrmConnectionDetail.ReplyUrl))
+            //    {
+            //        MessageBox.Show(this,
+            //            @"Please provide all information for OAuth authentication",
+            //            @"Warning",
+            //            MessageBoxButtons.OK,
+            //            MessageBoxIcon.Warning);
 
-                    return;
-                }
+            //        return;
+            //    }
 
-                if (!CrmConnectionDetail.ClientSecretIsEmpty)
-                {
-                    DisplayControl<ConnectionLoadingControl>();
-                    Connect();
-                }
-                else
-                {
-                    DisplayControl<ConnectionCredentialsControl>();
-                }
-            }
+            //    if (!CrmConnectionDetail.ClientSecretIsEmpty)
+            //    {
+            //        DisplayControl<ConnectionLoadingControl>();
+            //        Connect();
+            //    }
+            //    else
+            //    {
+            //        DisplayControl<ConnectionCredentialsControl>();
+            //    }
+            //}
             else if (ctrl is ConnectionStringControl csc)
             {
                 CrmConnectionDetail.SetConnectionString(csc.ConnectionString);
@@ -454,6 +457,11 @@ Note that this is required to validate this wizard",
 
         #endregion Buttons events
 
+        private void btnHelp_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://www.xrmtoolbox.com/documentation/for-users/connecting-to-an-organization/");
+        }
+
         private void Connect()
         {
             var bw = new BackgroundWorker();
@@ -606,7 +614,7 @@ Note that this is required to validate this wizard",
                     // Connection Properties
                     Url = CrmConnectionDetail?.OriginalUrl,
                     UseIntegratedAuth = !isNew && !(CrmConnectionDetail?.IsCustomAuth ?? true),
-                    UseMfa = CrmConnectionDetail?.UseMfa ?? false,
+                    // UseMfa = CrmConnectionDetail?.UseMfa ?? false,
                     Timeout = timespan.Value
                 };
 
@@ -654,7 +662,7 @@ Note that this is required to validate this wizard",
                 pnlFooter.Visible = true;
                 lblHeader.Text = @"Connecting...";
 
-                ctrl = new ConnectionLoadingControl();
+                ctrl = new ConnectionLoadingControl(CrmConnectionDetail);
 
                 btnBack.Visible = false;
                 btnReset.Visible = false;
@@ -706,22 +714,22 @@ Note that this is required to validate this wizard",
                 btnNext.Visible = true;
                 btnNext.Text = @"Next";
             }
-            else if (typeof(T) == typeof(ConnectionOauthControl))
-            {
-                pnlFooter.Visible = true;
-                lblHeader.Text = @"OAuth protocol settings";
+            //else if (typeof(T) == typeof(ConnectionOauthControl))
+            //{
+            //    pnlFooter.Visible = true;
+            //    lblHeader.Text = @"OAuth protocol settings";
 
-                ctrl = new ConnectionOauthControl
-                {
-                    AzureAdAppId = CrmConnectionDetail.AzureAdAppId,
-                    ReplyUrl = CrmConnectionDetail.ReplyUrl,
-                    HasClientSecret = !CrmConnectionDetail.ClientSecretIsEmpty
-                };
+            //    ctrl = new ConnectionOauthControl
+            //    {
+            //        AzureAdAppId = CrmConnectionDetail.AzureAdAppId,
+            //        ReplyUrl = CrmConnectionDetail.ReplyUrl,
+            //        HasClientSecret = !CrmConnectionDetail.ClientSecretIsEmpty
+            //    };
 
-                btnReset.Visible = true;
-                btnNext.Visible = true;
-                btnNext.Text = @"Next";
-            }
+            //    btnReset.Visible = true;
+            //    btnNext.Visible = true;
+            //    btnNext.Text = @"Next";
+            //}
             else if (typeof(T) == typeof(SdkLoginControlControl))
             {
                 pnlFooter.Visible = true;
@@ -809,12 +817,12 @@ Note that this is required to validate this wizard",
 
                 btnReset.Visible = true;
                 btnNext.Visible = true;
-                btnNext.Text = @"Next";
+                btnNext.Text = @"Connect";
             }
             else if (typeof(T) == typeof(ConnectionMfaControl))
             {
                 pnlFooter.Visible = true;
-                lblHeader.Text = @"Mutli Factor Authentication";
+                lblHeader.Text = @"OAuth Authentication";
 
                 if (!CrmConnectionDetail.ConnectionId.HasValue)
                 {
