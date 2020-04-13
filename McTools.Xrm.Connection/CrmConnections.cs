@@ -101,10 +101,44 @@ namespace McTools.Xrm.Connection
             if (Uri.IsWellFormedUriString(filePath, UriKind.Absolute))
                 return;
 
+            var passwords = new Dictionary<Guid, string>();
+            var secrets = new Dictionary<Guid, string>();
+            foreach (var connection in Connections)
+            {
+                if (!connection.SavePassword)
+                {
+                    if (!connection.PasswordIsEmpty)
+                    {
+                        passwords.Add(connection.ConnectionId ?? Guid.Empty, connection.UserPasswordEncrypted);
+                        connection.ErasePassword();
+                    }
+                    if (!connection.ClientSecretIsEmpty)
+                    {
+                        secrets.Add(connection.ConnectionId ?? Guid.Empty, connection.S2SClientSecret);
+                        connection.ErasePassword();
+                    }
+                }
+            }
+
             lock (_fileAccess)
             {
                 XmlSerializerHelper.SerializeToFile(this, filePath, typeof(ConnectionDetail));
             }
+
+            foreach (var connection in Connections)
+            {
+                if (passwords.ContainsKey(connection.ConnectionId ?? Guid.Empty))
+                {
+                    connection.SetPassword(passwords[connection.ConnectionId ?? Guid.Empty], true);
+                }
+                if (secrets.ContainsKey(connection.ConnectionId ?? Guid.Empty))
+                {
+                    connection.SetClientSecret(secrets[connection.ConnectionId ?? Guid.Empty], true);
+                }
+            }
+
+            passwords.Clear();
+            secrets.Clear();
         }
 
         public override string ToString()

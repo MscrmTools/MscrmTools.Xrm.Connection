@@ -281,6 +281,7 @@ namespace McTools.Xrm.Connection
         public void ErasePassword()
         {
             userPassword = null;
+            clientSecret = null;
         }
 
         public CrmServiceClient GetCrmServiceClient(bool forceNewService = false)
