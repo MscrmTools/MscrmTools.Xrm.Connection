@@ -194,7 +194,8 @@ namespace McTools.Xrm.Connection.WinForms
                     if (connectionFile == null)
                     {
                         if (ConnectionManager.Instance.ConnectionsList.Connections.FirstOrDefault(
-                            d => d.ConnectionId == cForm.CrmConnectionDetail.ConnectionId) == null)
+                            d => d.ConnectionId == cForm.CrmConnectionDetail.ConnectionId) == null
+                            && !string.IsNullOrEmpty(cForm.CrmConnectionDetail.ConnectionName))
                         {
                             ConnectionManager.Instance.ConnectionsList.Connections.Add(cForm.CrmConnectionDetail);
                         }
@@ -205,7 +206,8 @@ namespace McTools.Xrm.Connection.WinForms
                     {
                         var connections = CrmConnections.LoadFromFile(connectionFile.Path);
                         if (connections.Connections.FirstOrDefault(
-                            d => d.ConnectionId == cForm.CrmConnectionDetail.ConnectionId) == null)
+                            d => d.ConnectionId == cForm.CrmConnectionDetail.ConnectionId) == null
+                            && !string.IsNullOrEmpty(cForm.CrmConnectionDetail.ConnectionName))
                         {
                             connections.Connections.Add(cForm.CrmConnectionDetail);
                         }

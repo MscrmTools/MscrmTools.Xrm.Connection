@@ -20,9 +20,6 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
         private void btnClearEnvHighlight_Click(object sender, System.EventArgs e)
         {
             ConnectionDetail.EnvironmentHighlightingInfo = null;
-            //ConnectionDetail.EnvironmentColor = null;
-            //ConnectionDetail.EnvironmentTextColor = null;
-            //ConnectionDetail.EnvironmentText = null;
 
             btnClearEnvHighlight.Visible = false;
         }
