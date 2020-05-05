@@ -408,6 +408,11 @@ namespace McTools.Xrm.Connection
         {
             var csb = new DbConnectionStringBuilder { ConnectionString = connectionString };
 
+            OriginalUrl = (csb.ContainsKey("ServiceUri") ? csb["ServiceUri"] :
+                csb.ContainsKey("Service Uri") ? csb["Service Uri"] :
+                csb.ContainsKey("Url") ? csb["Url"] :
+                csb.ContainsKey("Server") ? csb["Server"] : "").ToString();
+
             if (csb.ContainsKey("Password"))
             {
                 csb["Password"] = CryptoManager.Encrypt(csb["Password"].ToString(), ConnectionManager.CryptoPassPhrase,
