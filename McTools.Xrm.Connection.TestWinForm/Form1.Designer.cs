@@ -38,9 +38,12 @@
             this.tsbClearLogs = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbRequestPassword = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsbImpersonate = new System.Windows.Forms.ToolStripButton();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.lbLogs = new System.Windows.Forms.ListBox();
+            this.tsbClearImpersonate = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -67,7 +70,10 @@
             this.toolStripSeparator2,
             this.tsbClearLogs,
             this.toolStripSeparator3,
-            this.tsbRequestPassword});
+            this.tsbRequestPassword,
+            this.toolStripSeparator4,
+            this.tsbImpersonate,
+            this.tsbClearImpersonate});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 3, 0);
@@ -129,6 +135,21 @@
             this.tsbRequestPassword.Text = "Request Password";
             this.tsbRequestPassword.Click += new System.EventHandler(this.tsbRequestPassword_Click);
             // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 42);
+            // 
+            // tsbImpersonate
+            // 
+            this.tsbImpersonate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.tsbImpersonate.Image = ((System.Drawing.Image)(resources.GetObject("tsbImpersonate.Image")));
+            this.tsbImpersonate.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbImpersonate.Name = "tsbImpersonate";
+            this.tsbImpersonate.Size = new System.Drawing.Size(152, 36);
+            this.tsbImpersonate.Text = "Impersonate";
+            this.tsbImpersonate.Click += new System.EventHandler(this.tsbImpersonate_Click);
+            // 
             // panel1
             // 
             this.panel1.Controls.Add(this.btnWhoAmI);
@@ -158,6 +179,16 @@
             this.lbLogs.Name = "lbLogs";
             this.lbLogs.Size = new System.Drawing.Size(1353, 394);
             this.lbLogs.TabIndex = 0;
+            // 
+            // tsbClearImpersonate
+            // 
+            this.tsbClearImpersonate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.tsbClearImpersonate.Image = ((System.Drawing.Image)(resources.GetObject("tsbClearImpersonate.Image")));
+            this.tsbClearImpersonate.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbClearImpersonate.Name = "tsbClearImpersonate";
+            this.tsbClearImpersonate.Size = new System.Drawing.Size(234, 36);
+            this.tsbClearImpersonate.Text = "Clear Impersonation";
+            this.tsbClearImpersonate.Click += new System.EventHandler(this.tsbClearImpersonate_Click);
             // 
             // Form1
             // 
@@ -193,6 +224,9 @@
         private System.Windows.Forms.ListBox lbLogs;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripButton tsbRequestPassword;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripButton tsbImpersonate;
+        private System.Windows.Forms.ToolStripButton tsbClearImpersonate;
     }
 }
 

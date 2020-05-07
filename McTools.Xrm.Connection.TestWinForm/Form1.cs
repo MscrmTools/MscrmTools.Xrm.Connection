@@ -1,6 +1,6 @@
 ﻿using McTools.Xrm.Connection.WinForms;
-using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Linq;
 using System.Windows.Forms;
@@ -89,6 +89,7 @@ namespace McTools.Xrm.Connection.TestWinForm
             // Store connection Organization Service
             this.service = e.OrganizationService;
             currentDetail = e.ConnectionDetail;
+            currentDetail.OnImpersonate += CurrentDetail_OnImpersonate;
 
             // Displays connection status
             this.ccsb.SetConnectionStatus(true, e.ConnectionDetail);
@@ -123,6 +124,11 @@ namespace McTools.Xrm.Connection.TestWinForm
             this.ccsb.SetMessage(e.CurrentStep);
         }
 
+        private void CurrentDetail_OnImpersonate(object sender, AppCode.ImpersonationEventArgs e)
+        {
+            MessageBox.Show("Impersonated as " + (e.UserName ?? "yourself"));
+        }
+
         #endregion Connection event handlers
 
         #region WhoAmI Sample methods
@@ -148,15 +154,28 @@ namespace McTools.Xrm.Connection.TestWinForm
 
             do
             {
-                WhoAmIRequest request = new WhoAmIRequest();
-                WhoAmIResponse response = (WhoAmIResponse)this.service.Execute(request);
+                //WhoAmIRequest request = new WhoAmIRequest();
+                //WhoAmIResponse response = (WhoAmIResponse)this.service.Execute(request);
+
+                var user = this.service.RetrieveMultiple(new QueryExpression("systemuser")
+                {
+                    ColumnSet = new ColumnSet("fullname"),
+
+                    Criteria = new FilterExpression
+                    {
+                        Conditions =
+                        {
+                            new ConditionExpression("systemuserid", ConditionOperator.EqualUserId)
+                        }
+                    }
+                }).Entities.First();
 
                 i++;
 
                 ccsb.SetMessage("Doing...");
                 ccsb.SetProgress(i * 10);
 
-                lbLogs.Items.Add("Your ID is: " + response.UserId.ToString("B"));
+                lbLogs.Items.Add($"Hello {user.GetAttributeValue<string>("fullname")},Your ID is: {user.Id:B}");
             } while (i < 1);
 
             ccsb.SetMessage("Done");
@@ -165,9 +184,24 @@ namespace McTools.Xrm.Connection.TestWinForm
 
         #endregion WhoAmI Sample methods
 
+        private void tsbClearImpersonate_Click(object sender, EventArgs e)
+        {
+            currentDetail.RemoveImpersonation();
+        }
+
         private void tsbClearLogs_Click(object sender, EventArgs e)
         {
             lbLogs.Items.Clear();
+        }
+
+        private void tsbImpersonate_Click(object sender, EventArgs e)
+        {
+            var user = service.RetrieveMultiple(new QueryExpression("systemuser")
+            {
+                ColumnSet = new ColumnSet("fullname"),
+            }).Entities.First();
+
+            currentDetail.Impersonate(user.Id, user.GetAttributeValue<string>("fullname"));
         }
 
         private void tsbManageConnections_Click(object sender, EventArgs e)

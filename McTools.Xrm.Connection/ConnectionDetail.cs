@@ -1,4 +1,5 @@
-﻿using McTools.Xrm.Connection.Forms;
+﻿using McTools.Xrm.Connection.AppCode;
+using McTools.Xrm.Connection.Forms;
 using McTools.Xrm.Connection.Utils;
 using Microsoft.Xrm.Sdk.Client;
 using Microsoft.Xrm.Sdk.Discovery;
@@ -12,6 +13,7 @@ using System.IO;
 using System.Net;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using AuthenticationType = Microsoft.Xrm.Tooling.Connector.AuthenticationType;
 
 namespace McTools.Xrm.Connection
 {
@@ -37,6 +39,8 @@ namespace McTools.Xrm.Connection
     public class ConnectionDetail : IComparable, ICloneable
     {
         private string clientSecret;
+        private Guid impersonatedUserId;
+        private string impersonatedUserName;
         private string userPassword;
 
         #region Constructeur
@@ -882,6 +886,32 @@ namespace McTools.Xrm.Connection
         }
 
         #endregion IComparable Members
+
+        #region Impersonation methods
+
+        public event EventHandler<ImpersonationEventArgs> OnImpersonate;
+
+        public void Impersonate(Guid userId, string username = null)
+        {
+            impersonatedUserId = userId;
+            impersonatedUserName = username;
+
+            ServiceClient.CallerId = userId;
+
+            OnImpersonate?.Invoke(this, new ImpersonationEventArgs(impersonatedUserId, impersonatedUserName));
+        }
+
+        public void RemoveImpersonation()
+        {
+            impersonatedUserId = Guid.Empty;
+            impersonatedUserName = null;
+
+            ServiceClient.CallerId = Guid.Empty;
+
+            OnImpersonate?.Invoke(this, new ImpersonationEventArgs(impersonatedUserId, impersonatedUserName));
+        }
+
+        #endregion Impersonation methods
     }
 
     public class EnvironmentHighlighting
