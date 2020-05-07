@@ -68,6 +68,7 @@ namespace McTools.Xrm.Connection
         public bool AllowPasswordSharing { get; set; }
 
         public AuthenticationProviderType AuthType { get; set; }
+
         public Guid AzureAdAppId { get; set; }
 
         [XmlElement("CertificateInfo")]
@@ -109,6 +110,12 @@ namespace McTools.Xrm.Connection
         /// Gets or sets the Home realm url for ADFS authentication
         /// </summary>
         public string HomeRealmUrl { get; set; }
+
+        [XmlIgnore]
+        public Guid ImpersonatedUserId => impersonatedUserId;
+
+        [XmlIgnore]
+        public string ImpersonatedUserName => impersonatedUserName;
 
         /// <summary>
         /// Get or set flag to know if custom authentication
