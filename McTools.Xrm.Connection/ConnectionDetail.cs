@@ -1,8 +1,10 @@
 ﻿using McTools.Xrm.Connection.AppCode;
 using McTools.Xrm.Connection.Forms;
 using McTools.Xrm.Connection.Utils;
+using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
 using Microsoft.Xrm.Sdk.Discovery;
+using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
 using System;
 using System.ComponentModel;
@@ -10,6 +12,7 @@ using System.Data.Common;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Windows.Forms;
 using System.Xml.Serialization;
@@ -70,6 +73,9 @@ namespace McTools.Xrm.Connection
         public AuthenticationProviderType AuthType { get; set; }
 
         public Guid AzureAdAppId { get; set; }
+
+        [XmlIgnore]
+        public bool CanImpersonate { get; private set; }
 
         [XmlElement("CertificateInfo")]
         public CertificateInfo Certificate { get; set; }
@@ -352,6 +358,8 @@ namespace McTools.Xrm.Connection
                 crmSvc = null;
                 throw new Exception(error);
             }
+
+            SetImpersonationCapability();
 
             OrganizationFriendlyName = crmSvc.ConnectedOrgFriendlyName;
             OrganizationDataServiceUrl = crmSvc.ConnectedOrgPublishedEndpoints[EndpointType.OrganizationDataService];
@@ -733,6 +741,64 @@ namespace McTools.Xrm.Connection
             }
 
             return cs;
+        }
+
+        private void SetImpersonationCapability()
+        {
+            var query = new QueryExpression("systemuserroles")
+            {
+                Criteria = new FilterExpression
+                {
+                    Conditions =
+                    {
+                        new ConditionExpression("systemuserid", ConditionOperator.EqualUserId)
+                    }
+                },
+                LinkEntities =
+                {
+                    new LinkEntity
+                    {
+                        LinkFromEntityName = "systemuserroles",
+                        LinkFromAttributeName = "roleid",
+                        LinkToAttributeName = "roleid",
+                        LinkToEntityName = "role",
+
+                        LinkEntities =
+                        {
+                            new LinkEntity
+                            {
+                                LinkFromEntityName = "role",
+                                LinkFromAttributeName = "roleid",
+                                LinkToAttributeName = "roleid",
+                                LinkToEntityName = "roleprivileges",
+                                EntityAlias = "priv",
+                                Columns = new ColumnSet("privilegedepthmask"),
+                                LinkEntities =
+                                {
+                                    new LinkEntity
+                                    {
+                                        LinkFromEntityName = "roleprivileges",
+                                        LinkFromAttributeName = "privilegeid",
+                                        LinkToAttributeName = "privilegeid",
+                                        LinkToEntityName = "privilege", LinkCriteria = new FilterExpression
+                                        {
+                                            Conditions =
+                                            {
+                                                new ConditionExpression("name", ConditionOperator.Equal, "prvActOnBehalfOfAnotherUser"),
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var privileges = crmSvc.RetrieveMultiple(query).Entities;
+
+            CanImpersonate = privileges.Any(p =>
+                (int)p.GetAttributeValue<AliasedValue>("priv.privilegedepthmask").Value == 8);
         }
 
         #endregion Méthodes
