@@ -37,6 +37,8 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
 
         public bool HasClientSecret { get; set; }
 
+        public bool SaveClientSecret => chkSaveSecret.Checked;
+
         private void ConnectionOauthControl_Load(object sender, EventArgs e)
         {
             txtAzureAdAppId.Focus();

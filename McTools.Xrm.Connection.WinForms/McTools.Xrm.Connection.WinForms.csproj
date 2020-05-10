@@ -267,6 +267,12 @@
     <Compile Include="EnvHighlightSettingsDialog.Designer.cs">
       <DependentUpon>EnvHighlightSettingsDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="SecretForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SecretForm.designer.cs">
+      <DependentUpon>SecretForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="RenameConnectionFileDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -379,6 +385,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="EnvHighlightSettingsDialog.resx">
       <DependentUpon>EnvHighlightSettingsDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SecretForm.resx">
+      <DependentUpon>SecretForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RenameConnectionFileDialog.resx">
       <DependentUpon>RenameConnectionFileDialog.cs</DependentUpon>

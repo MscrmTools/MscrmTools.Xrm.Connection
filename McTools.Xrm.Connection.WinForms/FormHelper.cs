@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xrm.Tooling.Connector;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -39,23 +40,43 @@ namespace McTools.Xrm.Connection.WinForms
 
                 foreach (var connectionDetail in cs.SelectedConnections)
                 {
-                    if (!connectionDetail.UseConnectionString && connectionDetail.IsCustomAuth)
+                    if (!connectionDetail.UseConnectionString)
                     {
-                        if (connectionDetail.PasswordIsEmpty && connectionDetail.Certificate == null)
+                        if (connectionDetail.NewAuthType == AuthenticationType.ClientSecret
+                            && connectionDetail.ClientSecretIsEmpty)
                         {
-                            var pForm = new PasswordForm(connectionDetail)
+                            var pForm = new SecretForm(connectionDetail)
                             {
-                                UserDomain = connectionDetail.UserDomain,
-                                UserLogin = connectionDetail.UserName
+                                ClientId = connectionDetail.AzureAdAppId.ToString("B")
                             };
                             if (pForm.ShowDialog(innerAppForm) == DialogResult.OK)
                             {
-                                connectionDetail.SetPassword(pForm.UserPassword);
-                                connectionDetail.SavePassword = pForm.SavePassword;
+                                connectionDetail.SetClientSecret(pForm.ClientSecret);
+                                connectionDetail.SavePassword = pForm.SaveSecret;
                             }
                             else
                             {
                                 return false;
+                            }
+                        }
+                        else if (connectionDetail.IsCustomAuth)
+                        {
+                            if (connectionDetail.PasswordIsEmpty && connectionDetail.Certificate == null)
+                            {
+                                var pForm = new PasswordForm(connectionDetail)
+                                {
+                                    UserDomain = connectionDetail.UserDomain,
+                                    UserLogin = connectionDetail.UserName
+                                };
+                                if (pForm.ShowDialog(innerAppForm) == DialogResult.OK)
+                                {
+                                    connectionDetail.SetPassword(pForm.UserPassword);
+                                    connectionDetail.SavePassword = pForm.SavePassword;
+                                }
+                                else
+                                {
+                                    return false;
+                                }
                             }
                         }
                     }

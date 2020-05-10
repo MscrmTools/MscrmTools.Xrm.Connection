@@ -80,6 +80,13 @@ namespace McTools.Xrm.Connection
         [XmlElement("CertificateInfo")]
         public CertificateInfo Certificate { get; set; }
 
+        [XmlElement("ClientSecret")]
+        public string ClientSecretEncrypted
+        {
+            get => clientSecret;
+            set => clientSecret = value;
+        }
+
         [XmlIgnore]
         public bool ClientSecretIsEmpty => string.IsNullOrEmpty(clientSecret);
 
@@ -936,6 +943,7 @@ namespace McTools.Xrm.Connection
                 || originalDetail.UserDomain?.ToLower() != UserDomain?.ToLower()
                 || originalDetail.UserName?.ToLower() != UserName?.ToLower()
                 || SavePassword && !string.IsNullOrEmpty(userPassword) && originalDetail.userPassword != userPassword
+                || SavePassword && !string.IsNullOrEmpty(clientSecret) && originalDetail.clientSecret != clientSecret
                 || originalDetail.Certificate.Thumbprint != Certificate.Thumbprint)
             {
                 return true;

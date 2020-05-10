@@ -369,6 +369,7 @@ Note that this is required to validate this wizard",
             else if (ctrl is ConnectionClientSecretControl ccsc)
             {
                 CrmConnectionDetail.AzureAdAppId = ccsc.AzureAdAppId;
+                CrmConnectionDetail.SavePassword = ccsc.SaveClientSecret;
                 CrmConnectionDetail.NewAuthType = AuthenticationType.ClientSecret;
 
                 if (ccsc.ClientSecretChanged)

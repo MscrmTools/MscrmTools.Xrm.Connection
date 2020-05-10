@@ -35,6 +35,7 @@
             this.lblClientId = new System.Windows.Forms.Label();
             this.txtAzureAdAppId = new System.Windows.Forms.TextBox();
             this.lblClientSecret = new System.Windows.Forms.Label();
+            this.chkSaveSecret = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -71,13 +72,15 @@
             this.tableLayoutPanel1.Controls.Add(this.lblClientId, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.txtAzureAdAppId, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.lblClientSecret, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.chkSaveSecret, 1, 2);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 45);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 3;
+            this.tableLayoutPanel1.RowCount = 4;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 47F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 47F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 47F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(982, 206);
             this.tableLayoutPanel1.TabIndex = 15;
             // 
@@ -122,6 +125,18 @@
             this.lblClientSecret.Text = "Client Secret";
             this.lblClientSecret.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // chkSaveSecret
+            // 
+            this.chkSaveSecret.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkSaveSecret.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chkSaveSecret.Location = new System.Drawing.Point(330, 97);
+            this.chkSaveSecret.Name = "chkSaveSecret";
+            this.chkSaveSecret.Size = new System.Drawing.Size(649, 41);
+            this.chkSaveSecret.TabIndex = 17;
+            this.chkSaveSecret.Text = "Save client secret ";
+            this.chkSaveSecret.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkSaveSecret.UseVisualStyleBackColor = true;
+            // 
             // ConnectionClientSecretControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -147,5 +162,6 @@
         private System.Windows.Forms.TextBox txtAzureAdAppId;
         private System.Windows.Forms.TextBox txtClientSecret;
         private System.Windows.Forms.Label lblClientSecret;
+        private System.Windows.Forms.CheckBox chkSaveSecret;
     }
 }
