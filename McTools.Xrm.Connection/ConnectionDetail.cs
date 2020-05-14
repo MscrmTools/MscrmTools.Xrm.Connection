@@ -381,7 +381,7 @@ namespace McTools.Xrm.Connection
             ServerName = webAppURi.Host;
             ServerPort = webAppURi.Port;
 
-            UseIfd = crmSvc.ActiveAuthenticationType == AuthenticationType.IFD;
+            //UseIfd = crmSvc.ActiveAuthenticationType == AuthenticationType.IFD;
 
             switch (crmSvc.ActiveAuthenticationType)
             {
