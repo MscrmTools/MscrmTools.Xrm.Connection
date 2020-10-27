@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Security;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using EndpointCollection = Microsoft.Xrm.Sdk.Organization.EndpointCollection;
 
@@ -356,6 +357,14 @@ namespace McTools.Xrm.Connection
             }
             catch (Exception error)
             {
+                var appLocation = Assembly.GetExecutingAssembly().Location;
+                var fi = new FileInfo(appLocation);
+
+                using (var writer = new StreamWriter(Path.Combine(fi.DirectoryName, "connection_debug.log"), true))
+                {
+                    writer.WriteLine($"{DateTime.Now}\tLoadConnectionsList\t{error.Message}");
+                }
+
                 throw new Exception("Error while deserializing configuration file. Details: " + error.Message);
             }
         }
