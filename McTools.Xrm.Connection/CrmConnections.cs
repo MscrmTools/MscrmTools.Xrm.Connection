@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
 
 namespace McTools.Xrm.Connection
 {
@@ -70,6 +71,16 @@ namespace McTools.Xrm.Connection
                 return crmConnections;
             }
 
+            using (var fStream = OpenStream(filePath))
+            {
+                if (fStream.Length > 0)
+                {
+                    return (CrmConnections)XmlSerializerHelper.Deserialize(fStream, typeof(CrmConnections), typeof(ConnectionDetail));
+                }
+            }
+
+            Thread.Sleep(1000);
+            // try again
             using (var fStream = OpenStream(filePath))
             {
                 return (CrmConnections)XmlSerializerHelper.Deserialize(fStream, typeof(CrmConnections), typeof(ConnectionDetail));
