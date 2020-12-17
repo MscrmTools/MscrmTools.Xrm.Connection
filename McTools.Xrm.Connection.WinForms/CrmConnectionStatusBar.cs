@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace McTools.Xrm.Connection.WinForms
@@ -186,7 +187,7 @@ namespace McTools.Xrm.Connection.WinForms
                 ConnectionsList.Instance.Save();
             }
 
-            foreach (var file in ConnectionsList.Instance.Files)
+            foreach (var file in ConnectionsList.Instance.Files.OrderBy(f => f.Name))
             {
                 var connections = CrmConnections.LoadFromFile(file.Path);
                 connections.Connections.Sort();

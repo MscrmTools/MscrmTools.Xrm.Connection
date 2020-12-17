@@ -237,8 +237,12 @@ namespace McTools.Xrm.Connection
         [XmlIgnore]
         public CrmServiceClient ServiceClient
         {
-            get { return GetCrmServiceClient(); }
-            set { crmSvc = value; }
+            get => GetCrmServiceClient();
+            set
+            {
+                crmSvc = value;
+                SetImpersonationCapability();
+            }
         }
 
         public Guid TenantId { get; set; }
@@ -312,6 +316,8 @@ namespace McTools.Xrm.Connection
         {
             if (forceNewService == false && crmSvc != null)
             {
+                SetImpersonationCapability();
+
                 return crmSvc;
             }
             if (Timeout.Ticks == 0)
