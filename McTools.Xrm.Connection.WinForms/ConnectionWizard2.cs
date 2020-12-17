@@ -614,8 +614,7 @@ Note that this is required to validate this wizard",
                 {
                     // Connection Properties
                     Url = CrmConnectionDetail?.OriginalUrl,
-                    UseIntegratedAuth = !isNew && !(CrmConnectionDetail?.IsCustomAuth ?? true),
-                    // UseMfa = CrmConnectionDetail?.UseMfa ?? false,
+                    UseIntegratedAuth = !(CrmConnectionDetail?.IsCustomAuth ?? false),
                     Timeout = timespan.Value
                 };
 
