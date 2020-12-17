@@ -56,7 +56,7 @@ namespace McTools.Xrm.Connection.WinForms
                         if (rule.IsMatch(newName))
                         {
                             cloneId++;
-                            newName = $"{OpenedFile.Name.Replace($" ({cloneId - 1})", "")} ({cloneId})";
+                            newName = $"{OpenedFile?.Name?.Replace($" ({cloneId - 1})", "") ?? "New File"} ({cloneId})";
                         }
                         else
                         {
