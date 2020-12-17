@@ -121,6 +121,11 @@ namespace McTools.Xrm.Connection.WinForms
         /// <param name="message">Message to display</param>
         public void SetMessage(string message)
         {
+            if (Items.Count < 2)
+            {
+                return;
+            }
+
             ToolStripStatusLabel label = (ToolStripStatusLabel)Items[1];
 
             MethodInvoker mi = delegate
