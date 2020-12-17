@@ -435,7 +435,7 @@ namespace McTools.Xrm.Connection.WinForms
 
         private void LvConnections_AfterLabelEdit(object sender, LabelEditEventArgs e)
         {
-            if (!e.CancelEdit)
+            if (!e.CancelEdit && e.Label != null)
             {
                 var detail = (ConnectionDetail)lvConnections.Items[e.Item].Tag;
                 detail.ConnectionName = e.Label;
