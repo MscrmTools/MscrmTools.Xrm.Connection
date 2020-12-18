@@ -73,7 +73,7 @@ namespace McTools.Xrm.Connection
 
             using (var fStream = OpenStream(filePath))
             {
-                if (fStream.Length > 0)
+                if (!fStream.CanSeek || fStream.Length > 0)
                 {
                     return (CrmConnections)XmlSerializerHelper.Deserialize(fStream, typeof(CrmConnections), typeof(ConnectionDetail));
                 }
