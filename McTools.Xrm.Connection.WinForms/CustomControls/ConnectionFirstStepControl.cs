@@ -131,7 +131,7 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
 
         public bool UseIntegratedAuth
         {
-            get => chkUseIntegratedAuthentication.Checked;
+            get => chkUseIntegratedAuthentication.Checked && !Url.EndsWith(".dynamics.com");
             set => chkUseIntegratedAuthentication.Checked = value;
         }
 
