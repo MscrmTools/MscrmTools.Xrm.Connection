@@ -133,7 +133,7 @@ namespace McTools.Xrm.Connection.WinForms
             lvConnections.SmallImageList = new ImageList();
             lvConnections.SmallImageList.Images.Add(RessourceManager.GetImage("McTools.Xrm.Connection.WinForms.Resources.CRMOnlineLive_16.png"));
             lvConnections.SmallImageList.Images.Add(RessourceManager.GetImage("McTools.Xrm.Connection.WinForms.Resources.server_key.png"));
-            lvConnections.SmallImageList.Images.Add(RessourceManager.GetImage("McTools.Xrm.Connection.WinForms.Resources.powerapps16.png"));
+            lvConnections.SmallImageList.Images.Add(RessourceManager.GetImage("McTools.Xrm.Connection.WinForms.Resources.Dataverse_16x16.png"));
         }
 
         #endregion Constructeur
@@ -266,7 +266,7 @@ namespace McTools.Xrm.Connection.WinForms
 
             if (detail.UseOnline)
             {
-                groupName = "Online";
+                groupName = "Dataverse";
             }
             else if (detail.UseIfd)
             {
