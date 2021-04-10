@@ -234,5 +234,41 @@ namespace McTools.Xrm.Connection.TestWinForm
                 MessageBox.Show($"Cannot get password for the following reason: {reason}");
             }
         }
+
+        private void tssbMetadata_ButtonClick(object sender, EventArgs e)
+        {
+            if (currentDetail == null)
+            {
+                MessageBox.Show("Please connect first");
+                return;
+            }
+
+            foreach (var entity in currentDetail.MetadataCache.OrderBy(entity => entity.LogicalName))
+            {
+                lbLogs.Items.Add($"{entity.LogicalName}: {entity.DisplayName.UserLocalizedLabel?.Label}");
+            }
+        }
+
+        private void updateCacheToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (currentDetail == null)
+            {
+                MessageBox.Show("Please connect first");
+                return;
+            }
+
+            currentDetail.UpdateMetadataCache(false);
+        }
+
+        private void flushCacheToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (currentDetail == null)
+            {
+                MessageBox.Show("Please connect first");
+                return;
+            }
+
+            currentDetail.UpdateMetadataCache(true);
+        }
     }
 }
