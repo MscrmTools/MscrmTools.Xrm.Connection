@@ -487,6 +487,8 @@ namespace McTools.Xrm.Connection
                     detail.CopyClientSecretTo(currentConnection);
                 }
 
+                UpdateMetadataCache(detail);
+
                 detail.LastUsedOn = DateTime.Now;
 
                 SaveConnectionsFile();
@@ -502,6 +504,13 @@ namespace McTools.Xrm.Connection
             {
                 return error;
             }
+        }
+
+        private void UpdateMetadataCache(ConnectionDetail detail)
+        {
+            SendStepChange("Updating Metadata Cache...");
+
+            detail.UpdateMetadataCache(false);
         }
 
         /// <summary>
@@ -605,6 +614,8 @@ namespace McTools.Xrm.Connection
             var parameters = new List<object> { detail, connectionParameter, 1 };
 
             if (crmSvc == null) return;
+
+            UpdateMetadataCache(detail);
 
             if (crmSvc.IsReady)
             {
