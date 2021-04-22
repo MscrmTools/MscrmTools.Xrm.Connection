@@ -926,6 +926,27 @@ namespace McTools.Xrm.Connection
                 return csb.ToString();
             }
 
+            if (!string.IsNullOrEmpty(clientSecret))
+            {
+                csb["AuthType"] = "ClientSecret";
+                csb["ClientId"] = AzureAdAppId.ToString("B");
+                csb["ClientSecret"] = "*************";
+
+                return csb.ToString();
+            }
+
+            if (UseMfa)
+            {
+                csb["Username"] = UserName;
+                csb["AuthType"] = "OAuth";
+                csb["ClientId"] = AzureAdAppId.ToString("B");
+                csb["LoginPrompt"] = "Auto";
+                csb["RedirectUri"] = ReplyUrl;
+                csb["TokenCacheStorePath"] = Path.Combine(Path.GetTempPath(), ConnectionId.Value.ToString("B"), "oauth-cache.txt");
+
+                return csb.ToString();
+            }
+
             if (!string.IsNullOrEmpty(UserDomain))
                 csb["Domain"] = UserDomain;
             csb["Username"] = UserName;
@@ -933,15 +954,6 @@ namespace McTools.Xrm.Connection
 
             if (!string.IsNullOrEmpty(HomeRealmUrl))
                 csb["HomeRealmUri"] = HomeRealmUrl;
-
-            if (UseMfa)
-            {
-                csb["AuthType"] = "OAuth";
-                csb["ClientId"] = AzureAdAppId.ToString("B");
-                csb["LoginPrompt"] = "Auto";
-                csb["RedirectUri"] = ReplyUrl;
-                csb["TokenCacheStorePath"] = Path.Combine(Path.GetTempPath(), ConnectionId.Value.ToString("B"), "oauth-cache.txt");
-            }
 
             return csb.ToString();
         }
