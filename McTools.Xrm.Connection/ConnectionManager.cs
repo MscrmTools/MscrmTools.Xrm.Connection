@@ -487,8 +487,10 @@ namespace McTools.Xrm.Connection
                     detail.CopyClientSecretTo(currentConnection);
                 }
 
-                UpdateMetadataCache(detail);
-
+                if (detail.OrganizationMajorVersion >= 8)
+                {
+                    UpdateMetadataCache(detail);
+                }
                 detail.LastUsedOn = DateTime.Now;
 
                 SaveConnectionsFile();
@@ -615,7 +617,10 @@ namespace McTools.Xrm.Connection
 
             if (crmSvc == null) return;
 
-            UpdateMetadataCache(detail);
+            if (detail.OrganizationMajorVersion >= 8)
+            {
+                UpdateMetadataCache(detail);
+            }
 
             if (crmSvc.IsReady)
             {
