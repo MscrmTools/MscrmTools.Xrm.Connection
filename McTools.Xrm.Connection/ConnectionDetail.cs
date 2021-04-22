@@ -73,6 +73,8 @@ namespace McTools.Xrm.Connection
 
         #region Propriétés
 
+        private MetadataCache _metadataCache;
+
         [XmlIgnore]
         private CrmServiceClient crmSvc;
 
@@ -167,6 +169,15 @@ namespace McTools.Xrm.Connection
                 }
             }
         }
+
+        /// <summary>
+        /// Returns a cached version of the metadata for this connection.
+        /// </summary>
+        /// <remarks>
+        /// This cache is updated at the start of each connection, or by calling <see cref="UpdateMetadataCache(bool)"/>
+        /// </remarks>
+        [XmlIgnore]
+        public EntityMetadata[] MetadataCache => _metadataCache.EntityMetadata;
 
         public AuthenticationType NewAuthType { get; set; }
 
@@ -310,17 +321,6 @@ namespace McTools.Xrm.Connection
         public bool UseSsl => WebApplicationUrl?.StartsWith("https://", StringComparison.InvariantCultureIgnoreCase) ?? OriginalUrl.StartsWith("https://", StringComparison.InvariantCultureIgnoreCase);
 
         public string WebApplicationUrl { get; set; }
-
-        private MetadataCache _metadataCache;
-
-        /// <summary>
-        /// Returns a cached version of the metadata for this connection.
-        /// </summary>
-        /// <remarks>
-        /// This cache is updated at the start of each connection, or by calling <see cref="UpdateMetadataCache(bool)"/>
-        /// </remarks>
-        [XmlIgnore]
-        public EntityMetadata[] MetadataCache => _metadataCache.EntityMetadata;
 
         #endregion Propriétés
 
@@ -1020,6 +1020,8 @@ namespace McTools.Xrm.Connection
 
         #endregion Impersonation methods
 
+        #region Metadata Cache methods
+
         /// <summary>
         /// Updates the <see cref="MetadataCache"/>
         /// </summary>
@@ -1207,6 +1209,8 @@ namespace McTools.Xrm.Connection
             if (newLabel.UserLocalizedLabel != null)
                 CopyChanges(existingLabel.UserLocalizedLabel, newLabel.UserLocalizedLabel, deletedIds);
         }
+
+        #endregion Metadata Cache methods
     }
 
     public class EnvironmentHighlighting
