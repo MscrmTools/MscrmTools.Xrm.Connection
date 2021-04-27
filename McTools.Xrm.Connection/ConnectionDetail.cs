@@ -22,6 +22,7 @@ using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.ServiceModel;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using AuthenticationType = Microsoft.Xrm.Tooling.Connector.AuthenticationType;
@@ -321,6 +322,12 @@ namespace McTools.Xrm.Connection
         /// </remarks>
         [XmlIgnore]
         public EntityMetadata[] MetadataCache => _metadataCache.EntityMetadata;
+
+        /// <summary>
+        /// Returns a task that provides access to the <see cref="MetadataCache"/> once it has finished loading
+        /// </summary>
+        [XmlIgnore]
+        public Task<MetadataCache> MetadataCacheLoader { get; private set; } = Task.FromResult<MetadataCache>(null);
 
         #endregion Propriétés
 
@@ -1024,95 +1031,118 @@ namespace McTools.Xrm.Connection
         /// Updates the <see cref="MetadataCache"/>
         /// </summary>
         /// <param name="flush">Indicates if the existing cache should be flushed and a full new copy of the metadata should be retrieved</param>
-        public void UpdateMetadataCache(bool flush)
+        public Task UpdateMetadataCache(bool flush)
         {
-            // Load & update metadata cache
-            var metadataCachePath = Path.Combine(Path.GetDirectoryName(Connection.ConnectionsList.ConnectionsListFilePath), "..", "Metadata", ConnectionId + ".xml.gz");
-            metadataCachePath = Path.IsPathRooted(metadataCachePath) ? metadataCachePath : Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName, metadataCachePath);
+            if (OrganizationMajorVersion < 8)
+                throw new NotSupportedException("Metadata cache is only supported on Dynamics CRM 2016 or later");
 
-            var metadataSerializer = new DataContractSerializer(typeof(MetadataCache));
+            // If there's already an update in progress, don't start a new one
+            if (!MetadataCacheLoader.IsCompleted)
+                return MetadataCacheLoader;
 
-            if (_metadataCache == null && File.Exists(metadataCachePath) && !flush)
+            // Load the metadata in a background task
+            var task = new Task<MetadataCache>(() =>
             {
-                using (var stream = File.OpenRead(metadataCachePath))
-                using (var gz = new GZipStream(stream, CompressionMode.Decompress))
-                {
-                    _metadataCache = (MetadataCache)metadataSerializer.ReadObject(gz);
-                }
-            }
+                // Load & update metadata cache
+                var metadataCachePath = Path.Combine(Path.GetDirectoryName(ConnectionsList.ConnectionsListFilePath), "..", "Metadata", ConnectionId + ".xml.gz");
+                metadataCachePath = Path.IsPathRooted(metadataCachePath) ? metadataCachePath : Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName, metadataCachePath);
 
-            // Get all the metadata that's changed since the last connection
-            // If this query changes, increment the version number to ensure any previously cached versions are flushed
-            const int queryVersion = 1;
+                var metadataSerializer = new DataContractSerializer(typeof(MetadataCache));
+                var metadataCache = _metadataCache;
 
-            var metadataQuery = new RetrieveMetadataChangesRequest
-            {
-                ClientVersionStamp = !flush && _metadataCache?.MetadataQueryVersion == queryVersion ? _metadataCache?.ClientVersionStamp : null,
-                Query = new EntityQueryExpression
+                if (metadataCache == null && File.Exists(metadataCachePath) && !flush)
                 {
-                    Properties = new MetadataPropertiesExpression { AllProperties = true },
-                    AttributeQuery = new AttributeQueryExpression
+                    using (var stream = File.OpenRead(metadataCachePath))
+                    using (var gz = new GZipStream(stream, CompressionMode.Decompress))
                     {
-                        Properties = new MetadataPropertiesExpression { AllProperties = true }
-                    },
-                    RelationshipQuery = new RelationshipQueryExpression
-                    {
-                        Properties = new MetadataPropertiesExpression { AllProperties = true }
+                        metadataCache = (MetadataCache)metadataSerializer.ReadObject(gz);
                     }
-                },
-                DeletedMetadataFilters = DeletedMetadataFilters.All
-            };
+                }
 
-            RetrieveMetadataChangesResponse metadataUpdate;
+                // Get all the metadata that's changed since the last connection
+                // If this query changes, increment the version number to ensure any previously cached versions are flushed
+                const int queryVersion = 1;
 
-            try
-            {
-                metadataUpdate = (RetrieveMetadataChangesResponse)ServiceClient.Execute(metadataQuery);
-            }
-            catch (FaultException<OrganizationServiceFault> ex)
-            {
-                // If the last connection was too long ago, we need to request all the metadata, not just the changes
-                if (ex.Detail.ErrorCode == unchecked((int)0x80044352))
+                var metadataQuery = new RetrieveMetadataChangesRequest
                 {
-                    _metadataCache = null;
-                    metadataQuery.ClientVersionStamp = null;
+                    ClientVersionStamp = !flush && metadataCache?.MetadataQueryVersion == queryVersion ? metadataCache?.ClientVersionStamp : null,
+                    Query = new EntityQueryExpression
+                    {
+                        Properties = new MetadataPropertiesExpression { AllProperties = true },
+                        AttributeQuery = new AttributeQueryExpression
+                        {
+                            Properties = new MetadataPropertiesExpression { AllProperties = true }
+                        },
+                        RelationshipQuery = new RelationshipQueryExpression
+                        {
+                            Properties = new MetadataPropertiesExpression { AllProperties = true }
+                        }
+                    },
+                    DeletedMetadataFilters = DeletedMetadataFilters.All
+                };
+
+                RetrieveMetadataChangesResponse metadataUpdate;
+
+                try
+                {
                     metadataUpdate = (RetrieveMetadataChangesResponse)ServiceClient.Execute(metadataQuery);
+                }
+                catch (FaultException<OrganizationServiceFault> ex)
+                {
+                    // If the last connection was too long ago, we need to request all the metadata, not just the changes
+                    if (ex.Detail.ErrorCode == unchecked((int)0x80044352))
+                    {
+                        _metadataCache = null;
+                        metadataQuery.ClientVersionStamp = null;
+                        metadataUpdate = (RetrieveMetadataChangesResponse)ServiceClient.Execute(metadataQuery);
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                if (metadataCache == null || flush)
+                {
+                    // If we didn't have a previous cache, just start a fresh one
+                    metadataCache = new MetadataCache();
+                    metadataCache.EntityMetadata = metadataUpdate.EntityMetadata.ToArray();
+                    metadataCache.MetadataQueryVersion = queryVersion;
                 }
                 else
                 {
-                    throw;
+                    // We had a cached version of the metadata before, so now we need to merge in the changes
+                    var deletedIds = metadataUpdate.DeletedMetadata == null ? new List<Guid>() : metadataUpdate.DeletedMetadata.SelectMany(kvp => kvp.Value).Distinct().ToList();
+
+                    CopyChanges(metadataCache, typeof(MetadataCache).GetProperty(nameof(Connection.MetadataCache.EntityMetadata)), metadataUpdate.EntityMetadata.ToArray(), deletedIds);
                 }
-            }
 
-            if (_metadataCache == null || flush)
-            {
-                // If we didn't have a previous cache, just start a fresh one
-                _metadataCache = new MetadataCache();
-                _metadataCache.EntityMetadata = metadataUpdate.EntityMetadata.ToArray();
-                _metadataCache.MetadataQueryVersion = queryVersion;
-            }
-            else
-            {
-                // We had a cached version of the metadata before, so now we need to merge in the changes
-                var deletedIds = metadataUpdate.DeletedMetadata == null ? new List<Guid>() : metadataUpdate.DeletedMetadata.SelectMany(kvp => kvp.Value).Distinct().ToList();
+                _metadataCache = metadataCache;
 
-                CopyChanges(_metadataCache, typeof(MetadataCache).GetProperty(nameof(Connection.MetadataCache.EntityMetadata)), metadataUpdate.EntityMetadata.ToArray(), deletedIds);
-            }
-
-            // Save the latest metadata cache
-            if (_metadataCache.ClientVersionStamp != metadataUpdate.ServerVersionStamp ||
-                _metadataCache.MetadataQueryVersion != queryVersion)
-            {
-                _metadataCache.ClientVersionStamp = metadataUpdate.ServerVersionStamp;
-                _metadataCache.MetadataQueryVersion = queryVersion;
-
-                Directory.CreateDirectory(Path.GetDirectoryName(metadataCachePath));
-                using (var stream = File.Create(metadataCachePath))
-                using (var gz = new GZipStream(stream, CompressionLevel.Optimal))
+                // Save the latest metadata cache
+                if (metadataCache.ClientVersionStamp != metadataUpdate.ServerVersionStamp ||
+                    metadataCache.MetadataQueryVersion != queryVersion)
                 {
-                    metadataSerializer.WriteObject(gz, _metadataCache);
+                    metadataCache.ClientVersionStamp = metadataUpdate.ServerVersionStamp;
+                    metadataCache.MetadataQueryVersion = queryVersion;
+
+                    Directory.CreateDirectory(Path.GetDirectoryName(metadataCachePath));
+
+                    using (var stream = File.Create(metadataCachePath))
+                    using (var gz = new GZipStream(stream, CompressionLevel.Optimal))
+                    {
+                        metadataSerializer.WriteObject(gz, metadataCache);
+                    }
                 }
-            }
+
+                return metadataCache;
+            });
+            task.ConfigureAwait(false);
+
+            // Store the current metadata loading task and run it
+            MetadataCacheLoader = task;
+            task.Start();
+            return task;
         }
 
         private void CopyChanges(object source, PropertyInfo sourceProperty, MetadataBase[] newArray, List<Guid> deletedIds)
@@ -1145,8 +1175,11 @@ namespace McTools.Xrm.Connection
 
         private void CopyChanges(MetadataBase existingItem, MetadataBase newItem, List<Guid> deletedIds)
         {
-            foreach (var prop in existingItem.GetType().GetProperties())
+            foreach (var prop in existingItem.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
+                if (!Attribute.IsDefined(prop, typeof(DataMemberAttribute)))
+                    continue;
+
                 var newValue = prop.GetValue(newItem);
                 var existingValue = prop.GetValue(existingItem) as MetadataBase;
                 var type = prop.PropertyType;

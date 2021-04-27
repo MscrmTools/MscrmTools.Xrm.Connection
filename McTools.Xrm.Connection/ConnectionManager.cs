@@ -615,6 +615,8 @@ namespace McTools.Xrm.Connection
 
             if (crmSvc == null) return;
 
+            detail.OrganizationVersion = crmSvc.ConnectedOrgVersion.ToString();
+
             UpdateMetadataCache(detail);
 
             if (crmSvc.IsReady)
