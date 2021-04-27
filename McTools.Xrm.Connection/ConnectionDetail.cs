@@ -74,6 +74,8 @@ namespace McTools.Xrm.Connection
 
         #region Propriétés
 
+        private MetadataCache _metadataCache;
+
         [XmlIgnore]
         private CrmServiceClient crmSvc;
 
@@ -168,6 +170,21 @@ namespace McTools.Xrm.Connection
                 }
             }
         }
+
+        /// <summary>
+        /// Returns a cached version of the metadata for this connection.
+        /// </summary>
+        /// <remarks>
+        /// This cache is updated at the start of each connection, or by calling <see cref="UpdateMetadataCache(bool)"/>
+        /// </remarks>
+        [XmlIgnore]
+        public EntityMetadata[] MetadataCache => _metadataCache.EntityMetadata;
+
+        /// <summary>
+        /// Returns a task that provides access to the <see cref="MetadataCache"/> once it has finished loading
+        /// </summary>
+        [XmlIgnore]
+        public Task<MetadataCache> MetadataCacheLoader { get; private set; } = Task.FromResult<MetadataCache>(null);
 
         public AuthenticationType NewAuthType { get; set; }
 
@@ -311,23 +328,6 @@ namespace McTools.Xrm.Connection
         public bool UseSsl => WebApplicationUrl?.StartsWith("https://", StringComparison.InvariantCultureIgnoreCase) ?? OriginalUrl.StartsWith("https://", StringComparison.InvariantCultureIgnoreCase);
 
         public string WebApplicationUrl { get; set; }
-
-        private MetadataCache _metadataCache;
-
-        /// <summary>
-        /// Returns a cached version of the metadata for this connection.
-        /// </summary>
-        /// <remarks>
-        /// This cache is updated at the start of each connection, or by calling <see cref="UpdateMetadataCache(bool)"/>
-        /// </remarks>
-        [XmlIgnore]
-        public EntityMetadata[] MetadataCache => _metadataCache.EntityMetadata;
-
-        /// <summary>
-        /// Returns a task that provides access to the <see cref="MetadataCache"/> once it has finished loading
-        /// </summary>
-        [XmlIgnore]
-        public Task<MetadataCache> MetadataCacheLoader { get; private set; } = Task.FromResult<MetadataCache>(null);
 
         #endregion Propriétés
 
@@ -933,6 +933,27 @@ namespace McTools.Xrm.Connection
                 return csb.ToString();
             }
 
+            if (!string.IsNullOrEmpty(clientSecret))
+            {
+                csb["AuthType"] = "ClientSecret";
+                csb["ClientId"] = AzureAdAppId.ToString("B");
+                csb["ClientSecret"] = "*************";
+
+                return csb.ToString();
+            }
+
+            if (UseMfa)
+            {
+                csb["Username"] = UserName;
+                csb["AuthType"] = "OAuth";
+                csb["ClientId"] = AzureAdAppId.ToString("B");
+                csb["LoginPrompt"] = "Auto";
+                csb["RedirectUri"] = ReplyUrl;
+                csb["TokenCacheStorePath"] = Path.Combine(Path.GetTempPath(), ConnectionId.Value.ToString("B"), "oauth-cache.txt");
+
+                return csb.ToString();
+            }
+
             if (!string.IsNullOrEmpty(UserDomain))
                 csb["Domain"] = UserDomain;
             csb["Username"] = UserName;
@@ -940,15 +961,6 @@ namespace McTools.Xrm.Connection
 
             if (!string.IsNullOrEmpty(HomeRealmUrl))
                 csb["HomeRealmUri"] = HomeRealmUrl;
-
-            if (UseMfa)
-            {
-                csb["AuthType"] = "OAuth";
-                csb["ClientId"] = AzureAdAppId.ToString("B");
-                csb["LoginPrompt"] = "Auto";
-                csb["RedirectUri"] = ReplyUrl;
-                csb["TokenCacheStorePath"] = Path.Combine(Path.GetTempPath(), ConnectionId.Value.ToString("B"), "oauth-cache.txt");
-            }
 
             return csb.ToString();
         }
@@ -1026,6 +1038,8 @@ namespace McTools.Xrm.Connection
         }
 
         #endregion Impersonation methods
+
+        #region Metadata Cache methods
 
         /// <summary>
         /// Updates the <see cref="MetadataCache"/>
@@ -1240,6 +1254,8 @@ namespace McTools.Xrm.Connection
             if (newLabel.UserLocalizedLabel != null)
                 CopyChanges(existingLabel.UserLocalizedLabel, newLabel.UserLocalizedLabel, deletedIds);
         }
+
+        #endregion Metadata Cache methods
     }
 
     public class EnvironmentHighlighting
