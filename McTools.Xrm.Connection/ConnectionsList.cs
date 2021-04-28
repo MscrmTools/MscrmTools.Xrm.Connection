@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace McTools.Xrm.Connection
@@ -27,7 +28,14 @@ namespace McTools.Xrm.Connection
 
         public override string ToString()
         {
-            return Name?.Length > 0 ? Name : "N/A";
+            var fileName = System.IO.Path.GetFileName(Path);
+            var fileNameParts = fileName.Split('.');
+            if (fileNameParts.Length > 1)
+            {
+                fileName = string.Join(".", fileNameParts.Take(fileNameParts.Length - 1));
+            }
+
+            return Name?.Length > 0 ? Name : fileName;
         }
     }
 
