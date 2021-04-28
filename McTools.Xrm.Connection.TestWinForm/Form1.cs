@@ -243,6 +243,14 @@ namespace McTools.Xrm.Connection.TestWinForm
                 return;
             }
 
+            if (!currentDetail.MetadataCacheLoader.IsCompleted)
+            {
+                ccsb.SetMessage("Waiting for metadata cache...");
+                var startTime = DateTime.Now;
+                currentDetail.MetadataCacheLoader.GetAwaiter().GetResult();
+                ccsb.SetMessage("Metadata cache loaded: " + (DateTime.Now - startTime));
+            }
+
             foreach (var entity in currentDetail.MetadataCache.OrderBy(entity => entity.LogicalName))
             {
                 lbLogs.Items.Add($"{entity.LogicalName}: {entity.DisplayName.UserLocalizedLabel?.Label}");
@@ -257,7 +265,17 @@ namespace McTools.Xrm.Connection.TestWinForm
                 return;
             }
 
-            currentDetail.UpdateMetadataCache(false);
+            ccsb.SetMessage("Updating Metadata Cache...");
+            var startTime = DateTime.Now;
+
+            currentDetail.UpdateMetadataCache(false)
+                .ContinueWith(task =>
+                {
+                    if (task.Exception == null)
+                        ccsb.SetMessage("Metadata cache updated: " + (DateTime.Now - startTime));
+                    else
+                        ccsb.SetMessage("Metadata cache update failed: " + task.Exception.Message);
+                });
         }
 
         private void flushCacheToolStripMenuItem_Click(object sender, EventArgs e)
@@ -268,7 +286,17 @@ namespace McTools.Xrm.Connection.TestWinForm
                 return;
             }
 
-            currentDetail.UpdateMetadataCache(true);
+            ccsb.SetMessage("Refreshing Metadata Cache...");
+            var startTime = DateTime.Now;
+
+            currentDetail.UpdateMetadataCache(true)
+                .ContinueWith(task =>
+                {
+                    if (task.Exception == null)
+                        ccsb.SetMessage("Metadata cache refreshed: " + (DateTime.Now - startTime));
+                    else
+                        ccsb.SetMessage("Metadata cache refresh failed: " + task.Exception.Message);
+                });
         }
     }
 }
