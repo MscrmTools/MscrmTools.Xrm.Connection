@@ -41,7 +41,7 @@
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 349F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 262F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.Controls.Add(this.lblUrl, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.txtOrganizationUrl, 1, 0);
@@ -51,23 +51,23 @@
             this.tableLayoutPanel1.Controls.Add(this.txtTimeout, 1, 2);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 5;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 52F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 52F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 52F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 52F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 42F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 42F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 42F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 42F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(982, 285);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(736, 228);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // lblUrl
             // 
             this.lblUrl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblUrl.Location = new System.Drawing.Point(4, 0);
-            this.lblUrl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblUrl.Location = new System.Drawing.Point(3, 0);
             this.lblUrl.Name = "lblUrl";
-            this.lblUrl.Size = new System.Drawing.Size(341, 52);
+            this.lblUrl.Size = new System.Drawing.Size(256, 42);
             this.lblUrl.TabIndex = 11;
             this.lblUrl.Text = "Organization url";
             this.lblUrl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -75,20 +75,19 @@
             // txtOrganizationUrl
             // 
             this.txtOrganizationUrl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtOrganizationUrl.Location = new System.Drawing.Point(353, 10);
-            this.txtOrganizationUrl.Margin = new System.Windows.Forms.Padding(4, 10, 4, 4);
+            this.txtOrganizationUrl.Location = new System.Drawing.Point(265, 8);
+            this.txtOrganizationUrl.Margin = new System.Windows.Forms.Padding(3, 8, 3, 3);
             this.txtOrganizationUrl.Name = "txtOrganizationUrl";
-            this.txtOrganizationUrl.Size = new System.Drawing.Size(625, 31);
+            this.txtOrganizationUrl.Size = new System.Drawing.Size(470, 26);
             this.txtOrganizationUrl.TabIndex = 1;
             this.txtOrganizationUrl.Text = "https://organization.crm.dynamics.com";
             // 
             // lblWindowsAuth
             // 
             this.lblWindowsAuth.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblWindowsAuth.Location = new System.Drawing.Point(4, 52);
-            this.lblWindowsAuth.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblWindowsAuth.Location = new System.Drawing.Point(3, 42);
             this.lblWindowsAuth.Name = "lblWindowsAuth";
-            this.lblWindowsAuth.Size = new System.Drawing.Size(341, 52);
+            this.lblWindowsAuth.Size = new System.Drawing.Size(256, 42);
             this.lblWindowsAuth.TabIndex = 14;
             this.lblWindowsAuth.Text = "Use your current credentials";
             this.lblWindowsAuth.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -97,10 +96,9 @@
             // 
             this.chkUseIntegratedAuthentication.AutoSize = true;
             this.chkUseIntegratedAuthentication.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkUseIntegratedAuthentication.Location = new System.Drawing.Point(353, 56);
-            this.chkUseIntegratedAuthentication.Margin = new System.Windows.Forms.Padding(4);
+            this.chkUseIntegratedAuthentication.Location = new System.Drawing.Point(265, 45);
             this.chkUseIntegratedAuthentication.Name = "chkUseIntegratedAuthentication";
-            this.chkUseIntegratedAuthentication.Size = new System.Drawing.Size(625, 44);
+            this.chkUseIntegratedAuthentication.Size = new System.Drawing.Size(470, 36);
             this.chkUseIntegratedAuthentication.TabIndex = 2;
             this.chkUseIntegratedAuthentication.Text = "(AD and IFD instances only)";
             this.chkUseIntegratedAuthentication.UseVisualStyleBackColor = true;
@@ -109,10 +107,9 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label4.Location = new System.Drawing.Point(4, 104);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label4.Location = new System.Drawing.Point(3, 84);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(341, 52);
+            this.label4.Size = new System.Drawing.Size(256, 42);
             this.label4.TabIndex = 18;
             this.label4.Text = "Service timeout";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -120,20 +117,21 @@
             // txtTimeout
             // 
             this.txtTimeout.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtTimeout.Location = new System.Drawing.Point(353, 114);
-            this.txtTimeout.Margin = new System.Windows.Forms.Padding(4, 10, 4, 4);
+            this.txtTimeout.Location = new System.Drawing.Point(265, 92);
+            this.txtTimeout.Margin = new System.Windows.Forms.Padding(3, 8, 3, 3);
             this.txtTimeout.Name = "txtTimeout";
-            this.txtTimeout.Size = new System.Drawing.Size(91, 31);
+            this.txtTimeout.Size = new System.Drawing.Size(69, 26);
             this.txtTimeout.TabIndex = 4;
             this.txtTimeout.Text = "00:02:00";
             // 
             // ConnectionFirstStepControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tableLayoutPanel1);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "ConnectionFirstStepControl";
-            this.Size = new System.Drawing.Size(982, 285);
+            this.Size = new System.Drawing.Size(736, 228);
             this.Load += new System.EventHandler(this.ConnectionFirstStepControl_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();

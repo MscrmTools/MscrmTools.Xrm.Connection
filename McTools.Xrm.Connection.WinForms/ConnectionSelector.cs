@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
@@ -66,6 +67,7 @@ namespace McTools.Xrm.Connection.WinForms
                 item.SubItems.Add(detail.Organization);
                 item.SubItems.Add(string.IsNullOrEmpty(detail.UserDomain) ? detail.UserName : $"{detail.UserDomain}\\{detail.UserName}");
                 item.SubItems.Add(detail.OrganizationVersion);
+                item.SubItems.Add(detail.LastUsedOn.ToString(CultureInfo.CurrentCulture));
                 item.Tag = detail;
                 item.ImageIndex = GetImageIndex(detail);
 
