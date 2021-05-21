@@ -559,8 +559,11 @@ Note that this is required to validate this wizard",
             if (typeof(T) != typeof(ConnectionLoadingControl))
                 navigationHistory.Add(typeof(T));
 
+            llIconLink.Visible = false;
+
             if (typeof(T) == typeof(StartPageControl))
             {
+                llIconLink.Visible = true;
                 pnlFooter.Visible = false;
                 lblHeader.Text = @"Choose a connection method";
 
@@ -845,6 +848,11 @@ Note that this is required to validate this wizard",
             ((UserControl)ctrl).Dock = DockStyle.Fill;
             pnlMain.Controls.Clear();
             pnlMain.Controls.Add((UserControl)ctrl);
+        }
+
+        private void llIconLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("https://icons8.com/icons/fluent");
         }
     }
 }
