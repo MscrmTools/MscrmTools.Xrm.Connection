@@ -47,9 +47,10 @@
             // 
             this.rdbUseDefault.AutoSize = true;
             this.rdbUseDefault.Checked = true;
-            this.rdbUseDefault.Location = new System.Drawing.Point(3, 3);
+            this.rdbUseDefault.Location = new System.Drawing.Point(2, 2);
+            this.rdbUseDefault.Margin = new System.Windows.Forms.Padding(2);
             this.rdbUseDefault.Name = "rdbUseDefault";
-            this.rdbUseDefault.Size = new System.Drawing.Size(251, 29);
+            this.rdbUseDefault.Size = new System.Drawing.Size(212, 24);
             this.rdbUseDefault.TabIndex = 0;
             this.rdbUseDefault.TabStop = true;
             this.rdbUseDefault.Text = "Use default configuration";
@@ -58,9 +59,10 @@
             // rdbUseCustom
             // 
             this.rdbUseCustom.AutoSize = true;
-            this.rdbUseCustom.Location = new System.Drawing.Point(3, 38);
+            this.rdbUseCustom.Location = new System.Drawing.Point(2, 32);
+            this.rdbUseCustom.Margin = new System.Windows.Forms.Padding(2);
             this.rdbUseCustom.Name = "rdbUseCustom";
-            this.rdbUseCustom.Size = new System.Drawing.Size(668, 29);
+            this.rdbUseCustom.Size = new System.Drawing.Size(546, 24);
             this.rdbUseCustom.TabIndex = 1;
             this.rdbUseCustom.Text = "Provide your own details for OAuth (Required only for IFD on ADFS 4.0+)";
             this.rdbUseCustom.UseVisualStyleBackColor = true;
@@ -72,35 +74,36 @@
             this.panel1.Controls.Add(this.rdbUseCustom);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(900, 85);
+            this.panel1.Size = new System.Drawing.Size(736, 71);
             this.panel1.TabIndex = 2;
             // 
             // panel2
             // 
             this.panel2.Controls.Add(this.btnOpenSdkLoginCtrl);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 214);
+            this.panel2.Location = new System.Drawing.Point(0, 178);
+            this.panel2.Margin = new System.Windows.Forms.Padding(2);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(900, 60);
+            this.panel2.Size = new System.Drawing.Size(736, 50);
             this.panel2.TabIndex = 17;
             // 
             // btnOpenSdkLoginCtrl
             // 
             this.btnOpenSdkLoginCtrl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOpenSdkLoginCtrl.Location = new System.Drawing.Point(621, 7);
-            this.btnOpenSdkLoginCtrl.Margin = new System.Windows.Forms.Padding(4);
+            this.btnOpenSdkLoginCtrl.Location = new System.Drawing.Point(447, 6);
             this.btnOpenSdkLoginCtrl.Name = "btnOpenSdkLoginCtrl";
-            this.btnOpenSdkLoginCtrl.Size = new System.Drawing.Size(275, 42);
+            this.btnOpenSdkLoginCtrl.Size = new System.Drawing.Size(286, 35);
             this.btnOpenSdkLoginCtrl.TabIndex = 4;
-            this.btnOpenSdkLoginCtrl.Text = "Open Sdk Login Control";
+            this.btnOpenSdkLoginCtrl.Text = "Open Microsoft Login Control";
             this.btnOpenSdkLoginCtrl.UseVisualStyleBackColor = true;
             this.btnOpenSdkLoginCtrl.Click += new System.EventHandler(this.btnOpenSdkLoginCtrl_Click);
             // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 300F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 245F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.Controls.Add(this.lblAzureAdAppId, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.txtAzureAdAppId, 1, 0);
@@ -108,24 +111,24 @@
             this.tableLayoutPanel1.Controls.Add(this.txtReplyUrl, 1, 1);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Enabled = false;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 85);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 71);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 3;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 42F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 42F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(900, 129);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 17F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 17F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(736, 107);
             this.tableLayoutPanel1.TabIndex = 18;
             // 
             // lblAzureAdAppId
             // 
             this.lblAzureAdAppId.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblAzureAdAppId.Location = new System.Drawing.Point(4, 0);
-            this.lblAzureAdAppId.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblAzureAdAppId.Location = new System.Drawing.Point(3, 0);
             this.lblAzureAdAppId.Name = "lblAzureAdAppId";
-            this.lblAzureAdAppId.Size = new System.Drawing.Size(292, 50);
+            this.lblAzureAdAppId.Size = new System.Drawing.Size(239, 42);
             this.lblAzureAdAppId.TabIndex = 11;
             this.lblAzureAdAppId.Text = "Application Id";
             this.lblAzureAdAppId.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -133,19 +136,18 @@
             // txtAzureAdAppId
             // 
             this.txtAzureAdAppId.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtAzureAdAppId.Location = new System.Drawing.Point(304, 10);
-            this.txtAzureAdAppId.Margin = new System.Windows.Forms.Padding(4, 10, 4, 4);
+            this.txtAzureAdAppId.Location = new System.Drawing.Point(248, 8);
+            this.txtAzureAdAppId.Margin = new System.Windows.Forms.Padding(3, 8, 3, 3);
             this.txtAzureAdAppId.Name = "txtAzureAdAppId";
-            this.txtAzureAdAppId.Size = new System.Drawing.Size(592, 29);
+            this.txtAzureAdAppId.Size = new System.Drawing.Size(485, 26);
             this.txtAzureAdAppId.TabIndex = 2;
             // 
             // lblReplyUrl
             // 
             this.lblReplyUrl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblReplyUrl.Location = new System.Drawing.Point(4, 50);
-            this.lblReplyUrl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblReplyUrl.Location = new System.Drawing.Point(3, 42);
             this.lblReplyUrl.Name = "lblReplyUrl";
-            this.lblReplyUrl.Size = new System.Drawing.Size(292, 50);
+            this.lblReplyUrl.Size = new System.Drawing.Size(239, 42);
             this.lblReplyUrl.TabIndex = 14;
             this.lblReplyUrl.Text = "Reply Url";
             this.lblReplyUrl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -153,21 +155,22 @@
             // txtReplyUrl
             // 
             this.txtReplyUrl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtReplyUrl.Location = new System.Drawing.Point(304, 60);
-            this.txtReplyUrl.Margin = new System.Windows.Forms.Padding(4, 10, 4, 4);
+            this.txtReplyUrl.Location = new System.Drawing.Point(248, 50);
+            this.txtReplyUrl.Margin = new System.Windows.Forms.Padding(3, 8, 3, 3);
             this.txtReplyUrl.Name = "txtReplyUrl";
-            this.txtReplyUrl.Size = new System.Drawing.Size(592, 29);
+            this.txtReplyUrl.Size = new System.Drawing.Size(485, 26);
             this.txtReplyUrl.TabIndex = 3;
             // 
             // SdkLoginControlControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "SdkLoginControlControl";
-            this.Size = new System.Drawing.Size(900, 274);
+            this.Size = new System.Drawing.Size(736, 228);
             this.Load += new System.EventHandler(this.SdkLoginControlControl_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

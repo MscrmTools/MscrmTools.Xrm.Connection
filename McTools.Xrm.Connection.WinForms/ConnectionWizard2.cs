@@ -493,7 +493,6 @@ Note that this is required to validate this wizard",
 
                 CrmConnectionDetail.Organization = crmSvc.ConnectedOrgUniqueName;
                 CrmConnectionDetail.OrganizationFriendlyName = crmSvc.ConnectedOrgFriendlyName;
-                CrmConnectionDetail.OrganizationUrlName = CrmConnectionDetail.OrganizationUrlName;
                 CrmConnectionDetail.OrganizationVersion = crmSvc.ConnectedOrgVersion.ToString();
                 CrmConnectionDetail.OrganizationDataServiceUrl = crmSvc.ConnectedOrgPublishedEndpoints[EndpointType.OrganizationDataService];
                 CrmConnectionDetail.OrganizationServiceUrl = crmSvc.ConnectedOrgPublishedEndpoints[EndpointType.OrganizationService];
@@ -736,7 +735,7 @@ Note that this is required to validate this wizard",
             else if (typeof(T) == typeof(SdkLoginControlControl))
             {
                 pnlFooter.Visible = true;
-                lblHeader.Text = @"SDK Login control (Preview)";
+                lblHeader.Text = @"Microsoft Login control";
 
                 if (!CrmConnectionDetail.ConnectionId.HasValue)
                 {
