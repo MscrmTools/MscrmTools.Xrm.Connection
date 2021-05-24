@@ -518,6 +518,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\Dataverse_16x16.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Dataverse.32x32.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

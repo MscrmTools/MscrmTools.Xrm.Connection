@@ -301,6 +301,16 @@ namespace McTools.Xrm.Connection.WinForms.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Dataverse_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("Dataverse.32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap logo_0100 {
             get {
                 object obj = ResourceManager.GetObject("logo_0100", resourceCulture);
