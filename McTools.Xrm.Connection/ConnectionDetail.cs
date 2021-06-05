@@ -1175,8 +1175,29 @@ namespace McTools.Xrm.Connection
                     CopyChanges(existingItem, newItem, deletedIds);
             }
 
+            // Store the new array
+            var updatedArray = Array.CreateInstance(sourceProperty.PropertyType.GetElementType(), existingList.Count);
+
+            for (var i = 0; i < existingList.Count; i++)
+                updatedArray.SetValue(existingList[i], i);
+
+            sourceProperty.SetValue(source, updatedArray);
+
+            if (deletedIds.Count > 0)
+                RemoveDeletedItems(source, sourceProperty, deletedIds);
+        }
+
+        private void RemoveDeletedItems(object source, PropertyInfo sourceProperty, List<Guid> deletedIds)
+        {
+            var existingArray = (MetadataBase[])sourceProperty.GetValue(source);
+            var existingList = new List<MetadataBase>(existingArray);
+
             // Remove any deleted items
             existingList.RemoveAll(e => deletedIds.Contains(e.MetadataId.Value));
+
+            // Recursively delete any sub-items
+            foreach (var item in existingList)
+                RemoveDeletedItems(item, deletedIds);
 
             // Store the new array
             var updatedArray = Array.CreateInstance(sourceProperty.PropertyType.GetElementType(), existingList.Count);
@@ -1185,6 +1206,54 @@ namespace McTools.Xrm.Connection
                 updatedArray.SetValue(existingList[i], i);
 
             sourceProperty.SetValue(source, updatedArray);
+        }
+
+        private void RemoveDeletedItems(MetadataBase item, List<Guid> deletedIds)
+        {
+            foreach (var prop in item.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            {
+                if (!Attribute.IsDefined(prop, typeof(DataMemberAttribute)))
+                    continue;
+
+                var value = prop.GetValue(item);
+                var childItem = value as MetadataBase;
+                var type = prop.PropertyType;
+
+                if (type.IsArray)
+                    type = type.GetElementType();
+
+                if (value is Label label)
+                {
+                    RemoveDeletedItems(label, deletedIds);
+                }
+                else if (childItem != null && childItem.MetadataId != null && deletedIds.Contains(childItem.MetadataId.Value))
+                {
+                    prop.SetValue(item, null);
+                }
+                else if (childItem != null)
+                {
+                    RemoveDeletedItems(childItem, deletedIds);
+                }
+                else if (value != null && prop.PropertyType.IsArray && typeof(MetadataBase).IsAssignableFrom(type))
+                {
+                    RemoveDeletedItems(item, prop, deletedIds);
+                }
+            }
+        }
+
+        private void RemoveDeletedItems(Label label, List<Guid> deletedIds)
+        {
+            if (label == null)
+                return;
+
+            for (var i = label.LocalizedLabels.Count - 1; i >= 0; i--)
+            {
+                if (deletedIds.Contains(label.LocalizedLabels[i].MetadataId.Value))
+                    label.LocalizedLabels.RemoveAt(i);
+            }
+
+            if (label.UserLocalizedLabel != null)
+                RemoveDeletedItems(label.UserLocalizedLabel, deletedIds);
         }
 
         private void CopyChanges(MetadataBase existingItem, MetadataBase newItem, List<Guid> deletedIds)
