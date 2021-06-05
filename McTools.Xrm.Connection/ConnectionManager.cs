@@ -11,6 +11,7 @@ using System.Net;
 using System.Net.Security;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using EndpointCollection = Microsoft.Xrm.Sdk.Organization.EndpointCollection;
 
 namespace McTools.Xrm.Connection
@@ -512,7 +513,14 @@ namespace McTools.Xrm.Connection
         {
             SendStepChange("Updating Metadata Cache...");
 
-            detail.UpdateMetadataCache(false);
+            var task = detail.UpdateMetadataCache(false);
+            task.ContinueWith(t =>
+            {
+                if (t.Status == TaskStatus.RanToCompletion)
+                    SendStepChange("Metadata Cache Updated");
+                else
+                    SendStepChange("Metadata Cache Update Failed: " + t.Exception.InnerException.Message);
+            });
         }
 
         /// <summary>
