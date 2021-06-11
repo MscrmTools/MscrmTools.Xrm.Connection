@@ -678,31 +678,31 @@ namespace McTools.Xrm.Connection
 
             Utilities.GetOrgnameAndOnlineRegionFromServiceUri(new Uri(OriginalUrl), out var region, out var orgName, out _);
 
-            if (UseMfa)
-            {
-                var path = Path.Combine(Path.GetTempPath(), ConnectionId.Value.ToString("B"), "oauth-cache.txt");
+            //if (UseMfa)
+            //{
+            var path = Path.Combine(Path.GetTempPath(), ConnectionId.Value.ToString("B"), "oauth-cache.txt");
 
-                crmSvc = new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password),
-                    region,
-                    orgName,
-                    false,
-                    null,
-                    null,
-                    AzureAdAppId.ToString(),
-                    new Uri(ReplyUrl),
-                    path,
-                    null);
-            }
-            else
-            {
-                crmSvc = new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password),
-                    region,
-                    orgName,
-                    true,
-                    true,
-                    null,
-                    true);
-            }
+            crmSvc = new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password),
+                region,
+                orgName,
+                false,
+                null,
+                null,
+                AzureAdAppId != Guid.Empty ? AzureAdAppId.ToString() : "51f81489-12ee-4a9e-aaae-a2591f45987d",
+                new Uri(ReplyUrl ?? "app://58145B91-0C36-4500-8554-080854F2AC97"),
+                path,
+                null);
+            //}
+            //else
+            //{
+            //    crmSvc = new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password),
+            //        region,
+            //        orgName,
+            //        true,
+            //        true,
+            //        null,
+            //        true);
+            //}
         }
 
         private void ConnectOnprem()
@@ -1192,6 +1192,74 @@ namespace McTools.Xrm.Connection
 
             if (deletedIds.Count > 0)
                 RemoveDeletedItems(source, sourceProperty, deletedIds);
+        }
+
+        private void CopyChanges(MetadataBase existingItem, MetadataBase newItem, List<Guid> deletedIds)
+        {
+            foreach (var prop in existingItem.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            {
+                if (!Attribute.IsDefined(prop, typeof(DataMemberAttribute)))
+                    continue;
+
+                var newValue = prop.GetValue(newItem);
+                var existingValue = prop.GetValue(existingItem) as MetadataBase;
+                var type = prop.PropertyType;
+
+                if (type.IsArray)
+                    type = type.GetElementType();
+
+                if (!typeof(MetadataBase).IsAssignableFrom(type) && !typeof(Label).IsAssignableFrom(type))
+                {
+                    prop.SetValue(existingItem, newValue);
+                }
+                else if (typeof(Label).IsAssignableFrom(type))
+                {
+                    CopyChanges((Label)prop.GetValue(existingItem), (Label)newValue, deletedIds);
+                }
+                else if (newValue != null)
+                {
+                    if (prop.PropertyType.IsArray)
+                    {
+                        CopyChanges(existingItem, prop, (MetadataBase[])newValue, deletedIds);
+                    }
+                    else
+                    {
+                        if (existingValue.MetadataId == ((MetadataBase)newValue).MetadataId)
+                            CopyChanges(existingValue, (MetadataBase)newValue, deletedIds);
+                        else
+                            prop.SetValue(existingItem, newValue);
+                    }
+                }
+                else if (existingValue != null && deletedIds.Contains(existingValue.MetadataId.Value))
+                {
+                    prop.SetValue(existingItem, null);
+                }
+            }
+        }
+
+        private void CopyChanges(Label existingLabel, Label newLabel, List<Guid> deletedIds)
+        {
+            if (newLabel == null)
+                return;
+
+            foreach (var localizedLabel in newLabel.LocalizedLabels)
+            {
+                var existingLocalizedLabel = existingLabel.LocalizedLabels.SingleOrDefault(ll => ll.MetadataId == localizedLabel.MetadataId);
+
+                if (existingLocalizedLabel == null)
+                    existingLabel.LocalizedLabels.Add(localizedLabel);
+                else
+                    CopyChanges(existingLocalizedLabel, localizedLabel, deletedIds);
+            }
+
+            for (var i = existingLabel.LocalizedLabels.Count - 1; i >= 0; i--)
+            {
+                if (deletedIds.Contains(existingLabel.LocalizedLabels[i].MetadataId.Value))
+                    existingLabel.LocalizedLabels.RemoveAt(i);
+            }
+
+            if (newLabel.UserLocalizedLabel != null)
+                CopyChanges(existingLabel.UserLocalizedLabel, newLabel.UserLocalizedLabel, deletedIds);
         }
 
         private void RemoveDeletedItems(object source, PropertyInfo sourceProperty, List<Guid> deletedIds)
