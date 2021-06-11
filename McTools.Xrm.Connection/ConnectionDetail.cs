@@ -1279,11 +1279,13 @@ namespace McTools.Xrm.Connection
 
                 if (!typeof(MetadataBase).IsAssignableFrom(type) && !typeof(Label).IsAssignableFrom(type))
                 {
-                    prop.SetValue(existingItem, newValue);
+                    if (newItem.HasChanged != false)
+                        prop.SetValue(existingItem, newValue);
                 }
                 else if (typeof(Label).IsAssignableFrom(type))
                 {
-                    CopyChanges((Label)prop.GetValue(existingItem), (Label)newValue, deletedIds);
+                    if (newItem.HasChanged != false)
+                        CopyChanges((Label)prop.GetValue(existingItem), (Label)newValue, deletedIds);
                 }
                 else if (newValue != null)
                 {
