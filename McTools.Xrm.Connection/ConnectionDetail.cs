@@ -1066,16 +1066,23 @@ namespace McTools.Xrm.Connection
 
                 if (metadataCache == null && File.Exists(metadataCachePath) && !flush)
                 {
-                    using (var stream = File.OpenRead(metadataCachePath))
-                    using (var gz = new GZipStream(stream, CompressionMode.Decompress))
+                    try
                     {
-                        metadataCache = (MetadataCache)metadataSerializer.ReadObject(gz);
+                        using (var stream = File.OpenRead(metadataCachePath))
+                        using (var gz = new GZipStream(stream, CompressionMode.Decompress))
+                        {
+                            metadataCache = (MetadataCache)metadataSerializer.ReadObject(gz);
+                        }
+                    }
+                    catch
+                    {
+                        // If the cache file isn't readable for any reason, throw it away and download a new copy
                     }
                 }
 
                 // Get all the metadata that's changed since the last connection
                 // If this query changes, increment the version number to ensure any previously cached versions are flushed
-                const int queryVersion = 1;
+                const int queryVersion = 2;
 
                 var metadataQuery = new RetrieveMetadataChangesRequest
                 {
@@ -1203,11 +1210,13 @@ namespace McTools.Xrm.Connection
 
                 if (!typeof(MetadataBase).IsAssignableFrom(type) && !typeof(Label).IsAssignableFrom(type))
                 {
-                    prop.SetValue(existingItem, newValue);
+                    if (newItem.HasChanged != false)
+                        prop.SetValue(existingItem, newValue);
                 }
                 else if (typeof(Label).IsAssignableFrom(type))
                 {
-                    CopyChanges((Label)prop.GetValue(existingItem), (Label)newValue, deletedIds);
+                    if (newItem.HasChanged != false)
+                        CopyChanges((Label)prop.GetValue(existingItem), (Label)newValue, deletedIds);
                 }
                 else if (newValue != null)
                 {
