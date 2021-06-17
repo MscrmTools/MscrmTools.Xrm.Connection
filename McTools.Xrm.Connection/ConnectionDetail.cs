@@ -327,7 +327,11 @@ namespace McTools.Xrm.Connection
         [XmlIgnore]
         public bool UseSsl => WebApplicationUrl?.StartsWith("https://", StringComparison.InvariantCultureIgnoreCase) ?? OriginalUrl.StartsWith("https://", StringComparison.InvariantCultureIgnoreCase);
 
-        public string WebApplicationUrl { get; set; }
+        public string WebApplicationUrl
+        {
+            get;
+            set;
+        }
 
         #endregion Propriétés
 
@@ -678,31 +682,18 @@ namespace McTools.Xrm.Connection
 
             Utilities.GetOrgnameAndOnlineRegionFromServiceUri(new Uri(OriginalUrl), out var region, out var orgName, out _);
 
-            //if (UseMfa)
-            //{
             var path = Path.Combine(Path.GetTempPath(), ConnectionId.Value.ToString("B"), "oauth-cache.txt");
 
             crmSvc = new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password),
                 region,
                 orgName,
-                false,
+                true,
                 null,
                 null,
                 AzureAdAppId != Guid.Empty ? AzureAdAppId.ToString() : "51f81489-12ee-4a9e-aaae-a2591f45987d",
                 new Uri(ReplyUrl ?? "app://58145B91-0C36-4500-8554-080854F2AC97"),
                 path,
                 null);
-            //}
-            //else
-            //{
-            //    crmSvc = new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password),
-            //        region,
-            //        orgName,
-            //        true,
-            //        true,
-            //        null,
-            //        true);
-            //}
         }
 
         private void ConnectOnprem()
