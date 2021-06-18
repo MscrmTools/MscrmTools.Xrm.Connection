@@ -178,7 +178,7 @@ namespace McTools.Xrm.Connection
         /// This cache is updated at the start of each connection, or by calling <see cref="UpdateMetadataCache(bool)"/>
         /// </remarks>
         [XmlIgnore]
-        public EntityMetadata[] MetadataCache => _metadataCache.EntityMetadata;
+        public EntityMetadata[] MetadataCache => _metadataCache?.EntityMetadata;
 
         /// <summary>
         /// Returns a task that provides access to the <see cref="MetadataCache"/> once it has finished loading
