@@ -691,7 +691,7 @@ namespace McTools.Xrm.Connection
                 null,
                 null,
                 AzureAdAppId != Guid.Empty ? AzureAdAppId.ToString() : "51f81489-12ee-4a9e-aaae-a2591f45987d",
-                new Uri(ReplyUrl ?? "app://58145B91-0C36-4500-8554-080854F2AC97"),
+                new Uri(string.IsNullOrEmpty(ReplyUrl) ? "app://58145B91-0C36-4500-8554-080854F2AC97" : ReplyUrl),
                 path,
                 null);
         }
