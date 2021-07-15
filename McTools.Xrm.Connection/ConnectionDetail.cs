@@ -1075,9 +1075,15 @@ namespace McTools.Xrm.Connection
                 // If this query changes, increment the version number to ensure any previously cached versions are flushed
                 const int queryVersion = 2;
 
+                if (metadataCache != null && metadataCache.MetadataQueryVersion != queryVersion)
+                {
+                    metadataCache = null;
+                    flush = true;
+                }
+
                 var metadataQuery = new RetrieveMetadataChangesRequest
                 {
-                    ClientVersionStamp = !flush && metadataCache?.MetadataQueryVersion == queryVersion ? metadataCache?.ClientVersionStamp : null,
+                    ClientVersionStamp = !flush ? metadataCache?.ClientVersionStamp : null,
                     Query = new EntityQueryExpression
                     {
                         Properties = new MetadataPropertiesExpression { AllProperties = true },
@@ -1217,7 +1223,7 @@ namespace McTools.Xrm.Connection
                     }
                     else
                     {
-                        if (existingValue.MetadataId == ((MetadataBase)newValue).MetadataId)
+                        if (existingValue != null && existingValue.MetadataId == ((MetadataBase)newValue).MetadataId)
                             CopyChanges(existingValue, (MetadataBase)newValue, deletedIds);
                         else
                             prop.SetValue(existingItem, newValue);
