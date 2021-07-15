@@ -82,7 +82,7 @@ namespace McTools.Xrm.Connection
 
                         var defaultFilePath = Path.Combine(directory, "ConnectionsList.Default.xml");
 
-                        CrmConnections cc = new CrmConnections("Default");
+                        var cc = new CrmConnections("Default") {UseInternetExplorerProxy = true};
                         cc.SerializeToFile(defaultFilePath);
 
                         _instance = new ConnectionsList();
