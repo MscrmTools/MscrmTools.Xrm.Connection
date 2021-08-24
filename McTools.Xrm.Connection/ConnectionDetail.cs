@@ -54,6 +54,7 @@ namespace McTools.Xrm.Connection
         private string clientSecret;
         private Guid impersonatedUserId;
         private string impersonatedUserName;
+        private bool? canImpersonate;
         private string userPassword;
 
         #region Constructeur
@@ -776,46 +777,49 @@ namespace McTools.Xrm.Connection
 
         private void SetImpersonationCapability()
         {
-            var query = new QueryExpression("systemuserroles")
+            if (canImpersonate == null)
             {
-                Criteria = new FilterExpression
+                var query = new QueryExpression("systemuserroles")
                 {
-                    Conditions =
+                    Criteria = new FilterExpression
                     {
-                        new ConditionExpression("systemuserid", ConditionOperator.EqualUserId)
-                    }
-                },
-                LinkEntities =
-                {
-                    new LinkEntity
-                    {
-                        LinkFromEntityName = "systemuserroles",
-                        LinkFromAttributeName = "roleid",
-                        LinkToAttributeName = "roleid",
-                        LinkToEntityName = "role",
-
-                        LinkEntities =
+                        Conditions =
                         {
-                            new LinkEntity
+                            new ConditionExpression("systemuserid", ConditionOperator.EqualUserId)
+                        }
+                    },
+                    LinkEntities =
+                    {
+                        new LinkEntity
+                        {
+                            LinkFromEntityName = "systemuserroles",
+                            LinkFromAttributeName = "roleid",
+                            LinkToAttributeName = "roleid",
+                            LinkToEntityName = "role",
+
+                            LinkEntities =
                             {
-                                LinkFromEntityName = "role",
-                                LinkFromAttributeName = "roleid",
-                                LinkToAttributeName = "roleid",
-                                LinkToEntityName = "roleprivileges",
-                                EntityAlias = "priv",
-                                Columns = new ColumnSet("privilegedepthmask"),
-                                LinkEntities =
+                                new LinkEntity
                                 {
-                                    new LinkEntity
+                                    LinkFromEntityName = "role",
+                                    LinkFromAttributeName = "roleid",
+                                    LinkToAttributeName = "roleid",
+                                    LinkToEntityName = "roleprivileges",
+                                    EntityAlias = "priv",
+                                    Columns = new ColumnSet("privilegedepthmask"),
+                                    LinkEntities =
                                     {
-                                        LinkFromEntityName = "roleprivileges",
-                                        LinkFromAttributeName = "privilegeid",
-                                        LinkToAttributeName = "privilegeid",
-                                        LinkToEntityName = "privilege", LinkCriteria = new FilterExpression
+                                        new LinkEntity
                                         {
-                                            Conditions =
+                                            LinkFromEntityName = "roleprivileges",
+                                            LinkFromAttributeName = "privilegeid",
+                                            LinkToAttributeName = "privilegeid",
+                                            LinkToEntityName = "privilege", LinkCriteria = new FilterExpression
                                             {
-                                                new ConditionExpression("name", ConditionOperator.Equal, "prvActOnBehalfOfAnotherUser"),
+                                                Conditions =
+                                                {
+                                                    new ConditionExpression("name", ConditionOperator.Equal, "prvActOnBehalfOfAnotherUser"),
+                                                }
                                             }
                                         }
                                     }
@@ -823,13 +827,15 @@ namespace McTools.Xrm.Connection
                             }
                         }
                     }
-                }
-            };
+                };
 
-            var privileges = crmSvc.RetrieveMultiple(query).Entities;
+                var privileges = crmSvc.RetrieveMultiple(query).Entities;
 
-            CanImpersonate = privileges.Any(p =>
-                (int)p.GetAttributeValue<AliasedValue>("priv.privilegedepthmask").Value == 8);
+                canImpersonate = privileges.Any(p =>
+                    (int)p.GetAttributeValue<AliasedValue>("priv.privilegedepthmask").Value == 8);
+            }
+            
+            CanImpersonate = canImpersonate.Value;
         }
 
         #endregion Méthodes
