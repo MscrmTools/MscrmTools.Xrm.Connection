@@ -24,6 +24,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 using System.Xml.Serialization;
 using AuthenticationType = Microsoft.Xrm.Tooling.Connector.AuthenticationType;
 using Label = Microsoft.Xrm.Sdk.Label;
@@ -1058,7 +1059,7 @@ namespace McTools.Xrm.Connection
             var task = new Task<MetadataCache>(() =>
             {
                 // Load & update metadata cache
-                var metadataCachePath = Path.Combine(Path.GetDirectoryName(ConnectionsList.ConnectionsListFilePath), "..", "Metadata", ConnectionId + ".xml.gz");
+                var metadataCachePath = Path.Combine(Path.GetDirectoryName(ConnectionsList.ConnectionsListFilePath), "..", "Metadata", ConnectionId + ".bxml.gz");
                 metadataCachePath = Path.IsPathRooted(metadataCachePath) ? metadataCachePath : Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName, metadataCachePath);
 
                 var metadataSerializer = new DataContractSerializer(typeof(MetadataCache));
@@ -1070,8 +1071,15 @@ namespace McTools.Xrm.Connection
                     {
                         using (var stream = File.OpenRead(metadataCachePath))
                         using (var gz = new GZipStream(stream, CompressionMode.Decompress))
+                        using (var tmpFile = new FileStream(Path.GetTempFileName(), FileMode.Create, FileAccess.ReadWrite, FileShare.None, 81920, FileOptions.DeleteOnClose))
                         {
-                            metadataCache = (MetadataCache)metadataSerializer.ReadObject(gz);
+                            gz.CopyTo(tmpFile);
+                            tmpFile.Seek(0, SeekOrigin.Begin);
+
+                            using (var reader = XmlDictionaryReader.CreateBinaryReader(tmpFile, XmlDictionaryReaderQuotas.Max))
+                            {
+                                metadataCache = (MetadataCache)metadataSerializer.ReadObject(reader);
+                            }
                         }
                     }
                     catch
@@ -1153,13 +1161,17 @@ namespace McTools.Xrm.Connection
                     metadataCache.ClientVersionStamp = metadataUpdate.ServerVersionStamp;
                     metadataCache.MetadataQueryVersion = queryVersion;
 
-                    Directory.CreateDirectory(Path.GetDirectoryName(metadataCachePath));
-
-                    using (var stream = File.Create(metadataCachePath))
-                    using (var gz = new GZipStream(stream, CompressionLevel.Optimal))
+                    Task.Run(() =>
                     {
-                        metadataSerializer.WriteObject(gz, metadataCache);
-                    }
+                        Directory.CreateDirectory(Path.GetDirectoryName(metadataCachePath));
+
+                        using (var stream = File.Create(metadataCachePath))
+                        using (var gz = new GZipStream(stream, CompressionLevel.Optimal))
+                        using (var writer = XmlDictionaryWriter.CreateBinaryWriter(gz))
+                        {
+                            metadataSerializer.WriteObject(writer, metadataCache);
+                        }
+                    });
                 }
 
                 return metadataCache;
