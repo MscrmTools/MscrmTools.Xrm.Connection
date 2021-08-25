@@ -1198,7 +1198,10 @@ namespace McTools.Xrm.Connection
                             metadataSerializer.Serialize(jsonWriter, metadataCache);
                         }
 
-                        File.Replace(tempFilePath, metadataCachePath, null);
+                        if (File.Exists(metadataCachePath))
+                            File.Replace(tempFilePath, metadataCachePath, null);
+                        else
+                            File.Move(tempFilePath, metadataCachePath);
                     });
                 }
 
