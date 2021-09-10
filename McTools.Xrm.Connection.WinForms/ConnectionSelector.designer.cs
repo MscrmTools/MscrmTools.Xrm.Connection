@@ -37,6 +37,7 @@
             this.chOrganization = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chUser = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chVersion = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chLastUsedOn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.menu = new System.Windows.Forms.ToolStrip();
             this.tsbNewConnection = new System.Windows.Forms.ToolStripButton();
             this.tsbUpdateConnection = new System.Windows.Forms.ToolStripButton();
@@ -56,7 +57,9 @@
             this.tsbRenameFile = new System.Windows.Forms.ToolStripButton();
             this.pnlFooter = new System.Windows.Forms.Panel();
             this.pnlMain = new System.Windows.Forms.Panel();
-            this.chLastUsedOn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.tstSearch = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.menu.SuspendLayout();
             this.pnlFooter.SuspendLayout();
             this.pnlMain.SuspendLayout();
@@ -104,7 +107,7 @@
             this.lvConnections.Location = new System.Drawing.Point(7, 6);
             this.lvConnections.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.lvConnections.Name = "lvConnections";
-            this.lvConnections.Size = new System.Drawing.Size(1148, 535);
+            this.lvConnections.Size = new System.Drawing.Size(1380, 630);
             this.lvConnections.TabIndex = 2;
             this.lvConnections.UseCompatibleStateImageBehavior = false;
             this.lvConnections.View = System.Windows.Forms.View.Details;
@@ -139,6 +142,11 @@
             this.chVersion.Text = "Version";
             this.chVersion.Width = 90;
             // 
+            // chLastUsedOn
+            // 
+            this.chLastUsedOn.Text = "Last used on";
+            this.chLastUsedOn.Width = 150;
+            // 
             // menu
             // 
             this.menu.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
@@ -158,10 +166,13 @@
             this.tsbRemoveConnectionList,
             this.tsbMoveToNewFile,
             this.tsbMoveToExistingFile,
-            this.tsbRenameFile});
+            this.tsbRenameFile,
+            this.toolStripSeparator5,
+            this.toolStripLabel1,
+            this.tstSearch});
             this.menu.Location = new System.Drawing.Point(0, 0);
             this.menu.Name = "menu";
-            this.menu.Size = new System.Drawing.Size(1162, 34);
+            this.menu.Size = new System.Drawing.Size(1394, 46);
             this.menu.TabIndex = 1;
             this.menu.Text = "tsMain";
             // 
@@ -170,7 +181,7 @@
             this.tsbNewConnection.Image = ((System.Drawing.Image)(resources.GetObject("tsbNewConnection.Image")));
             this.tsbNewConnection.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbNewConnection.Name = "tsbNewConnection";
-            this.tsbNewConnection.Size = new System.Drawing.Size(159, 29);
+            this.tsbNewConnection.Size = new System.Drawing.Size(159, 41);
             this.tsbNewConnection.Text = "New connection";
             this.tsbNewConnection.Click += new System.EventHandler(this.tsbNewConnection_Click);
             // 
@@ -260,6 +271,7 @@
             // tscbbConnectionsFile
             // 
             this.tscbbConnectionsFile.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.tscbbConnectionsFile.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.tscbbConnectionsFile.Name = "tscbbConnectionsFile";
             this.tscbbConnectionsFile.Size = new System.Drawing.Size(280, 34);
             this.tscbbConnectionsFile.SelectedIndexChanged += new System.EventHandler(this.tscbbConnectionsFile_SelectedIndexChanged);
@@ -312,7 +324,7 @@
             this.pnlFooter.Controls.Add(this.bValidate);
             this.pnlFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pnlFooter.Location = new System.Drawing.Point(0, 581);
-            this.pnlFooter.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pnlFooter.Margin = new System.Windows.Forms.Padding(2);
             this.pnlFooter.Name = "pnlFooter";
             this.pnlFooter.Size = new System.Drawing.Size(1162, 50);
             this.pnlFooter.TabIndex = 5;
@@ -321,17 +333,29 @@
             // 
             this.pnlMain.Controls.Add(this.lvConnections);
             this.pnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlMain.Location = new System.Drawing.Point(0, 34);
-            this.pnlMain.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pnlMain.Location = new System.Drawing.Point(0, 55);
+            this.pnlMain.Margin = new System.Windows.Forms.Padding(2);
             this.pnlMain.Name = "pnlMain";
             this.pnlMain.Padding = new System.Windows.Forms.Padding(7, 6, 7, 6);
-            this.pnlMain.Size = new System.Drawing.Size(1162, 547);
+            this.pnlMain.Size = new System.Drawing.Size(1394, 642);
             this.pnlMain.TabIndex = 6;
             // 
-            // chLastUsedOn
+            // tstSearch
             // 
-            this.chLastUsedOn.Text = "Last used on";
-            this.chLastUsedOn.Width = 150;
+            this.tstSearch.Name = "tstSearch";
+            this.tstSearch.Size = new System.Drawing.Size(180, 46);
+            this.tstSearch.TextChanged += new System.EventHandler(this.tstSearch_TextChanged);
+            // 
+            // toolStripLabel1
+            // 
+            this.toolStripLabel1.Name = "toolStripLabel1";
+            this.toolStripLabel1.Size = new System.Drawing.Size(64, 29);
+            this.toolStripLabel1.Text = "Search";
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 34);
             // 
             // ConnectionSelector
             // 
@@ -389,5 +413,8 @@
         private System.Windows.Forms.ColumnHeader chUser;
         private System.Windows.Forms.ToolStripButton tsbRenameFile;
         private System.Windows.Forms.ColumnHeader chLastUsedOn;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
+        private System.Windows.Forms.ToolStripTextBox tstSearch;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
     }
 }

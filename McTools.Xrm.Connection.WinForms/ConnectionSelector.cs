@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -45,60 +46,70 @@ namespace McTools.Xrm.Connection.WinForms
             }
         }
 
-        private void DisplayConnections()
+        private void DisplayConnections(object searchTerm = null)
         {
-            lvConnections.Items.Clear();
-            lvConnections.Groups.Clear();
-
-            ConnectionManager.Instance.ConnectionsList.Connections.Sort();
-
-            LoadImages();
-
-            var details = ConnectionManager.Instance.ConnectionsList.Connections;
-            if (ConnectionManager.Instance.ConnectionsList.UseMruDisplay)
+            Invoke(new Action(() =>
             {
-                details = ConnectionManager.Instance.ConnectionsList.Connections.OrderByDescending(c => c.LastUsedOn).ThenBy(c => c.ConnectionName).ToList();
-            }
+                lvConnections.Items.Clear();
+                lvConnections.Groups.Clear();
 
-            foreach (ConnectionDetail detail in details)
-            {
-                var item = new ListViewItem(detail.ConnectionName);
-                item.SubItems.Add(detail.ServerName);
-                item.SubItems.Add(detail.Organization);
-                item.SubItems.Add(string.IsNullOrEmpty(detail.UserDomain) ? detail.UserName : $"{detail.UserDomain}\\{detail.UserName}");
-                item.SubItems.Add(detail.OrganizationVersion);
-                item.SubItems.Add(detail.LastUsedOn.ToString(CultureInfo.CurrentCulture));
-                item.Tag = detail;
-                item.ImageIndex = GetImageIndex(detail);
+                ConnectionManager.Instance.ConnectionsList.Connections.Sort();
+
+                LoadImages();
+
+                var details = ConnectionManager.Instance.ConnectionsList.Connections;
+
+                var filteredDetails = details.Where(d => searchTerm == null
+                || d.ConnectionName.ToLower().IndexOf(searchTerm?.ToString().ToLower()) >= 0
+                || d.WebApplicationUrl.ToLower().IndexOf(searchTerm?.ToString().ToLower()) >= 0
+                || d.UserName.ToLower().IndexOf(searchTerm?.ToString().ToLower()) >= 0
+                ).ToList();
+
+                if (ConnectionManager.Instance.ConnectionsList.UseMruDisplay)
+                {
+                    filteredDetails = filteredDetails.OrderByDescending(c => c.LastUsedOn).ThenBy(c => c.ConnectionName).ToList();
+                }
+
+                foreach (ConnectionDetail detail in filteredDetails)
+                {
+                    var item = new ListViewItem(detail.ConnectionName);
+                    item.SubItems.Add(detail.ServerName);
+                    item.SubItems.Add(detail.Organization);
+                    item.SubItems.Add(string.IsNullOrEmpty(detail.UserDomain) ? detail.UserName : $"{detail.UserDomain}\\{detail.UserName}");
+                    item.SubItems.Add(detail.OrganizationVersion);
+                    item.SubItems.Add(detail.LastUsedOn.ToString(CultureInfo.CurrentCulture));
+                    item.Tag = detail;
+                    item.ImageIndex = GetImageIndex(detail);
+
+                    if (!ConnectionManager.Instance.ConnectionsList.UseMruDisplay)
+                    {
+                        item.Group = GetGroup(detail);
+                    }
+
+                    lvConnections.Items.Add(item);
+                }
 
                 if (!ConnectionManager.Instance.ConnectionsList.UseMruDisplay)
                 {
-                    item.Group = GetGroup(detail);
+                    var groups = new ListViewGroup[lvConnections.Groups.Count];
+
+                    lvConnections.Groups.CopyTo(groups, 0);
+
+                    Array.Sort(groups, new GroupComparer());
+
+                    lvConnections.BeginUpdate();
+                    lvConnections.Groups.Clear();
+                    lvConnections.Groups.AddRange(groups);
+                    lvConnections.EndUpdate();
                 }
 
-                lvConnections.Items.Add(item);
-            }
-
-            if (!ConnectionManager.Instance.ConnectionsList.UseMruDisplay)
-            {
-                var groups = new ListViewGroup[lvConnections.Groups.Count];
-
-                lvConnections.Groups.CopyTo(groups, 0);
-
-                Array.Sort(groups, new GroupComparer());
-
-                lvConnections.BeginUpdate();
-                lvConnections.Groups.Clear();
-                lvConnections.Groups.AddRange(groups);
-                lvConnections.EndUpdate();
-            }
-
-            tsbNewConnection.Enabled = !ConnectionManager.Instance.ConnectionsList.IsReadOnly;
-            tsbUpdateConnection.Enabled = !ConnectionManager.Instance.ConnectionsList.IsReadOnly;
-            tsbCloneConnection.Enabled = !ConnectionManager.Instance.ConnectionsList.IsReadOnly;
-            tsbDeleteConnection.Enabled = !ConnectionManager.Instance.ConnectionsList.IsReadOnly;
-            tsbUpdatePassword.Enabled = !ConnectionManager.Instance.ConnectionsList.IsReadOnly;
-            tsb_UseMru.Enabled = !ConnectionManager.Instance.ConnectionsList.IsReadOnly;
+                tsbNewConnection.Enabled = !ConnectionManager.Instance.ConnectionsList.IsReadOnly;
+                tsbUpdateConnection.Enabled = !ConnectionManager.Instance.ConnectionsList.IsReadOnly;
+                tsbCloneConnection.Enabled = !ConnectionManager.Instance.ConnectionsList.IsReadOnly;
+                tsbDeleteConnection.Enabled = !ConnectionManager.Instance.ConnectionsList.IsReadOnly;
+                tsbUpdatePassword.Enabled = !ConnectionManager.Instance.ConnectionsList.IsReadOnly;
+                tsb_UseMru.Enabled = !ConnectionManager.Instance.ConnectionsList.IsReadOnly;
+            }));
         }
 
         private void LoadConnectionFile()
@@ -189,6 +200,8 @@ namespace McTools.Xrm.Connection.WinForms
         }
 
         #endregion Méthodes
+
+        private Thread searchThread;
 
         private void ConnectionSelector_KeyDown(object sender, KeyEventArgs e)
         {
@@ -763,5 +776,13 @@ namespace McTools.Xrm.Connection.WinForms
         }
 
         #endregion Connection file actions
+
+        private void tstSearch_TextChanged(object sender, EventArgs e)
+        {
+            if (searchThread != null) searchThread.Abort();
+
+            searchThread = new Thread(new ParameterizedThreadStart(DisplayConnections));
+            searchThread.Start(tstSearch.Text);
+        }
     }
 }
