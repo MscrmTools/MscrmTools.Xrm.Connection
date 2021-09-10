@@ -9,6 +9,7 @@ using Microsoft.Xrm.Sdk.Metadata;
 using Microsoft.Xrm.Sdk.Metadata.Query;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,6 +25,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 using System.Xml.Serialization;
 using AuthenticationType = Microsoft.Xrm.Tooling.Connector.AuthenticationType;
 using Label = Microsoft.Xrm.Sdk.Label;
@@ -69,6 +71,16 @@ namespace McTools.Xrm.Connection
             {
                 ConnectionId = Guid.NewGuid();
             }
+        }
+
+        static ConnectionDetail()
+        {
+            // Generate the contracts used by JSON.NET to serialize the metadata cache in the background.
+            // This saves about 0.5 seconds on the first connection.
+            Task.Run(() =>
+            {
+                MetadataCacheContractResolver.Instance.PreloadContracts(typeof(MetadataCache));
+            });
         }
 
         #endregion Constructeur
@@ -1055,20 +1067,29 @@ namespace McTools.Xrm.Connection
             var task = new Task<MetadataCache>(() =>
             {
                 // Load & update metadata cache
-                var metadataCachePath = Path.Combine(Path.GetDirectoryName(ConnectionsList.ConnectionsListFilePath), "..", "Metadata", ConnectionId + ".xml.gz");
+                var metadataCachePath = Path.Combine(Path.GetDirectoryName(ConnectionsList.ConnectionsListFilePath), "..", "Metadata", ConnectionId + ".json.gz");
                 metadataCachePath = Path.IsPathRooted(metadataCachePath) ? metadataCachePath : Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName, metadataCachePath);
 
-                var metadataSerializer = new DataContractSerializer(typeof(MetadataCache));
+                // Set up the serializer to use. We need to add a custom converter to handle the KeyAttributeCollection on
+                // the Entity class (used for the AsyncJob property on EntityKeyMetadata) as the standard JsonSerializer
+                // can't handle it. We also need to set the TypeNameHandling property to Auto to ensure polymorphic classes
+                // (e.g. attribute types) are serialized correctly.
+                var metadataSerializer = new JsonSerializer();
+                metadataSerializer.ContractResolver = MetadataCacheContractResolver.Instance;
+                metadataSerializer.TypeNameHandling = TypeNameHandling.Auto;
                 var metadataCache = _metadataCache;
 
+                // Load the existing file if it exists and we're not trying to just update an already-loaded cache.
                 if (metadataCache == null && File.Exists(metadataCachePath) && !flush)
                 {
                     try
                     {
                         using (var stream = File.OpenRead(metadataCachePath))
                         using (var gz = new GZipStream(stream, CompressionMode.Decompress))
+                        using (var reader = new StreamReader(gz))
+                        using (var jsonReader = new JsonTextReader(reader))
                         {
-                            metadataCache = (MetadataCache)metadataSerializer.ReadObject(gz);
+                            metadataCache = metadataSerializer.Deserialize<MetadataCache>(jsonReader);
                         }
                     }
                     catch
@@ -1106,10 +1127,16 @@ namespace McTools.Xrm.Connection
                 };
 
                 RetrieveMetadataChangesResponse metadataUpdate;
+                var svc = ServiceClient;
+
+                // Use a cloned connection instance where possible so we can load the metadata in the background without
+                // blocking other uses of the connection.
+                if (svc.ActiveAuthenticationType == AuthenticationType.OAuth)
+                    svc = svc.Clone();
 
                 try
                 {
-                    metadataUpdate = (RetrieveMetadataChangesResponse)ServiceClient.Execute(metadataQuery);
+                    metadataUpdate = (RetrieveMetadataChangesResponse)svc.Execute(metadataQuery);
                 }
                 catch (FaultException<OrganizationServiceFault> ex)
                 {
@@ -1118,7 +1145,7 @@ namespace McTools.Xrm.Connection
                     {
                         _metadataCache = null;
                         metadataQuery.ClientVersionStamp = null;
-                        metadataUpdate = (RetrieveMetadataChangesResponse)ServiceClient.Execute(metadataQuery);
+                        metadataUpdate = (RetrieveMetadataChangesResponse)svc.Execute(metadataQuery);
                     }
                     else
                     {
@@ -1150,13 +1177,29 @@ namespace McTools.Xrm.Connection
                     metadataCache.ClientVersionStamp = metadataUpdate.ServerVersionStamp;
                     metadataCache.MetadataQueryVersion = queryVersion;
 
-                    Directory.CreateDirectory(Path.GetDirectoryName(metadataCachePath));
-
-                    using (var stream = File.Create(metadataCachePath))
-                    using (var gz = new GZipStream(stream, CompressionLevel.Optimal))
+                    Task.Run(() =>
                     {
-                        metadataSerializer.WriteObject(gz, metadataCache);
-                    }
+                        // Write the new metadata to a temporary file in the same directory, then swap it with the original
+                        // file. This avoids getting a corrupted file if something goes wrong while the file is being written.
+                        var directory = Path.GetDirectoryName(metadataCachePath);
+                        Directory.CreateDirectory(directory);
+
+                        var tempFileName = "~" + Path.GetFileName(metadataCachePath);
+                        var tempFilePath = Path.Combine(directory, tempFileName);
+
+                        using (var stream = File.Create(tempFilePath))
+                        using (var gz = new GZipStream(stream, CompressionLevel.Optimal))
+                        using (var writer = new StreamWriter(gz))
+                        using (var jsonWriter = new JsonTextWriter(writer))
+                        {
+                            metadataSerializer.Serialize(jsonWriter, metadataCache);
+                        }
+
+                        if (File.Exists(metadataCachePath))
+                            File.Replace(tempFilePath, metadataCachePath, null);
+                        else
+                            File.Move(tempFilePath, metadataCachePath);
+                    });
                 }
 
                 return metadataCache;
