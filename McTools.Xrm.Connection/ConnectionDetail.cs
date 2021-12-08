@@ -1307,7 +1307,12 @@ namespace McTools.Xrm.Connection
             }
 
             if (newLabel.UserLocalizedLabel != null)
-                CopyChanges(existingLabel.UserLocalizedLabel, newLabel.UserLocalizedLabel, deletedIds);
+            {
+                if (existingLabel.UserLocalizedLabel == null)
+                    existingLabel.UserLocalizedLabel = newLabel.UserLocalizedLabel;
+                else
+                    CopyChanges(existingLabel.UserLocalizedLabel, newLabel.UserLocalizedLabel, deletedIds);
+            }
         }
 
         private void RemoveDeletedItems(object source, PropertyInfo sourceProperty, List<Guid> deletedIds)
