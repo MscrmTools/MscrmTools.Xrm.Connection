@@ -1098,7 +1098,7 @@ namespace McTools.Xrm.Connection
                     }
                 }
 
-                // Get all the metadata that's changed since the last connection
+                // Check if the metadata has changed since the last connection
                 // If this query changes, increment the version number to ensure any previously cached versions are flushed
                 const int queryVersion = 2;
 
@@ -1122,8 +1122,7 @@ namespace McTools.Xrm.Connection
                         {
                             Properties = new MetadataPropertiesExpression { AllProperties = true }
                         }
-                    },
-                    DeletedMetadataFilters = DeletedMetadataFilters.All
+                    }
                 };
 
                 RetrieveMetadataChangesResponse metadataUpdate;
@@ -1143,7 +1142,6 @@ namespace McTools.Xrm.Connection
                     // If the last connection was too long ago, we need to request all the metadata, not just the changes
                     if (ex.Detail.ErrorCode == unchecked((int)0x80044352))
                     {
-                        _metadataCache = null;
                         metadataQuery.ClientVersionStamp = null;
                         metadataUpdate = (RetrieveMetadataChangesResponse)svc.Execute(metadataQuery);
                     }
@@ -1153,29 +1151,23 @@ namespace McTools.Xrm.Connection
                     }
                 }
 
-                if (metadataCache == null || flush)
+                if (metadataQuery.ClientVersionStamp != null && metadataQuery.ClientVersionStamp != metadataUpdate.ServerVersionStamp)
                 {
-                    // If we didn't have a previous cache, just start a fresh one
+                    // Something has changed in the metadata. We can't reliably apply changes as some of the IDs
+                    // appear to change during backup/restore operations, so get a whole fresh copy
+                    metadataQuery.ClientVersionStamp = null;
+                    metadataUpdate = (RetrieveMetadataChangesResponse)svc.Execute(metadataQuery);
+                }
+
+                if (metadataQuery.ClientVersionStamp == null)
+                {
+                    // Save the latest metadata cache
                     metadataCache = new MetadataCache();
                     metadataCache.EntityMetadata = metadataUpdate.EntityMetadata.ToArray();
-                    metadataCache.MetadataQueryVersion = queryVersion;
-                }
-                else
-                {
-                    // We had a cached version of the metadata before, so now we need to merge in the changes
-                    var deletedIds = metadataUpdate.DeletedMetadata == null ? new List<Guid>() : metadataUpdate.DeletedMetadata.SelectMany(kvp => kvp.Value).Distinct().ToList();
-
-                    CopyChanges(metadataCache, typeof(MetadataCache).GetProperty(nameof(Connection.MetadataCache.EntityMetadata)), metadataUpdate.EntityMetadata.ToArray(), deletedIds);
-                }
-
-                _metadataCache = metadataCache;
-
-                // Save the latest metadata cache
-                if (metadataCache.ClientVersionStamp != metadataUpdate.ServerVersionStamp ||
-                    metadataCache.MetadataQueryVersion != queryVersion)
-                {
                     metadataCache.ClientVersionStamp = metadataUpdate.ServerVersionStamp;
                     metadataCache.MetadataQueryVersion = queryVersion;
+
+                    _metadataCache = metadataCache;
 
                     Task.Run(() =>
                     {
@@ -1210,178 +1202,6 @@ namespace McTools.Xrm.Connection
             MetadataCacheLoader = task;
             task.Start();
             return task;
-        }
-
-        private void CopyChanges(object source, PropertyInfo sourceProperty, MetadataBase[] newArray, List<Guid> deletedIds)
-        {
-            var existingArray = (MetadataBase[])sourceProperty.GetValue(source);
-            var existingList = new List<MetadataBase>(existingArray);
-
-            // Add any new items and update any modified ones
-            foreach (var newItem in newArray)
-            {
-                var existingItem = existingList.SingleOrDefault(e => e.MetadataId == newItem.MetadataId);
-
-                if (existingItem == null)
-                    existingList.Add(newItem);
-                else
-                    CopyChanges(existingItem, newItem, deletedIds);
-            }
-
-            // Store the new array
-            var updatedArray = Array.CreateInstance(sourceProperty.PropertyType.GetElementType(), existingList.Count);
-
-            for (var i = 0; i < existingList.Count; i++)
-                updatedArray.SetValue(existingList[i], i);
-
-            sourceProperty.SetValue(source, updatedArray);
-
-            if (deletedIds.Count > 0)
-                RemoveDeletedItems(source, sourceProperty, deletedIds);
-        }
-
-        private void CopyChanges(MetadataBase existingItem, MetadataBase newItem, List<Guid> deletedIds)
-        {
-            foreach (var prop in existingItem.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
-            {
-                if (!Attribute.IsDefined(prop, typeof(DataMemberAttribute)))
-                    continue;
-
-                var newValue = prop.GetValue(newItem);
-                var existingValue = prop.GetValue(existingItem) as MetadataBase;
-                var type = prop.PropertyType;
-
-                if (type.IsArray)
-                    type = type.GetElementType();
-
-                if (!typeof(MetadataBase).IsAssignableFrom(type) && !typeof(Label).IsAssignableFrom(type))
-                {
-                    if (newItem.HasChanged != false)
-                        prop.SetValue(existingItem, newValue);
-                }
-                else if (typeof(Label).IsAssignableFrom(type))
-                {
-                    if (newItem.HasChanged != false)
-                        CopyChanges((Label)prop.GetValue(existingItem), (Label)newValue, deletedIds);
-                }
-                else if (newValue != null)
-                {
-                    if (prop.PropertyType.IsArray)
-                    {
-                        CopyChanges(existingItem, prop, (MetadataBase[])newValue, deletedIds);
-                    }
-                    else
-                    {
-                        if (existingValue != null && existingValue.MetadataId == ((MetadataBase)newValue).MetadataId)
-                            CopyChanges(existingValue, (MetadataBase)newValue, deletedIds);
-                        else
-                            prop.SetValue(existingItem, newValue);
-                    }
-                }
-                else if (existingValue != null && deletedIds.Contains(existingValue.MetadataId.Value))
-                {
-                    prop.SetValue(existingItem, null);
-                }
-            }
-        }
-
-        private void CopyChanges(Label existingLabel, Label newLabel, List<Guid> deletedIds)
-        {
-            if (newLabel == null)
-                return;
-
-            foreach (var localizedLabel in newLabel.LocalizedLabels)
-            {
-                var existingLocalizedLabel = existingLabel.LocalizedLabels.SingleOrDefault(ll => ll.MetadataId == localizedLabel.MetadataId);
-
-                if (existingLocalizedLabel == null)
-                    existingLabel.LocalizedLabels.Add(localizedLabel);
-                else
-                    CopyChanges(existingLocalizedLabel, localizedLabel, deletedIds);
-            }
-
-            for (var i = existingLabel.LocalizedLabels.Count - 1; i >= 0; i--)
-            {
-                if (deletedIds.Contains(existingLabel.LocalizedLabels[i].MetadataId.Value))
-                    existingLabel.LocalizedLabels.RemoveAt(i);
-            }
-
-            if (newLabel.UserLocalizedLabel != null)
-            {
-                if (existingLabel.UserLocalizedLabel == null)
-                    existingLabel.UserLocalizedLabel = newLabel.UserLocalizedLabel;
-                else
-                    CopyChanges(existingLabel.UserLocalizedLabel, newLabel.UserLocalizedLabel, deletedIds);
-            }
-        }
-
-        private void RemoveDeletedItems(object source, PropertyInfo sourceProperty, List<Guid> deletedIds)
-        {
-            var existingArray = (MetadataBase[])sourceProperty.GetValue(source);
-            var existingList = new List<MetadataBase>(existingArray);
-
-            // Remove any deleted items
-            existingList.RemoveAll(e => deletedIds.Contains(e.MetadataId.Value));
-
-            // Recursively delete any sub-items
-            foreach (var item in existingList)
-                RemoveDeletedItems(item, deletedIds);
-
-            // Store the new array
-            var updatedArray = Array.CreateInstance(sourceProperty.PropertyType.GetElementType(), existingList.Count);
-
-            for (var i = 0; i < existingList.Count; i++)
-                updatedArray.SetValue(existingList[i], i);
-
-            sourceProperty.SetValue(source, updatedArray);
-        }
-
-        private void RemoveDeletedItems(MetadataBase item, List<Guid> deletedIds)
-        {
-            foreach (var prop in item.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
-            {
-                if (!Attribute.IsDefined(prop, typeof(DataMemberAttribute)))
-                    continue;
-
-                var value = prop.GetValue(item);
-                var childItem = value as MetadataBase;
-                var type = prop.PropertyType;
-
-                if (type.IsArray)
-                    type = type.GetElementType();
-
-                if (value is Label label)
-                {
-                    RemoveDeletedItems(label, deletedIds);
-                }
-                else if (childItem != null && childItem.MetadataId != null && deletedIds.Contains(childItem.MetadataId.Value))
-                {
-                    prop.SetValue(item, null);
-                }
-                else if (childItem != null)
-                {
-                    RemoveDeletedItems(childItem, deletedIds);
-                }
-                else if (value != null && prop.PropertyType.IsArray && typeof(MetadataBase).IsAssignableFrom(type))
-                {
-                    RemoveDeletedItems(item, prop, deletedIds);
-                }
-            }
-        }
-
-        private void RemoveDeletedItems(Label label, List<Guid> deletedIds)
-        {
-            if (label == null)
-                return;
-
-            for (var i = label.LocalizedLabels.Count - 1; i >= 0; i--)
-            {
-                if (deletedIds.Contains(label.LocalizedLabels[i].MetadataId.Value))
-                    label.LocalizedLabels.RemoveAt(i);
-            }
-
-            if (label.UserLocalizedLabel != null)
-                RemoveDeletedItems(label.UserLocalizedLabel, deletedIds);
         }
 
         #endregion Metadata Cache methods
