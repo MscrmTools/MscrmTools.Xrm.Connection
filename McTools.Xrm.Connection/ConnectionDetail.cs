@@ -370,7 +370,18 @@ namespace McTools.Xrm.Connection
             }
             CrmServiceClient.MaxConnectionTimeout = Timeout;
 
-            if (Certificate != null)
+            if (IsFromSdkLoginCtrl)
+            {
+                if (crmSvc != null)
+                {
+                    SetImpersonationCapability();
+
+                    return crmSvc;
+                }
+
+                throw new ApplicationException("Connections using the SDK Login Control cannot be created automatically");
+            }
+            else if (Certificate != null)
             {
                 var cs = HandleConnectionString($"AuthType=Certificate;url={OriginalUrl};thumbprint={Certificate.Thumbprint};ClientId={AzureAdAppId};");
                 crmSvc = new CrmServiceClient(cs);
