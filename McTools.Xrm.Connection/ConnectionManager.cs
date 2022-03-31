@@ -464,17 +464,26 @@ namespace McTools.Xrm.Connection
                     }
                 }
 
-                var endpoints = service.ConnectedOrgPublishedEndpoints != null ? EndpointCollection.FromDiscovery(service.ConnectedOrgPublishedEndpoints) : null;
-
-                if (endpoints == null)
+                if (service.ConnectedOrgVersion.Major < 7)
                 {
-                    // Some connection methods do not automatically retrieve the endpoints - get them now
-                    var orgDetails = (RetrieveCurrentOrganizationResponse)service.Execute(new RetrieveCurrentOrganizationRequest());
-                    endpoints = orgDetails.Detail.Endpoints;
+                    detail.WebApplicationUrl = service.ConnectedOrgPublishedEndpoints[Microsoft.Xrm.Sdk.Discovery.EndpointType.WebApplication];
+                    detail.OrganizationDataServiceUrl = service.ConnectedOrgPublishedEndpoints[Microsoft.Xrm.Sdk.Discovery.EndpointType.OrganizationDataService];
+                }
+                else
+                {
+                    var endpoints = service.ConnectedOrgPublishedEndpoints != null ? EndpointCollection.FromDiscovery(service.ConnectedOrgPublishedEndpoints) : null;
+
+                    if (endpoints == null)
+                    {
+                        // Some connection methods do not automatically retrieve the endpoints - get them now
+                        var orgDetails = (RetrieveCurrentOrganizationResponse)service.Execute(new RetrieveCurrentOrganizationRequest());
+                        endpoints = orgDetails.Detail.Endpoints;
+                    }
+
+                    detail.WebApplicationUrl = endpoints[EndpointType.WebApplication];
+                    detail.OrganizationDataServiceUrl = endpoints[EndpointType.OrganizationDataService];
                 }
 
-                detail.WebApplicationUrl = endpoints[EndpointType.WebApplication];
-                detail.OrganizationDataServiceUrl = endpoints[EndpointType.OrganizationDataService];
                 detail.OrganizationVersion = service.ConnectedOrgVersion.ToString();
 
                 var currentConnection = ConnectionsList.Connections.FirstOrDefault(x => x.ConnectionId == detail.ConnectionId);
