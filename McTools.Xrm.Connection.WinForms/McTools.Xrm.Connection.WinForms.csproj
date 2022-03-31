@@ -183,6 +183,13 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BrowserProfile.cs" />
+    <Compile Include="BrowserSelectionDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BrowserSelectionDialog.Designer.cs">
+      <DependentUpon>BrowserSelectionDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="ConnectionStringDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -360,6 +367,9 @@
     <Compile Include="RessourceManager.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="BrowserSelectionDialog.resx">
+      <DependentUpon>BrowserSelectionDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ConnectionStringDialog.resx">
       <DependentUpon>ConnectionStringDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -548,6 +558,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Dataverse.32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\world.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

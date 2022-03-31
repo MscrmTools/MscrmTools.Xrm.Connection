@@ -336,6 +336,7 @@ namespace McTools.Xrm.Connection.WinForms
             tsbCloneConnection.Visible = lvConnections.SelectedItems.Count > 0;
             tsbDeleteConnection.Visible = lvConnections.SelectedItems.Count > 0;
             tsbUpdatePassword.Visible = lvConnections.SelectedItems.Count > 0;
+            tsbSetProfile.Visible = lvConnections.SelectedItems.Count > 0;
             toolStripSeparator3.Visible = lvConnections.SelectedItems.Count > 0;
 
             tsbMoveToExistingFile.Visible = lvConnections.SelectedItems.Count > 0;
@@ -540,6 +541,46 @@ namespace McTools.Xrm.Connection.WinForms
                 {
                     ConnectionManager.Instance.ConnectionsList.Connections.Add(newConnection);
                     ConnectionManager.Instance.SaveConnectionsFile();
+                }
+            }
+        }
+
+        private void tsbSetProfile_Click(object sender, EventArgs e)
+        {
+            var connections = lvConnections.SelectedItems
+               .Cast<ListViewItem>().Select(lvi => (ConnectionDetail)lvi.Tag)
+               .ToList();
+
+            if (!connections.Any())
+            {
+                return;
+            }
+
+            var browser = BrowserEnum.None;
+            string profile = null;
+
+            if (connections.Count == 1)
+            {
+                browser = connections.First().BrowserName;
+                profile = connections.First().BrowserProfile;
+            }
+
+            var dialog = new BrowserSelectionDialog(browser, profile);
+            if (dialog.ShowDialog(this) == DialogResult.OK)
+            {
+                foreach (var connection in connections)
+                {
+                    connection.BrowserName = dialog.Browser;
+                    connection.BrowserProfile = dialog.Profile;
+                }
+
+                try
+                {
+                    ConnectionManager.Instance.SaveConnectionsFile();
+                }
+                catch (Exception error)
+                {
+                    MessageBox.Show(this, $"An error occured when saving connection(s): {error.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }

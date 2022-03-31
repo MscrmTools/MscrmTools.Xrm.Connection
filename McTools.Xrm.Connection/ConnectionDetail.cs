@@ -32,6 +32,14 @@ using Label = Microsoft.Xrm.Sdk.Label;
 
 namespace McTools.Xrm.Connection
 {
+    public enum BrowserEnum
+    {
+        Edge,
+        Chrome,
+        Firefox,
+        None
+    }
+
     public enum SensitiveDataNotFoundReason
     {
         NotAllowedByUser,
@@ -53,13 +61,23 @@ namespace McTools.Xrm.Connection
     [XmlInclude(typeof(EnvironmentHighlighting))]
     public class ConnectionDetail : IComparable, ICloneable
     {
+        private bool? canImpersonate;
         private string clientSecret;
         private Guid impersonatedUserId;
         private string impersonatedUserName;
-        private bool? canImpersonate;
         private string userPassword;
 
         #region Constructeur
+
+        static ConnectionDetail()
+        {
+            // Generate the contracts used by JSON.NET to serialize the metadata cache in the background.
+            // This saves about 0.5 seconds on the first connection.
+            Task.Run(() =>
+            {
+                MetadataCacheContractResolver.Instance.PreloadContracts(typeof(MetadataCache));
+            });
+        }
 
         public ConnectionDetail()
         {
@@ -71,16 +89,6 @@ namespace McTools.Xrm.Connection
             {
                 ConnectionId = Guid.NewGuid();
             }
-        }
-
-        static ConnectionDetail()
-        {
-            // Generate the contracts used by JSON.NET to serialize the metadata cache in the background.
-            // This saves about 0.5 seconds on the first connection.
-            Task.Run(() =>
-            {
-                MetadataCacheContractResolver.Instance.PreloadContracts(typeof(MetadataCache));
-            });
         }
 
         #endregion Constructeur
@@ -96,8 +104,10 @@ namespace McTools.Xrm.Connection
         public bool AllowPasswordSharing { get; set; }
 
         public AuthenticationProviderType AuthType { get; set; }
-
         public Guid AzureAdAppId { get; set; }
+        public BrowserEnum BrowserName { get; set; } = BrowserEnum.None;
+
+        public string BrowserProfile { get; set; }
 
         [XmlIgnore]
         public bool CanImpersonate { get; private set; }
@@ -846,7 +856,7 @@ namespace McTools.Xrm.Connection
                 canImpersonate = privileges.Any(p =>
                     (int)p.GetAttributeValue<AliasedValue>("priv.privilegedepthmask").Value == 8);
             }
-            
+
             CanImpersonate = canImpersonate.Value;
         }
 
