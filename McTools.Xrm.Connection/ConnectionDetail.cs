@@ -11,9 +11,9 @@ using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.Common;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -21,14 +21,12 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
 using AuthenticationType = Microsoft.Xrm.Tooling.Connector.AuthenticationType;
-using Label = Microsoft.Xrm.Sdk.Label;
 
 namespace McTools.Xrm.Connection
 {
@@ -468,6 +466,39 @@ namespace McTools.Xrm.Connection
             }
 
             return crmSvc;
+        }
+
+        public void OpenUrlWithBrowserProfile(Uri uri)
+        {
+            var process = new Process();
+
+            switch (BrowserName)
+            {
+                case BrowserEnum.Chrome:
+                    process.StartInfo = new ProcessStartInfo("chrome.exe");
+                    process.StartInfo.Arguments = uri.ToString();
+                    process.StartInfo.Arguments += $" --profile-directory=\"{BrowserProfile}\"";
+                    break;
+
+                case BrowserEnum.Edge:
+                    process.StartInfo = new ProcessStartInfo("msedge.exe");
+                    process.StartInfo.Arguments = uri.ToString();
+                    process.StartInfo.Arguments += $" --profile-directory=\"{BrowserProfile}\"";
+                    break;
+
+                case BrowserEnum.Firefox:
+                    process.StartInfo = new ProcessStartInfo("firefox.exe");
+                    process.StartInfo.Arguments = uri.ToString();
+                    process.StartInfo.Arguments += $" -P \"{BrowserProfile}\"";
+                    break;
+
+                default:
+                    Process.Start(uri.ToString());
+                    return;
+                    break;
+            }
+
+            process.Start();
         }
 
         public void SetClientSecret(string secret, bool isEncrypted = false)

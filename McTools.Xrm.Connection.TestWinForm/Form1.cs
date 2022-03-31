@@ -184,6 +184,27 @@ namespace McTools.Xrm.Connection.TestWinForm
 
         #endregion WhoAmI Sample methods
 
+        private void flushCacheToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (currentDetail == null)
+            {
+                MessageBox.Show("Please connect first");
+                return;
+            }
+
+            ccsb.SetMessage("Refreshing Metadata Cache...");
+            var startTime = DateTime.Now;
+
+            currentDetail.UpdateMetadataCache(true)
+                .ContinueWith(task =>
+                {
+                    if (task.Exception == null)
+                        ccsb.SetMessage("Metadata cache refreshed: " + (DateTime.Now - startTime));
+                    else
+                        ccsb.SetMessage("Metadata cache refresh failed: " + task.Exception.Message);
+                });
+        }
+
         private void tsbClearImpersonate_Click(object sender, EventArgs e)
         {
             currentDetail.RemoveImpersonation();
@@ -212,6 +233,17 @@ namespace McTools.Xrm.Connection.TestWinForm
         private void tsbMergeConnectionsFiles_Click(object sender, EventArgs e)
         {
             ccsb.MergeConnectionsFiles = tsbMergeConnectionsFiles.Checked;
+        }
+
+        private void tsbOpenXtbPortal_Click(object sender, EventArgs e)
+        {
+            if (currentDetail == null)
+            {
+                MessageBox.Show("Please connect first");
+                return;
+            }
+
+            currentDetail.OpenUrlWithBrowserProfile(new Uri("https://www.xrmtoolbox.com"));
         }
 
         private void tsbRequestPassword_Click(object sender, EventArgs e)
@@ -275,27 +307,6 @@ namespace McTools.Xrm.Connection.TestWinForm
                         ccsb.SetMessage("Metadata cache updated: " + (DateTime.Now - startTime));
                     else
                         ccsb.SetMessage("Metadata cache update failed: " + task.Exception.Message);
-                });
-        }
-
-        private void flushCacheToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (currentDetail == null)
-            {
-                MessageBox.Show("Please connect first");
-                return;
-            }
-
-            ccsb.SetMessage("Refreshing Metadata Cache...");
-            var startTime = DateTime.Now;
-
-            currentDetail.UpdateMetadataCache(true)
-                .ContinueWith(task =>
-                {
-                    if (task.Exception == null)
-                        ccsb.SetMessage("Metadata cache refreshed: " + (DateTime.Now - startTime));
-                    else
-                        ccsb.SetMessage("Metadata cache refresh failed: " + task.Exception.Message);
                 });
         }
     }
