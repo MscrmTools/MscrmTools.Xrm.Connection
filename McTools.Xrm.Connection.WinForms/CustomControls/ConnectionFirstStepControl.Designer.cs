@@ -69,7 +69,7 @@
             this.lblUrl.Name = "lblUrl";
             this.lblUrl.Size = new System.Drawing.Size(256, 42);
             this.lblUrl.TabIndex = 11;
-            this.lblUrl.Text = "Organization url";
+            this.lblUrl.Text = "Environment url";
             this.lblUrl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // txtOrganizationUrl

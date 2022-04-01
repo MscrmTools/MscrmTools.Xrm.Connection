@@ -142,7 +142,7 @@
             this.btnUseOrgTheme.Name = "btnUseOrgTheme";
             this.btnUseOrgTheme.Size = new System.Drawing.Size(297, 42);
             this.btnUseOrgTheme.TabIndex = 21;
-            this.btnUseOrgTheme.Text = "Use organization theme";
+            this.btnUseOrgTheme.Text = "Use environment theme";
             this.btnUseOrgTheme.UseVisualStyleBackColor = true;
             this.btnUseOrgTheme.Click += new System.EventHandler(this.btnUseOrgTheme_Click);
             // 

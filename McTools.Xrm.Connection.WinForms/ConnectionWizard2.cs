@@ -38,7 +38,7 @@ namespace McTools.Xrm.Connection.WinForms
 
         public ConnectionDetail CrmConnectionDetail { get; private set; }
 
-        public sealed override string Text
+        public override sealed string Text
         {
             get => base.Text;
             set => base.Text = value;
@@ -214,7 +214,7 @@ Note that this is required to validate this wizard",
                     if (!CrmConnectionDetail.UseIfd)
                     {
                         MessageBox.Show(this,
-                            @"We were unable to determine the organization name based on the information you specified. Please complete the url to add the organization name inside",
+                            @"We were unable to determine the environment name based on the information you specified. Please complete the url to add the environment name inside",
                             @"Warning",
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Warning);

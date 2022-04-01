@@ -435,7 +435,7 @@ namespace McTools.Xrm.Connection
                 }
             }
 
-            SendStepChange("Creating Organization service proxy...");
+            SendStepChange("Connecting...");
 
             // Connecting to Crm server
             try

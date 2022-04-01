@@ -99,7 +99,7 @@ namespace McTools.Xrm.Connection.WinForms
             };
             bw.RunWorkerCompleted += (s, evt) =>
             {
-                btnUseOrgTheme.Text = @"Use organization theme";
+                btnUseOrgTheme.Text = @"Use environment theme";
                 btnUseOrgTheme.Enabled = true;
                 Cursor = Cursors.Default;
 

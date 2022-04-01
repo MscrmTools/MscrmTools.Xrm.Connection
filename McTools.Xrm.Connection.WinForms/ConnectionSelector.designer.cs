@@ -130,7 +130,7 @@
             // 
             // chOrganization
             // 
-            this.chOrganization.Text = "Organization";
+            this.chOrganization.Text = "Environment";
             this.chOrganization.Width = 80;
             // 
             // chUser
