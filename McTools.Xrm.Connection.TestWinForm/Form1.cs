@@ -237,12 +237,6 @@ namespace McTools.Xrm.Connection.TestWinForm
 
         private void tsbOpenXtbPortal_Click(object sender, EventArgs e)
         {
-            if (currentDetail == null)
-            {
-                MessageBox.Show("Please connect first");
-                return;
-            }
-
             currentDetail.OpenUrlWithBrowserProfile(new Uri("https://www.xrmtoolbox.com"));
         }
 

@@ -45,6 +45,48 @@ namespace McTools.Xrm.Connection
         None
     }
 
+    public static class ConnectionDetailExtensions
+    {
+        public static void OpenUrlWithBrowserProfile(this ConnectionDetail detail, Uri uri)
+        {
+            var process = new Process();
+
+            if (detail == null)
+            {
+                Process.Start(uri.ToString());
+                return;
+            }
+
+            switch (detail.BrowserName)
+            {
+                case BrowserEnum.Chrome:
+                    process.StartInfo = new ProcessStartInfo("chrome.exe");
+                    process.StartInfo.Arguments = uri.ToString();
+                    process.StartInfo.Arguments += $" --profile-directory=\"{detail.BrowserProfile}\"";
+                    break;
+
+                case BrowserEnum.Edge:
+                    process.StartInfo = new ProcessStartInfo("msedge.exe");
+                    process.StartInfo.Arguments = uri.ToString();
+                    process.StartInfo.Arguments += $" --profile-directory=\"{detail.BrowserProfile}\"";
+                    break;
+
+                case BrowserEnum.Firefox:
+                    process.StartInfo = new ProcessStartInfo("firefox.exe");
+                    process.StartInfo.Arguments = uri.ToString();
+                    process.StartInfo.Arguments += $" -P \"{detail.BrowserProfile}\"";
+                    break;
+
+                default:
+                    Process.Start(uri.ToString());
+                    return;
+                    break;
+            }
+
+            process.Start();
+        }
+    }
+
     public class CertificateInfo
     {
         public string Issuer { get; set; }
@@ -479,39 +521,6 @@ namespace McTools.Xrm.Connection
             return crmSvc;
         }
 
-        public void OpenUrlWithBrowserProfile(Uri uri)
-        {
-            var process = new Process();
-
-            switch (BrowserName)
-            {
-                case BrowserEnum.Chrome:
-                    process.StartInfo = new ProcessStartInfo("chrome.exe");
-                    process.StartInfo.Arguments = uri.ToString();
-                    process.StartInfo.Arguments += $" --profile-directory=\"{BrowserProfile}\"";
-                    break;
-
-                case BrowserEnum.Edge:
-                    process.StartInfo = new ProcessStartInfo("msedge.exe");
-                    process.StartInfo.Arguments = uri.ToString();
-                    process.StartInfo.Arguments += $" --profile-directory=\"{BrowserProfile}\"";
-                    break;
-
-                case BrowserEnum.Firefox:
-                    process.StartInfo = new ProcessStartInfo("firefox.exe");
-                    process.StartInfo.Arguments = uri.ToString();
-                    process.StartInfo.Arguments += $" -P \"{BrowserProfile}\"";
-                    break;
-
-                default:
-                    Process.Start(uri.ToString());
-                    return;
-                    break;
-            }
-
-            process.Start();
-        }
-
         public void SetClientSecret(string secret, bool isEncrypted = false)
         {
             if (!string.IsNullOrEmpty(secret))
@@ -672,6 +681,14 @@ namespace McTools.Xrm.Connection
             EnvironmentText = editedConnection.EnvironmentText;
             EnvironmentColor = editedConnection.EnvironmentColor;
             EnvironmentTextColor = editedConnection.EnvironmentTextColor;
+
+            TenantId = editedConnection.TenantId;
+            EnvironmentId = editedConnection.EnvironmentId;
+            AllowPasswordSharing = editedConnection.AllowPasswordSharing;
+            BrowserName = editedConnection.BrowserName;
+            BrowserProfile = editedConnection.BrowserProfile;
+            IsCustomAuth = editedConnection.IsCustomAuth;
+            NewAuthType = editedConnection.NewAuthType;
         }
 
         private void ConnectIfd()
@@ -939,6 +956,13 @@ namespace McTools.Xrm.Connection
                 RefreshToken = RefreshToken,
                 S2SClientSecret = S2SClientSecret,
                 IsFromSdkLoginCtrl = IsFromSdkLoginCtrl,
+                TenantId = TenantId,
+                EnvironmentId = EnvironmentId,
+                AllowPasswordSharing = AllowPasswordSharing,
+                BrowserName = BrowserName,
+                BrowserProfile = BrowserProfile,
+                IsCustomAuth = IsCustomAuth,
+                NewAuthType = NewAuthType
             };
 
             if (Certificate != null)
