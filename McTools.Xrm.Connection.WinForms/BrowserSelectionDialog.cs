@@ -71,6 +71,17 @@ namespace McTools.Xrm.Connection.WinForms
             }
         }
 
+        private string GetChromeProfileName(string folder)
+        {
+            JObject jo;
+            using (var reader = new StreamReader(Path.Combine(folder, "Preferences")))
+            {
+                jo = JObject.Parse(reader.ReadToEnd());
+            }
+
+            return ((JValue)((JObject)jo["profile"])["name"]).Value.ToString();
+        }
+
         private void LoadBrowsers()
         {
             comboBox1.Items.Clear();
@@ -82,18 +93,11 @@ namespace McTools.Xrm.Connection.WinForms
 
                     foreach (var folder in Directory.GetDirectories(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), path), "Profile *"))
                     {
-                        JObject jo;
-                        using (var reader = new StreamReader(Path.Combine(folder, "Preferences")))
-                        {
-                            jo = JObject.Parse(reader.ReadToEnd());
-                        }
-
-                        var profileName = ((JValue)((JObject)jo["profile"])["name"]).Value.ToString();
-
-                        comboBox1.Items.Add(new BrowserProfile { Name = profileName, Path = Path.GetFileName(folder) });
+                        comboBox1.Items.Add(new BrowserProfile { Name = GetChromeProfileName(folder), Path = Path.GetFileName(folder) });
                     }
 
-                    if (Browser == BrowserEnum.Edge) comboBox1.Items.Add(new BrowserProfile { Name = "Default", Path = "Default" });
+                    var defaultFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), path, "Default");
+                    comboBox1.Items.Add(new BrowserProfile { Name = GetChromeProfileName(defaultFolder), Path = Path.GetFileName(defaultFolder) });
 
                     break;
 
