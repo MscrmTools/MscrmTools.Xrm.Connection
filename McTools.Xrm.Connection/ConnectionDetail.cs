@@ -1079,7 +1079,7 @@ namespace McTools.Xrm.Connection
                 || originalDetail.UserName?.ToLower() != UserName?.ToLower()
                 || SavePassword && !string.IsNullOrEmpty(userPassword) && originalDetail.userPassword != userPassword
                 || SavePassword && !string.IsNullOrEmpty(clientSecret) && originalDetail.clientSecret != clientSecret
-                || originalDetail.Certificate.Thumbprint != Certificate.Thumbprint)
+                || originalDetail.Certificate?.Thumbprint != Certificate?.Thumbprint)
             {
                 return true;
             }
