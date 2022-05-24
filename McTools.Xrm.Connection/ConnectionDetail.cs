@@ -459,12 +459,12 @@ namespace McTools.Xrm.Connection
             }
             else if (UseOnline)
             {
-                //       ConnectOnline();
+                ConnectOnline();
 
-                var path = Path.Combine(Path.GetTempPath(), ConnectionId.Value.ToString("B"));
+                //var path = Path.Combine(Path.GetTempPath(), ConnectionId.Value.ToString("B"));
 
-                var cs = HandleConnectionString($"AuthType=OAuth;Username={UserName};Password={userPassword};Url={OriginalUrl};AppId={(AzureAdAppId != Guid.Empty ? AzureAdAppId : new Guid("51f81489-12ee-4a9e-aaae-a2591f45987d"))};RedirectUri={(string.IsNullOrEmpty(ReplyUrl) ? "app://58145B91-0C36-4500-8554-080854F2AC97" : ReplyUrl)};TokenCacheStorePath={path};LoginPrompt=Auto");
-                crmSvc = new CrmServiceClient(cs);
+                //var cs = HandleConnectionString($"AuthType=OAuth;Username={UserName};Password={userPassword};Url={OriginalUrl};AppId={(AzureAdAppId != Guid.Empty ? AzureAdAppId : new Guid("51f81489-12ee-4a9e-aaae-a2591f45987d"))};RedirectUri={(string.IsNullOrEmpty(ReplyUrl) ? "app://58145B91-0C36-4500-8554-080854F2AC97" : ReplyUrl)};TokenCacheStorePath={path};LoginPrompt=Auto");
+                //crmSvc = new CrmServiceClient(cs);
             }
             else if (UseIfd)
             {
