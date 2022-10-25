@@ -581,18 +581,28 @@ namespace McTools.Xrm.Connection
         {
             if (!string.IsNullOrEmpty(password))
             {
+                string newPassword;
                 if (isEncrypted)
                 {
-                    userPassword = password;
+                    newPassword = password;
                 }
                 else
                 {
-                    userPassword = CryptoManager.Encrypt(password, ConnectionManager.CryptoPassPhrase,
+                    newPassword = CryptoManager.Encrypt(password, ConnectionManager.CryptoPassPhrase,
                         ConnectionManager.CryptoSaltValue,
                         ConnectionManager.CryptoHashAlgorythm,
                         ConnectionManager.CryptoPasswordIterations,
                         ConnectionManager.CryptoInitVector,
                         ConnectionManager.CryptoKeySize);
+                }
+
+                if (NewAuthType == AuthenticationType.ClientSecret)
+                {
+                    clientSecret = newPassword;
+                }
+                else
+                {
+                    userPassword = newPassword;
                 }
             }
         }
