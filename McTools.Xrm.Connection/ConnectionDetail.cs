@@ -925,10 +925,17 @@ namespace McTools.Xrm.Connection
                     }
                 };
 
-                var privileges = crmSvc.RetrieveMultiple(query).Entities;
+                try
+                {
+                    var privileges = crmSvc.RetrieveMultiple(query).Entities;
 
-                canImpersonate = privileges.Any(p =>
-                    (int)p.GetAttributeValue<AliasedValue>("priv.privilegedepthmask").Value == 8);
+                    canImpersonate = privileges.Any(p =>
+                        (int)p.GetAttributeValue<AliasedValue>("priv.privilegedepthmask").Value == 8);
+                }
+                catch
+                {
+                    canImpersonate = false;
+                }
             }
 
             CanImpersonate = canImpersonate.Value;
