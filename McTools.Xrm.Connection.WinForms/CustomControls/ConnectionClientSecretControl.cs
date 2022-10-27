@@ -37,7 +37,11 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
 
         public bool HasClientSecret { get; set; }
 
-        public bool SaveClientSecret => chkSaveSecret.Checked;
+        public bool SaveClientSecret
+        {
+            get { return chkSaveSecret.Checked; }
+            set { chkSaveSecret.Checked = value; }
+        }
 
         private void ConnectionOauthControl_Load(object sender, EventArgs e)
         {

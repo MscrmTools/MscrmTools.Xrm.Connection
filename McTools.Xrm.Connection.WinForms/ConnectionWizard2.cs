@@ -816,6 +816,7 @@ Note that this is required to validate this wizard",
                 {
                     ((ConnectionClientSecretControl)ctrl).AzureAdAppId = CrmConnectionDetail.AzureAdAppId;
                 }
+                ((ConnectionClientSecretControl)ctrl).SaveClientSecret = CrmConnectionDetail.SavePassword;
 
                 btnReset.Visible = true;
                 btnNext.Visible = true;
