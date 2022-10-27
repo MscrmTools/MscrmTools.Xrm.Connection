@@ -984,7 +984,11 @@ namespace McTools.Xrm.Connection
                 BrowserName = BrowserName,
                 BrowserProfile = BrowserProfile,
                 IsCustomAuth = IsCustomAuth,
-                NewAuthType = NewAuthType
+                NewAuthType = NewAuthType,
+                Certificate = Certificate,
+                ClientSecretEncrypted = ClientSecretEncrypted,
+                UserPasswordEncrypted = UserPasswordEncrypted,
+                clientSecret = clientSecret
             };
 
             if (Certificate != null)
