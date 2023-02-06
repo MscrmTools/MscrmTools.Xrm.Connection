@@ -1,4 +1,6 @@
-﻿using Microsoft.Xrm.Tooling.Connector;
+﻿using McTools.Xrm.Connection.WinForms.AppCode;
+using McTools.Xrm.Connection.WinForms.Forms;
+using Microsoft.Xrm.Tooling.Connector;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +11,12 @@ namespace McTools.Xrm.Connection.WinForms
     public class FormHelper
     {
         private readonly Control innerAppForm;
+        private readonly IConnectionControlSettings settings;
 
-        public FormHelper(Control innerAppForm)
+        public FormHelper(Control innerAppForm, IConnectionControlSettings settings = null)
         {
             this.innerAppForm = innerAppForm;
+            this.settings = settings;
         }
 
         /// <summary>
@@ -23,10 +27,15 @@ namespace McTools.Xrm.Connection.WinForms
         /// <returns></returns>
         public bool AskForConnection(object connectionParameter, Action<List<ConnectionDetail>> preConnectionRequestAction)
         {
-            var cs = new ConnectionSelector
+            var cs = new CompactConnectionSelector(settings)
             {
-                StartPosition = FormStartPosition.CenterParent,
+                StartPosition = FormStartPosition.CenterParent
             };
+
+            //var cs = new ConnectionSelector
+            //{
+            //    StartPosition = FormStartPosition.CenterParent,
+            //};
 
             if (cs.ShowDialog(innerAppForm) == DialogResult.OK)
             {
@@ -187,11 +196,22 @@ namespace McTools.Xrm.Connection.WinForms
             }
         }
 
+        public void DisplayCompactConnectionsSelection(Form form)
+        {
+            var cs = new CompactConnectionSelector(settings)
+            {
+                StartPosition = FormStartPosition.CenterParent,
+            };
+
+            cs.ShowDialog(form);
+        }
+
         public void DisplayConnectionsList(Form form)
         {
             var cs = new ConnectionSelector(false)
             {
                 StartPosition = FormStartPosition.CenterParent,
+                Settings = settings
             };
 
             cs.ShowDialog(form);

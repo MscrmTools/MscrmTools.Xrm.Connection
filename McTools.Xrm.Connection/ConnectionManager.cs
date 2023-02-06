@@ -126,7 +126,10 @@ namespace McTools.Xrm.Connection
         private ConnectionManager()
         {
             crmServices = new Dictionary<Guid, CrmServiceClient>();
+
+            ConnectionsFilesList = LoadConnectionsFilesList();
             ConnectionsList = LoadConnectionsList();
+
             SetupFileSystemWatcher();
             ServicePointManager.ServerCertificateValidationCallback += ValidateRemoteCertificate;
         }
@@ -188,6 +191,8 @@ namespace McTools.Xrm.Connection
                     var lastUsedFile = Connection.ConnectionsList.Instance.Files.OrderByDescending(f => f.LastUsed).FirstOrDefault();
                     if (lastUsedFile != null)
                     {
+                        lastUsedFile.ApplyLinkWithConnectionDetails();
+
                         return lastUsedFile.Path;
                     }
                 }
@@ -203,12 +208,13 @@ namespace McTools.Xrm.Connection
                     if (existingFile == null)
                     {
                         CrmConnections newCc = CrmConnections.LoadFromFile(value);
-
-                        Connection.ConnectionsList.Instance.Files.Add(new ConnectionFile(newCc) { Path = configfile, LastUsed = DateTime.Now });
+                        existingFile = new ConnectionFile(newCc) { Path = configfile, LastUsed = DateTime.Now };
+                        Connection.ConnectionsList.Instance.Files.Add(existingFile);
                         Connection.ConnectionsList.Instance.Save();
                     }
 
-                    Instance.ConnectionsList = Instance.LoadConnectionsList();
+                    existingFile.ApplyLinkWithConnectionDetails();
+
                     Instance.SetupFileSystemWatcher();
                     Instance.ConnectionListUpdated?.Invoke(null, new EventArgs());
                 }
@@ -219,6 +225,15 @@ namespace McTools.Xrm.Connection
         {
             get =>
                 instance.Value;
+        }
+
+        /// <summary>
+        /// List of Crm connections
+        /// </summary>
+        public ConnectionsList ConnectionsFilesList
+        {
+            get;
+            set;
         }
 
         /// <summary>
@@ -240,6 +255,11 @@ namespace McTools.Xrm.Connection
         {
             get;
             set;
+        }
+
+        private ConnectionsList LoadConnectionsFilesList()
+        {
+            return Connection.ConnectionsList.Instance;
         }
 
         #endregion Properties
@@ -307,14 +327,19 @@ namespace McTools.Xrm.Connection
         {
             try
             {
-                CrmConnections crmConnections;
-                if (FileExists(ConfigurationFile))
+                string confFile = ConfigurationFile;
+                ConnectionFile file;
+                if (FileExists(confFile))
                 {
-                    crmConnections = CrmConnections.LoadFromFile(ConfigurationFile);
-
-                    if (!string.IsNullOrEmpty(crmConnections.Password))
+                    file = ConnectionsFilesList.Files.FirstOrDefault(f => f.Path == confFile);
+                    if (file.Connections == null)
                     {
-                        crmConnections.Password = CryptoManager.Decrypt(crmConnections.Password,
+                        file.Connections = CrmConnections.LoadFromFile(ConfigurationFile);
+                    }
+
+                    if (!string.IsNullOrEmpty(file.Connections.Password))
+                    {
+                        file.Connections.Password = CryptoManager.Decrypt(file.Connections.Password,
                         CryptoPassPhrase,
                         CryptoSaltValue,
                         CryptoHashAlgorythm,
@@ -323,7 +348,7 @@ namespace McTools.Xrm.Connection
                         CryptoKeySize);
                     }
 
-                    foreach (var detail in crmConnections.Connections)
+                    foreach (var detail in file.Connections.Connections)
                     {
                         // Fix for new connection code
                         if (string.IsNullOrEmpty(detail.OrganizationUrlName))
@@ -348,13 +373,13 @@ namespace McTools.Xrm.Connection
                 }
                 else
                 {
-                    crmConnections = new CrmConnections("Default")
+                    file = new ConnectionFile(new CrmConnections("Default")
                     {
                         Connections = new List<ConnectionDetail>()
-                    };
+                    });
                 }
 
-                return crmConnections;
+                return file.Connections;
             }
             catch (Exception error)
             {

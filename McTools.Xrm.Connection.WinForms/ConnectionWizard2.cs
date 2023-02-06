@@ -62,8 +62,6 @@ namespace McTools.Xrm.Connection.WinForms
                 DisplayControl<ConnectionIfdControl>();
             else if (type == typeof(ConnectionLoadingControl))
                 DisplayControl<ConnectionLoadingControl>();
-            //else if (type == typeof(ConnectionOauthControl))
-            //    DisplayControl<ConnectionOauthControl>();
             else if (type == typeof(ConnectionStringControl))
                 DisplayControl<ConnectionStringControl>();
             else if (type == typeof(ConnectionSucceededControl))
@@ -268,38 +266,6 @@ Note that this is required to validate this wizard",
                     }
                 }
             }
-            //else if (ctrl is ConnectionOauthControl coc)
-            //{
-            //    CrmConnectionDetail.AzureAdAppId = coc.AzureAdAppId;
-            //    CrmConnectionDetail.ReplyUrl = coc.ReplyUrl;
-
-            //    if (coc.ClientSecretChanged)
-            //    {
-            //        CrmConnectionDetail.SetClientSecret(coc.ClientSecret);
-            //    }
-
-            //    if (CrmConnectionDetail.AzureAdAppId == Guid.Empty
-            //        || string.IsNullOrEmpty(CrmConnectionDetail.ReplyUrl))
-            //    {
-            //        MessageBox.Show(this,
-            //            @"Please provide all information for OAuth authentication",
-            //            @"Warning",
-            //            MessageBoxButtons.OK,
-            //            MessageBoxIcon.Warning);
-
-            //        return;
-            //    }
-
-            //    if (!CrmConnectionDetail.ClientSecretIsEmpty)
-            //    {
-            //        DisplayControl<ConnectionLoadingControl>();
-            //        Connect();
-            //    }
-            //    else
-            //    {
-            //        DisplayControl<ConnectionCredentialsControl>();
-            //    }
-            //}
             else if (ctrl is ConnectionStringControl csc)
             {
                 CrmConnectionDetail.SetConnectionString(csc.ConnectionString);
@@ -716,22 +682,6 @@ Note that this is required to validate this wizard",
                 btnNext.Visible = true;
                 btnNext.Text = @"Next";
             }
-            //else if (typeof(T) == typeof(ConnectionOauthControl))
-            //{
-            //    pnlFooter.Visible = true;
-            //    lblHeader.Text = @"OAuth protocol settings";
-
-            //    ctrl = new ConnectionOauthControl
-            //    {
-            //        AzureAdAppId = CrmConnectionDetail.AzureAdAppId,
-            //        ReplyUrl = CrmConnectionDetail.ReplyUrl,
-            //        HasClientSecret = !CrmConnectionDetail.ClientSecretIsEmpty
-            //    };
-
-            //    btnReset.Visible = true;
-            //    btnNext.Visible = true;
-            //    btnNext.Text = @"Next";
-            //}
             else if (typeof(T) == typeof(SdkLoginControlControl))
             {
                 pnlFooter.Visible = true;
