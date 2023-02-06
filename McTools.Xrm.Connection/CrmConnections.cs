@@ -8,7 +8,7 @@ using System.Threading;
 namespace McTools.Xrm.Connection
 {
     /// <summary>
-    /// Stores the list of Crm connections
+    /// Stores the list of Dataverse connections
     /// </summary>
     public class CrmConnections
     {
@@ -30,6 +30,7 @@ namespace McTools.Xrm.Connection
 
         #region Propriétés
 
+        public string Base64Image { get; set; }
         public bool ByPassProxyOnLocal { get; set; }
 
         /// <summary>
@@ -43,15 +44,11 @@ namespace McTools.Xrm.Connection
         public bool IsReadOnly { get; set; }
 
         public string Name { get; set; }
-
         public string Password { get; set; }
-
         public string ProxyAddress { get; set; }
-
         public bool UseCustomProxy { get; set; }
-
         public bool UseDefaultCredentials { get; set; }
-
+        public bool UseDetailsView { get; set; }
         public bool UseInternetExplorerProxy { get; set; }
 
         public bool UseMruDisplay { get; set; }

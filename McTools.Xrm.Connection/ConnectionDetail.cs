@@ -13,6 +13,7 @@ using Microsoft.Xrm.Sdk.Metadata.Query;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
 using Newtonsoft.Json;
+using OrderedPropertyGrid;
 using System;
 using System.ComponentModel;
 using System.Data.Common;
@@ -102,6 +103,7 @@ namespace McTools.Xrm.Connection
     /// </summary>
     [XmlInclude(typeof(CertificateInfo))]
     [XmlInclude(typeof(EnvironmentHighlighting))]
+    [TypeConverter(typeof(PropertySorter))]
     public class ConnectionDetail : IComparable, ICloneable
     {
         private bool? canImpersonate;
@@ -144,26 +146,48 @@ namespace McTools.Xrm.Connection
         private CrmServiceClient crmSvc;
 
         [XmlIgnore]
+        [Browsable(false)]
         public bool AllowPasswordSharing { get; set; }
 
+        [Browsable(false)]
         public AuthenticationProviderType AuthType { get; set; }
+
+        [Category("Authentication")]
+        [DisplayName("Application Id")]
+        [ReadOnly(true)]
+        [PropertyOrder(7)]
         public Guid AzureAdAppId { get; set; }
-        
+
         /// <summary>
         /// The name of the Azure Key Vault that stores the Secret
         /// </summary>
         public string AzureKeyVaultName { get; set; }
+
+        [Category("Browser")]
+        [DisplayName("Browser")]
+        [ReadOnly(true)]
         public BrowserEnum BrowserName { get; set; } = BrowserEnum.None;
 
+        /// <summary>
+        /// The name of the Azure Key Vault that stores the Secret
+        /// </summary>
+        public string AzureKeyVaultName { get; set; }
+
+        [Category("Browser")]
+        [DisplayName("Profile")]
+        [ReadOnly(true)]
         public string BrowserProfile { get; set; }
 
         [XmlIgnore]
+        [Browsable(false)]
         public bool CanImpersonate { get; private set; }
 
         [XmlElement("CertificateInfo")]
+        [Browsable(false)]
         public CertificateInfo Certificate { get; set; }
 
         [XmlElement("ClientSecret")]
+        [Browsable(false)]
         public string ClientSecretEncrypted
         {
             get => clientSecret;
@@ -171,60 +195,101 @@ namespace McTools.Xrm.Connection
         }
 
         [XmlIgnore]
+        [Browsable(false)]
         public bool ClientSecretIsEmpty => string.IsNullOrEmpty(clientSecret);
 
         /// <summary>
         /// Gets or sets the connection unique identifier
         /// </summary>
+        [Category("\tGeneral")]
+        [DisplayName("Connection Id")]
+        [PropertyOrder(2)]
+        [ReadOnly(true)]
         public Guid? ConnectionId { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the connection
         /// </summary>
+        [Category("\tGeneral")]
+        [DisplayName("Connection Name")]
+        [PropertyOrder(1)]
+        [ReadOnly(true)]
         public string ConnectionName { get; set; }
 
+        [Category("Authentication")]
+        [DisplayName("Connection string")]
+        [ReadOnly(true)]
+        [PropertyOrder(12)]
         public string ConnectionString { get; set; }
 
         [XmlIgnore]
+        [Browsable(false)]
         public Color? EnvironmentColor { get; set; }
 
         ///// <summary>
         ///// Gets or sets custom information for use by consuming application
         ///// </summary>
         //public Dictionary<string, string> CustomInformation { get; set; }
+        // [Browsable(false)]
+        [Category("Highlighting")]
+        [DisplayName("Highlighting Info")]
+        [ReadOnly(true)]
+        [TypeConverter(typeof(HighlightingExpandConverter))]
+        [PropertyOrder(21)]
         public EnvironmentHighlighting EnvironmentHighlightingInfo { get; set; }
 
+        [Category("Environment")]
+        [DisplayName("Environment Id")]
+        [ReadOnly(true)]
         public string EnvironmentId { get; set; }
 
         [XmlIgnore]
+        [Browsable(false)]
         public string EnvironmentText { get; set; }
 
         [XmlIgnore]
+        [Browsable(false)]
         public Color? EnvironmentTextColor { get; set; }
 
         /// <summary>
         /// Gets or sets the Home realm url for ADFS authentication
         /// </summary>
+        [Category("Authentication")]
+        [DisplayName("Home realm url")]
+        [ReadOnly(true)]
+        [PropertyOrder(9)]
         public string HomeRealmUrl { get; set; }
 
         [XmlIgnore]
+        [Browsable(false)]
         public Guid ImpersonatedUserId => impersonatedUserId;
 
         [XmlIgnore]
+        [Browsable(false)]
         public string ImpersonatedUserName => impersonatedUserName;
 
         /// <summary>
         /// Get or set flag to know if custom authentication
         /// </summary>
+        [Browsable(false)]
         public bool IsCustomAuth { get; set; }
 
-        [XmlIgnore] public bool IsEnvironmentHighlightSet => EnvironmentHighlightingInfo != null;
+        [XmlIgnore]
+        [Browsable(false)]
+        public bool IsEnvironmentHighlightSet => EnvironmentHighlightingInfo != null;
+
+        [Browsable(false)]
         public bool IsFromSdkLoginCtrl { get; set; }
 
         [XmlIgnore]
+        [Category("\tGeneral")]
+        [DisplayName("Last used on")]
+        [PropertyOrder(3)]
+        [ReadOnly(true)]
         public DateTime LastUsedOn { get; set; }
 
         [XmlElement("LastUsedOn")]
+        [Browsable(false)]
         public string LastUsedOnString
         {
             get => LastUsedOn.ToString("yyyy-MM-dd HH:mm:ss");
@@ -249,59 +314,104 @@ namespace McTools.Xrm.Connection
         /// This cache is updated at the start of each connection, or by calling <see cref="UpdateMetadataCache(bool)"/>
         /// </remarks>
         [XmlIgnore]
+        [Browsable(false)]
         public EntityMetadata[] MetadataCache => _metadataCache?.EntityMetadata;
 
         /// <summary>
         /// Returns a task that provides access to the <see cref="MetadataCache"/> once it has finished loading
         /// </summary>
         [XmlIgnore]
+        [Browsable(false)]
         public Task<MetadataCache> MetadataCacheLoader { get; private set; } = Task.FromResult<MetadataCache>(null);
 
+        [Category("Authentication")]
+        [DisplayName("Authentication type")]
+        [ReadOnly(true)]
         public AuthenticationType NewAuthType { get; set; }
 
         /// <summary>
         /// Get or set the organization name
         /// </summary>
+        [Category("Organization")]
+        [DisplayName("Unique name")]
+        [ReadOnly(true)]
+        [PropertyOrder(31)]
         public string Organization { get; set; }
 
+        [Category("Organization")]
+        [DisplayName("URL - Organization data")]
+        [ReadOnly(true)]
+        [PropertyOrder(36)]
         public string OrganizationDataServiceUrl { get; set; }
 
         /// <summary>
         /// Get or set the organization friendly name
         /// </summary>
+        [Category("Organization")]
+        [DisplayName("Friendly nalme")]
+        [ReadOnly(true)]
+        [PropertyOrder(30)]
         public string OrganizationFriendlyName { get; set; }
 
+        [Browsable(false)]
         public int OrganizationMajorVersion => OrganizationVersion != null ? int.Parse(OrganizationVersion.Split('.')[0]) : -1;
+
+        [Browsable(false)]
         public int OrganizationMinorVersion => OrganizationVersion != null ? int.Parse(OrganizationVersion.Split('.')[1]) : -1;
 
         /// <summary>
         /// Gets or sets the Crm Service Url
         /// </summary>
+        [Category("Organization")]
+        [DisplayName("URL - Organization service")]
+        [ReadOnly(true)]
+        [PropertyOrder(35)]
         public string OrganizationServiceUrl { get; set; }
 
         /// <summary>
         /// Get or set the organization name
         /// </summary>
+        [Category("Organization")]
+        [DisplayName("Organization URL name")]
+        [ReadOnly(true)]
+        [PropertyOrder(32)]
         public string OrganizationUrlName { get; set; }
 
+        [Category("Organization")]
+        [DisplayName("Version")]
+        [ReadOnly(true)]
+        [PropertyOrder(33)]
         public string OrganizationVersion { get; set; }
+
+        [Browsable(false)]
         public string OriginalUrl { get; set; }
+
+        [XmlIgnore]
+        [Browsable(false)]
+        public ConnectionFile ParentConnectionFile { get; set; }
 
         /// <summary>
         /// Gets an information if the password is empty
         /// </summary>
+        [Browsable(false)]
         public bool PasswordIsEmpty => string.IsNullOrEmpty(userPassword);
 
         /// <summary>
         /// OAuth Refresh Token
         /// </summary>
+        [Browsable(false)]
         public string RefreshToken { get; set; }
 
+        [Category("Authentication")]
+        [DisplayName("Reply Url")]
+        [ReadOnly(true)]
+        [PropertyOrder(8)]
         public string ReplyUrl { get; set; }
 
         /// <summary>
         /// Client Secret used for S2S Auth
         /// </summary>
+        [Browsable(false)]
         public string S2SClientSecret
         {
             get => clientSecret;
@@ -311,11 +421,13 @@ namespace McTools.Xrm.Connection
         /// <summary>
         /// Gets or sets the information if the password must be saved
         /// </summary>
+        [Browsable(false)]
         public bool SavePassword { get; set; }
 
         /// <summary>
         /// Get or set the server name
         /// </summary>
+        [Browsable(false)]
         public string ServerName { get; set; }
 
         /// <summary>
@@ -323,9 +435,11 @@ namespace McTools.Xrm.Connection
         /// </summary>
         [DefaultValue(80)]
         [XmlIgnore]
+        [Browsable(false)]
         public int? ServerPort { get; set; }
 
         [XmlElement("ServerPort")]
+        [Browsable(false)]
         public string ServerPortString
         {
             get => ServerPort.ToString();
@@ -333,6 +447,7 @@ namespace McTools.Xrm.Connection
         }
 
         [XmlIgnore]
+        [Browsable(false)]
         public CrmServiceClient ServiceClient
         {
             get => GetCrmServiceClient();
@@ -343,9 +458,17 @@ namespace McTools.Xrm.Connection
             }
         }
 
+        [Category("Environment")]
+        [DisplayName("Tenant Id")]
+        [ReadOnly(true)]
         public Guid TenantId { get; set; }
+
+        [Category("\tGeneral")]
+        [ReadOnly(true)]
+        [PropertyOrder(4)]
         public TimeSpan Timeout { get; set; }
 
+        [Browsable(false)]
         public long TimeoutTicks
         {
             get { return Timeout.Ticks; }
@@ -353,27 +476,38 @@ namespace McTools.Xrm.Connection
         }
 
         [XmlIgnore]
+        [Category("Authentication")]
+        [DisplayName("Use connection string")]
+        [ReadOnly(true)]
+        [PropertyOrder(11)]
         public bool UseConnectionString => !string.IsNullOrEmpty(ConnectionString);
 
         /// <summary>
         /// Get or set flag to know if we use IFD
         /// </summary>
+        [Browsable(false)]
         public bool UseIfd { get; set; }
 
         /// <summary>
         /// Get or set flag to know if we use Multi Factor Authentication
         /// </summary>
+        [Browsable(false)]
         public bool UseMfa { get; set; }
 
         /// <summary>
         /// Get or set flag to know if we use CRM Online
         /// </summary>
         [XmlIgnore]
+        [Browsable(false)]
         public bool UseOnline => OriginalUrl.IndexOf(".dynamics.com", StringComparison.InvariantCultureIgnoreCase) > 0;
 
         /// <summary>
         /// Get or set the user domain name
         /// </summary>
+        [Category("Authentication")]
+        [DisplayName("User domain")]
+        [ReadOnly(true)]
+        [PropertyOrder(5)]
         public string UserDomain { get; set; }
 
         /// <summary>
@@ -383,9 +517,14 @@ namespace McTools.Xrm.Connection
         /// <summary>
         /// Get or set user login
         /// </summary>
+        [Category("Authentication")]
+        [DisplayName("User name")]
+        [ReadOnly(true)]
+        [PropertyOrder(6)]
         public string UserName { get; set; }
 
         [XmlElement("UserPassword")]
+        [Browsable(false)]
         public string UserPasswordEncrypted
         {
             get => userPassword;
@@ -396,8 +535,13 @@ namespace McTools.Xrm.Connection
         /// Get or set the use of SSL connection
         /// </summary>
         [XmlIgnore]
+        [Browsable(false)]
         public bool UseSsl => WebApplicationUrl?.StartsWith("https://", StringComparison.InvariantCultureIgnoreCase) ?? OriginalUrl.StartsWith("https://", StringComparison.InvariantCultureIgnoreCase);
 
+        [Category("Organization")]
+        [DisplayName("URL - Web application")]
+        [ReadOnly(true)]
+        [PropertyOrder(34)]
         public string WebApplicationUrl
         {
             get;
@@ -785,8 +929,6 @@ namespace McTools.Xrm.Connection
             crmSvc = new CrmServiceClient(_connectionString);
         }
 
-
-
         private void ConnectOnline()
         {
             AuthType = AuthenticationProviderType.OnlineFederation;
@@ -1015,7 +1157,8 @@ namespace McTools.Xrm.Connection
                 Certificate = Certificate,
                 ClientSecretEncrypted = ClientSecretEncrypted,
                 UserPasswordEncrypted = UserPasswordEncrypted,
-                clientSecret = clientSecret
+                clientSecret = clientSecret,
+                ParentConnectionFile = ParentConnectionFile
             };
 
             if (Certificate != null)
@@ -1336,24 +1479,36 @@ namespace McTools.Xrm.Connection
         #endregion Metadata Cache methods
     }
 
+    [TypeConverter(typeof(HighlightingExpandConverter))]
     public class EnvironmentHighlighting
     {
         [XmlIgnore]
+        [Browsable(false)]
         public Color? Color { get; set; }
 
         [XmlElement("Color")]
+        [DisplayName("Background color")]
+        [PropertyOrder(20)]
+        [ReadOnly(true)]
         public string ColorString
         {
             get => ColorTranslator.ToHtml(Color ?? System.Drawing.Color.Black);
             set => Color = ColorTranslator.FromHtml(value);
         }
 
+        [DisplayName("Label")]
+        [ReadOnly(true)]
+        [PropertyOrder(22)]
         public string Text { get; set; }
 
         [XmlIgnore]
+        [Browsable(false)]
         public Color? TextColor { get; set; }
 
         [XmlElement("TextColor")]
+        [DisplayName("Label color")]
+        [PropertyOrder(21)]
+        [ReadOnly(true)]
         public string TextColorString
         {
             get => ColorTranslator.ToHtml(TextColor ?? System.Drawing.Color.Black);

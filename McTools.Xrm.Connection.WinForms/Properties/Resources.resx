@@ -136,35 +136,83 @@
   <data name="ConnectionWizard_ErrorHeaderDescription" xml:space="preserve">
     <value>Your information have not been validated</value>
   </data>
+  <data name="Folder64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Folder64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Folder32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Folder32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Properties32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Properties32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="ConnectionWizard_QuestionHeaderTitle" xml:space="preserve">
     <value>Question</value>
   </data>
   <data name="Certificate32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Certificate32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="open_folder" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\open-folder.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="connection-secret-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\connection-secret-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="user_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\user-blue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="plus" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\plus.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="copy" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\copy.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ConnectionWizard_ConnectingHeaderDescription" xml:space="preserve">
     <value>Please wait while the wizard is trying to connect to your Microsoft Dynamics CRM organization</value>
   </data>
+  <data name="_string" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\string.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="ConnectionWizard_EnterUrlHeaderDescription" xml:space="preserve">
     <value>Enter the url displayed in the browser when you are connected to your Microsoft Dynamics CRM organization</value>
+  </data>
+  <data name="globe_white" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\globe-white.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ConnectionWizard_CredentialsHeaderDescription" xml:space="preserve">
     <value>Enter credentials required to connect to Microsoft Dynamics CRM organization</value>
   </data>
+  <data name="Create" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Create.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="database_link" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\database_link.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="world" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\world.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="logo_0200" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\logo_0200.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="edit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\edit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="history" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\history.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="earth" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\earth.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ConnectionWizard_SuccessHeaderDescription" xml:space="preserve">
     <value>Your information have been validated</value>
   </data>
   <data name="XTB_HIGHLIGHT_UAT" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\XTB_HIGHLIGHT_UAT.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="user_white" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\user-white.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="auth_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\auth-blue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="XTB_HIGHLIGHT_CUSTOM" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\XTB_HIGHLIGHT_CUSTOM.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -180,8 +228,17 @@ Expected format : HH:mm:ss</value>
   <data name="XTB_HIGHLIGHT_PRODUCTION" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\XTB_HIGHLIGHT_PRODUCTION.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="add_folder" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\add-folder.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="LogoDyn365_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\LogoDyn365_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Connection64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Connection64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ConnectionWizard_NeedToTestConnectionAgain" xml:space="preserve">
     <value>You changed some values that require to test the connection. Would you like to test it now?
@@ -191,11 +248,17 @@ Note that this is required to validate this wizard</value>
   <data name="ConnectionWizard_ConnectionStringConnectionHeaderDescription" xml:space="preserve">
     <value>Please provide the connection string you want to use to connect to your Microsoft Dynamics CRM organization</value>
   </data>
+  <data name="key" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\key.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="ConnectionWizard_UnableToDetermineOrganization" xml:space="preserve">
     <value>We were unable to determine the organization name based on the information you specified. Please complete the url to add the organization name inside</value>
   </data>
   <data name="ConnectionWizard_UnableToDetermineOrganizationFromUrl" xml:space="preserve">
     <value>Unable to identify organization from url, please review it!</value>
+  </data>
+  <data name="globe_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\globe-blue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="connection-string-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\connection-string-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -215,8 +278,14 @@ Note that this is required to validate this wizard</value>
   <data name="ConnectionWizard_IfdSelectionHeaderDescription" xml:space="preserve">
     <value>Help us to determine if your Microsoft Dynamics CRM deployment is exposed via IFD</value>
   </data>
+  <data name="auth_white" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\auth-white.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="connection-mfa-32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\connection-mfa-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Info_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Info_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ConnectionWizard_WarningTitle" xml:space="preserve">
     <value>Warning</value>
@@ -224,7 +293,10 @@ Note that this is required to validate this wizard</value>
   <data name="logo_0100" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\logo_0100.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="world" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\world.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Connection32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Connection32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NoConnection512" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NoConnection512.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
