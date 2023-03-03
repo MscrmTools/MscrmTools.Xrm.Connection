@@ -72,7 +72,7 @@ namespace McTools.Xrm.Connection.WinForms
 
         private void lvConnections_DrawItem(object sender, DrawListViewItemEventArgs e)
         {
-            if (showCompact)
+            if ((bool)btnDetailsView.Tag)
             {
                 e.DrawDefault = true;
                 return;
@@ -88,7 +88,7 @@ namespace McTools.Xrm.Connection.WinForms
 
         private void lvConnections_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
         {
-            if (e.ColumnIndex != 0 || showCompact)
+            if (e.ColumnIndex != 0 || (bool)btnDetailsView.Tag)
             {
                 e.DrawDefault = true;
                 return;

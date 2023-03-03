@@ -213,6 +213,7 @@ namespace McTools.Xrm.Connection
                         Connection.ConnectionsList.Instance.Save();
                     }
 
+                    Instance.ConnectionsList = existingFile.Connections;
                     existingFile.ApplyLinkWithConnectionDetails();
 
                     Instance.SetupFileSystemWatcher();

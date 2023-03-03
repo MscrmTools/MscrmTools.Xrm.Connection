@@ -32,7 +32,7 @@ namespace McTools.Xrm.Connection
             {
                 if (_connections == null)
                 {
-                    _connections = CrmConnections.LoadFromFile(Path);
+                    Reload();
                 }
 
                 return _connections;
@@ -54,6 +54,13 @@ namespace McTools.Xrm.Connection
             {
                 c.ParentConnectionFile = this;
             }
+        }
+
+        public void Reload()
+        {
+            _connections = CrmConnections.LoadFromFile(Path);
+
+            ApplyLinkWithConnectionDetails();
         }
 
         public void Save()

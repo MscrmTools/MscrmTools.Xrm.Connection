@@ -20,8 +20,8 @@ namespace McTools.Xrm.Connection.WinForms
 
             this.detail = detail;
 
-            this.backColor = backColor.HasValue ? this.backColor : Color.FromArgb(255, 0, 255);
-            this.textColor = textColor.HasValue ? this.textColor : Color.White;
+            this.backColor = backColor.HasValue ? backColor.Value : Color.FromArgb(255, 0, 255);
+            this.textColor = textColor.HasValue ? textColor.Value : Color.White;
             txtText.Text = text;
             btnBackColor.BackColor = this.backColor;
             btnTextColor.BackColor = this.textColor;
@@ -34,18 +34,20 @@ namespace McTools.Xrm.Connection.WinForms
 
         private void btnBackColor_Click(object sender, EventArgs e)
         {
-            var dialog = new ColorDialog { Color = backColor };
-            if (dialog.ShowDialog(this) == DialogResult.OK)
+            using (var dialog = new ColorDialog { Color = backColor })
             {
-                backColor = dialog.Color;
-                ((Button)sender).BackColor = dialog.Color;
-
-                OnTemplateSettingsChanged?.Invoke(this, new TemplateChangeEventArgs
+                if (dialog.ShowDialog(this) == DialogResult.OK)
                 {
-                    BackColor = backColor,
-                    Text = txtText.Text,
-                    TextColor = textColor
-                });
+                    backColor = dialog.Color;
+                    ((Button)sender).BackColor = dialog.Color;
+
+                    OnTemplateSettingsChanged?.Invoke(this, new TemplateChangeEventArgs
+                    {
+                        BackColor = backColor,
+                        Text = txtText.Text,
+                        TextColor = textColor
+                    });
+                }
             }
         }
 
@@ -56,18 +58,20 @@ namespace McTools.Xrm.Connection.WinForms
 
         private void btnTextColor_Click(object sender, EventArgs e)
         {
-            var dialog = new ColorDialog { Color = textColor };
-            if (dialog.ShowDialog(this) == DialogResult.OK)
+            using (var dialog = new ColorDialog { Color = textColor })
             {
-                textColor = dialog.Color;
-                ((Button)sender).BackColor = dialog.Color;
-
-                OnTemplateSettingsChanged?.Invoke(this, new TemplateChangeEventArgs
+                if (dialog.ShowDialog(this) == DialogResult.OK)
                 {
-                    BackColor = backColor,
-                    Text = txtText.Text,
-                    TextColor = textColor
-                });
+                    textColor = dialog.Color;
+                    ((Button)sender).BackColor = dialog.Color;
+
+                    OnTemplateSettingsChanged?.Invoke(this, new TemplateChangeEventArgs
+                    {
+                        BackColor = backColor,
+                        Text = txtText.Text,
+                        TextColor = textColor
+                    });
+                }
             }
         }
 

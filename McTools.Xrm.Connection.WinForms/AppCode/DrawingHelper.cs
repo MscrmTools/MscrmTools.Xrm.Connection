@@ -33,14 +33,18 @@ namespace McTools.Xrm.Connection.WinForms.AppCode
 
             using (var font = new Font(e.Item.ListView.Font.FontFamily, 10))
             {
+                var userName = cd.UserName;
+                if (string.IsNullOrEmpty(userName) && !cd.IsCustomAuth) userName = "Integrated authentication";
+                if (string.IsNullOrEmpty(userName)) userName = "Unknown";
+
                 e.Graphics.DrawImage(e.Item.Selected ? Properties.Resources.globe_white : Properties.Resources.globe_blue, e.Bounds.X + 100, e.Bounds.Y + 25, 14, 14);
                 e.Graphics.DrawString(cd.WebApplicationUrl, font, new SolidBrush(e.Item.Selected ? Color.White : Color.FromArgb(84, 168, 232)), new Point(e.Bounds.X + 120, e.Bounds.Y + 25));
                 e.Graphics.DrawImage(e.Item.Selected ? Properties.Resources.user_white : Properties.Resources.user_blue, e.Bounds.X + 100, e.Bounds.Y + 40, 14, 14);
-                e.Graphics.DrawString(cd.UserName, font, new SolidBrush(e.Item.Selected ? Color.White : Color.FromArgb(84, 168, 232)), new Point(e.Bounds.X + 120, e.Bounds.Y + 40));
+                e.Graphics.DrawString(userName, font, new SolidBrush(e.Item.Selected ? Color.White : Color.FromArgb(84, 168, 232)), new Point(e.Bounds.X + 120, e.Bounds.Y + 40));
 
                 if (drawAuthType)
                 {
-                    var userNameSize = TextRenderer.MeasureText(cd.UserName, font);
+                    var userNameSize = TextRenderer.MeasureText(userName, font);
                     string authType;
                     if (cd.IsFromSdkLoginCtrl)
                     {

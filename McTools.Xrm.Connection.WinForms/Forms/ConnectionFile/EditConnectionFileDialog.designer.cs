@@ -55,7 +55,7 @@
             this.btnCancel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(112, 35);
-            this.btnCancel.TabIndex = 1;
+            this.btnCancel.TabIndex = 7;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -103,7 +103,7 @@
             this.btnOk.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(112, 35);
-            this.btnOk.TabIndex = 13;
+            this.btnOk.TabIndex = 6;
             this.btnOk.Text = "OK";
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
@@ -126,7 +126,7 @@
             this.txtConnectionName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtConnectionName.Name = "txtConnectionName";
             this.txtConnectionName.Size = new System.Drawing.Size(466, 26);
-            this.txtConnectionName.TabIndex = 15;
+            this.txtConnectionName.TabIndex = 1;
             // 
             // btnBrowseImage
             // 
@@ -135,7 +135,7 @@
             this.btnBrowseImage.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnBrowseImage.Name = "btnBrowseImage";
             this.btnBrowseImage.Size = new System.Drawing.Size(185, 64);
-            this.btnBrowseImage.TabIndex = 24;
+            this.btnBrowseImage.TabIndex = 4;
             this.btnBrowseImage.Text = "Browse";
             this.btnBrowseImage.UseVisualStyleBackColor = true;
             this.btnBrowseImage.Click += new System.EventHandler(this.btnBrowseImage_Click);
@@ -165,7 +165,7 @@
             this.btnRemoveImage.Location = new System.Drawing.Point(461, 178);
             this.btnRemoveImage.Name = "btnRemoveImage";
             this.btnRemoveImage.Size = new System.Drawing.Size(195, 64);
-            this.btnRemoveImage.TabIndex = 26;
+            this.btnRemoveImage.TabIndex = 5;
             this.btnRemoveImage.Text = "Remove";
             this.btnRemoveImage.UseVisualStyleBackColor = true;
             this.btnRemoveImage.Click += new System.EventHandler(this.btnRemoveImage_Click);
@@ -177,7 +177,7 @@
             this.btnBrowse.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnBrowse.Name = "btnBrowse";
             this.btnBrowse.Size = new System.Drawing.Size(59, 35);
-            this.btnBrowse.TabIndex = 29;
+            this.btnBrowse.TabIndex = 3;
             this.btnBrowse.Text = "...";
             this.btnBrowse.UseVisualStyleBackColor = true;
             this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
@@ -200,7 +200,7 @@
             this.txtFilePath.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtFilePath.Name = "txtFilePath";
             this.txtFilePath.Size = new System.Drawing.Size(399, 26);
-            this.txtFilePath.TabIndex = 27;
+            this.txtFilePath.TabIndex = 2;
             // 
             // label4
             // 

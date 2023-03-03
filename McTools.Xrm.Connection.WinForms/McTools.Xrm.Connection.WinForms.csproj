@@ -198,6 +198,7 @@
     <Compile Include="AppCode\DrawingHelper.cs" />
     <Compile Include="AppCode\Extensions.cs" />
     <Compile Include="AppCode\IConnectionControlSettings.cs" />
+    <Compile Include="AppCode\OpenCreateWizardEventArgs.cs" />
     <Compile Include="AppCode\Settings.cs" />
     <Compile Include="BrowserProfile.cs" />
     <Compile Include="BrowserSelectionDialog.cs">
@@ -327,6 +328,9 @@
     <Compile Include="Forms\CompactConnectionSelector.Designer.cs">
       <DependentUpon>CompactConnectionSelector.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\CompactConnectionSelector.Drawing.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="SecretForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -358,12 +362,6 @@
       <DependentUpon>CrmConnectionStatusBar.cs</DependentUpon>
     </Compile>
     <Compile Include="ListViewItemComparer.cs" />
-    <Compile Include="Forms\ConnectionFile\AddConnectionFileDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ConnectionFile\AddConnectionFileDialog.designer.cs">
-      <DependentUpon>AddConnectionFileDialog.cs</DependentUpon>
-    </Compile>
     <Compile Include="PasswordForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -377,12 +375,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ConnectionFile\NewConnectionFileDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ConnectionFile\NewConnectionFileDialog.designer.cs">
-      <DependentUpon>NewConnectionFileDialog.cs</DependentUpon>
-    </Compile>
     <Compile Include="ProxySettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -390,6 +382,12 @@
       <DependentUpon>ProxySettingsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="RessourceManager.cs" />
+    <Compile Include="UserControls\NoConnectionControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\NoConnectionControl.Designer.cs">
+      <DependentUpon>NoConnectionControl.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="BrowserSelectionDialog.resx">
@@ -468,9 +466,6 @@
       <DependentUpon>CrmConnectionStatusBar.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ConnectionFile\AddConnectionFileDialog.resx">
-      <DependentUpon>AddConnectionFileDialog.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="PasswordForm.resx">
       <DependentUpon>PasswordForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -479,11 +474,11 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ConnectionFile\NewConnectionFileDialog.resx">
-      <DependentUpon>NewConnectionFileDialog.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="ProxySettingsForm.resx">
       <DependentUpon>ProxySettingsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\NoConnectionControl.resx">
+      <DependentUpon>NoConnectionControl.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -624,9 +619,6 @@
     <None Include="Resources\copy.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\edit.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\delete.png" />
   </ItemGroup>
   <ItemGroup>
@@ -667,6 +659,27 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\NoConnection512.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\edit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Search32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\NoHistory32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\NoSearch32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Details32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\NoDetails32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Theme32.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

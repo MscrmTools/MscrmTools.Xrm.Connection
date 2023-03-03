@@ -116,6 +116,7 @@ namespace McTools.Xrm.Connection.WinForms
             Path = txtFilePath.Text;
             file.Path = txtFilePath.Text;
             file.Name = txtConnectionName.Text;
+            file.Connections.Name = txtConnectionName.Text;
 
             if (!string.IsNullOrEmpty(imagePath))
             {

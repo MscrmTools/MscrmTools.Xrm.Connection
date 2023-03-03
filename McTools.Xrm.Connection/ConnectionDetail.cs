@@ -757,58 +757,62 @@ namespace McTools.Xrm.Connection
 
         public bool TryRequestClientSecret(Control parent, string secretUsageDescription, out string secret, out SensitiveDataNotFoundReason notFoundReason)
         {
-            var prd = new PasswordRequestDialog(secretUsageDescription, this, "client secret");
-            if (AllowPasswordSharing || prd.ShowDialog(parent) == DialogResult.OK && prd.Accepted)
+            using (var prd = new PasswordRequestDialog(secretUsageDescription, this, "client secret"))
             {
-                if (string.IsNullOrEmpty(clientSecret))
+                if (AllowPasswordSharing || prd.ShowDialog(parent) == DialogResult.OK && prd.Accepted)
                 {
-                    secret = string.Empty;
-                    notFoundReason = SensitiveDataNotFoundReason.NotAccessible;
-                    return false;
+                    if (string.IsNullOrEmpty(clientSecret))
+                    {
+                        secret = string.Empty;
+                        notFoundReason = SensitiveDataNotFoundReason.NotAccessible;
+                        return false;
+                    }
+
+                    secret = CryptoManager.Decrypt(clientSecret, ConnectionManager.CryptoPassPhrase,
+                        ConnectionManager.CryptoSaltValue,
+                        ConnectionManager.CryptoHashAlgorythm,
+                        ConnectionManager.CryptoPasswordIterations,
+                        ConnectionManager.CryptoInitVector,
+                        ConnectionManager.CryptoKeySize);
+
+                    notFoundReason = SensitiveDataNotFoundReason.None;
+                    return true;
                 }
 
-                secret = CryptoManager.Decrypt(clientSecret, ConnectionManager.CryptoPassPhrase,
-                    ConnectionManager.CryptoSaltValue,
-                    ConnectionManager.CryptoHashAlgorythm,
-                    ConnectionManager.CryptoPasswordIterations,
-                    ConnectionManager.CryptoInitVector,
-                    ConnectionManager.CryptoKeySize);
-
-                notFoundReason = SensitiveDataNotFoundReason.None;
-                return true;
+                notFoundReason = SensitiveDataNotFoundReason.NotAllowedByUser;
+                secret = string.Empty;
+                return false;
             }
-
-            notFoundReason = SensitiveDataNotFoundReason.NotAllowedByUser;
-            secret = string.Empty;
-            return false;
         }
 
         public bool TryRequestPassword(Control parent, string passwordUsageDescription, out string password, out SensitiveDataNotFoundReason notFoundReason)
         {
-            var prd = new PasswordRequestDialog(passwordUsageDescription, this, "password");
-            if (AllowPasswordSharing || prd.ShowDialog(parent) == DialogResult.OK && prd.Accepted)
+            using (var prd = new PasswordRequestDialog(passwordUsageDescription, this, "password"))
             {
-                if (string.IsNullOrEmpty(userPassword))
+                if (AllowPasswordSharing || prd.ShowDialog(parent) == DialogResult.OK && prd.Accepted)
                 {
-                    password = string.Empty;
-                    notFoundReason = SensitiveDataNotFoundReason.NotAccessible;
-                    return false;
+                    if (string.IsNullOrEmpty(userPassword))
+                    {
+                        password = string.Empty;
+                        notFoundReason = SensitiveDataNotFoundReason.NotAccessible;
+                        return false;
+                    }
+
+                    password = CryptoManager.Decrypt(userPassword, ConnectionManager.CryptoPassPhrase,
+                        ConnectionManager.CryptoSaltValue,
+                        ConnectionManager.CryptoHashAlgorythm,
+                        ConnectionManager.CryptoPasswordIterations,
+                        ConnectionManager.CryptoInitVector,
+                        ConnectionManager.CryptoKeySize);
+
+                    notFoundReason = SensitiveDataNotFoundReason.None;
+                    return true;
                 }
 
-                password = CryptoManager.Decrypt(userPassword, ConnectionManager.CryptoPassPhrase,
-                    ConnectionManager.CryptoSaltValue,
-                    ConnectionManager.CryptoHashAlgorythm,
-                    ConnectionManager.CryptoPasswordIterations,
-                    ConnectionManager.CryptoInitVector,
-                    ConnectionManager.CryptoKeySize);
-
-                notFoundReason = SensitiveDataNotFoundReason.None;
-                return true;
+                notFoundReason = SensitiveDataNotFoundReason.NotAllowedByUser;
+                password = string.Empty;
+                return false;
             }
-
-            notFoundReason = SensitiveDataNotFoundReason.NotAllowedByUser;
-            password = string.Empty;
-            return false;
         }
 
         public void UpdateAfterEdit(ConnectionDetail editedConnection)
@@ -835,7 +839,7 @@ namespace McTools.Xrm.Connection
             EnvironmentText = editedConnection.EnvironmentText;
             EnvironmentColor = editedConnection.EnvironmentColor;
             EnvironmentTextColor = editedConnection.EnvironmentTextColor;
-
+            EnvironmentHighlightingInfo = editedConnection.EnvironmentHighlightingInfo;
             TenantId = editedConnection.TenantId;
             EnvironmentId = editedConnection.EnvironmentId;
             AllowPasswordSharing = editedConnection.AllowPasswordSharing;
@@ -1086,49 +1090,50 @@ namespace McTools.Xrm.Connection
         {
             var cd = new ConnectionDetail
             {
+                AllowPasswordSharing = AllowPasswordSharing,
                 AuthType = AuthType,
+                AzureAdAppId = AzureAdAppId,
+                BrowserName = BrowserName,
+                BrowserProfile = BrowserProfile,
+                Certificate = Certificate,
+                clientSecret = clientSecret,
+                ClientSecretEncrypted = ClientSecretEncrypted,
                 ConnectionId = Guid.NewGuid(),
                 ConnectionName = ConnectionName,
                 ConnectionString = ConnectionString,
+                EnvironmentHighlightingInfo = EnvironmentHighlightingInfo,
+                EnvironmentColor = EnvironmentColor,
+                EnvironmentId = EnvironmentId,
+                EnvironmentText = EnvironmentText,
+                EnvironmentTextColor = EnvironmentTextColor,
                 HomeRealmUrl = HomeRealmUrl,
+                IsCustomAuth = IsCustomAuth,
+                IsFromSdkLoginCtrl = IsFromSdkLoginCtrl,
+                NewAuthType = NewAuthType,
                 Organization = Organization,
+                OrganizationDataServiceUrl = OrganizationDataServiceUrl,
                 OrganizationFriendlyName = OrganizationFriendlyName,
                 OrganizationServiceUrl = OrganizationServiceUrl,
-                OrganizationDataServiceUrl = OrganizationDataServiceUrl,
                 OrganizationUrlName = OrganizationUrlName,
                 OrganizationVersion = OrganizationVersion,
+                OriginalUrl = OriginalUrl,
+                ParentConnectionFile = ParentConnectionFile,
+                RefreshToken = RefreshToken,
+                ReplyUrl = ReplyUrl,
+                S2SClientSecret = S2SClientSecret,
                 SavePassword = SavePassword,
                 ServerName = ServerName,
                 ServerPort = ServerPort,
+                TenantId = TenantId,
+                Timeout = Timeout,
                 TimeoutTicks = TimeoutTicks,
                 UseIfd = UseIfd,
+                UseMfa = UseMfa,
                 UserDomain = UserDomain,
                 UserName = UserName,
                 userPassword = userPassword,
-                WebApplicationUrl = WebApplicationUrl,
-                OriginalUrl = OriginalUrl,
-                Timeout = Timeout,
-                UseMfa = UseMfa,
-                AzureAdAppId = AzureAdAppId,
-                ReplyUrl = ReplyUrl,
-                EnvironmentText = EnvironmentText,
-                EnvironmentColor = EnvironmentColor,
-                EnvironmentTextColor = EnvironmentTextColor,
-                RefreshToken = RefreshToken,
-                S2SClientSecret = S2SClientSecret,
-                IsFromSdkLoginCtrl = IsFromSdkLoginCtrl,
-                TenantId = TenantId,
-                EnvironmentId = EnvironmentId,
-                AllowPasswordSharing = AllowPasswordSharing,
-                BrowserName = BrowserName,
-                BrowserProfile = BrowserProfile,
-                IsCustomAuth = IsCustomAuth,
-                NewAuthType = NewAuthType,
-                Certificate = Certificate,
-                ClientSecretEncrypted = ClientSecretEncrypted,
                 UserPasswordEncrypted = UserPasswordEncrypted,
-                clientSecret = clientSecret,
-                ParentConnectionFile = ParentConnectionFile
+                WebApplicationUrl = WebApplicationUrl
             };
 
             if (Certificate != null)

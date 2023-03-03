@@ -34,27 +34,31 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
 
         private void btnSetBrowser_Click(object sender, System.EventArgs e)
         {
-            var dialog = new BrowserSelectionDialog(ConnectionDetail.BrowserName, ConnectionDetail.BrowserProfile);
-            if (dialog.ShowDialog(this) == DialogResult.OK)
+            using (var dialog = new BrowserSelectionDialog(ConnectionDetail.BrowserName, ConnectionDetail.BrowserProfile))
             {
-                ConnectionDetail.BrowserName = dialog.Browser;
-                ConnectionDetail.BrowserProfile = dialog.Profile;
+                if (dialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    ConnectionDetail.BrowserName = dialog.Browser;
+                    ConnectionDetail.BrowserProfile = dialog.Profile;
+                }
             }
         }
 
         private void btnSetEnvHighlight_Click(object sender, System.EventArgs e)
         {
-            var dialog = new EnvHighlightDialog(ConnectionDetail);
-            if (dialog.ShowDialog(this) == DialogResult.OK)
+            using (var dialog = new EnvHighlightDialog(ConnectionDetail))
             {
-                ConnectionDetail.EnvironmentHighlightingInfo = new EnvironmentHighlighting
+                if (dialog.ShowDialog(this) == DialogResult.OK)
                 {
-                    Color = dialog.BackColorSelected,
-                    TextColor = dialog.TextColorSelected,
-                    Text = dialog.TextSelected
-                };
+                    ConnectionDetail.EnvironmentHighlightingInfo = new EnvironmentHighlighting
+                    {
+                        Color = dialog.BackColorSelected,
+                        TextColor = dialog.TextColorSelected,
+                        Text = dialog.TextSelected
+                    };
 
-                btnClearEnvHighlight.Visible = true;
+                    btnClearEnvHighlight.Visible = true;
+                }
             }
         }
 
