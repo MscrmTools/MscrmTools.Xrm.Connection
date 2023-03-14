@@ -40,25 +40,18 @@ namespace McTools.Xrm.Connection.WinForms.Forms
                 }
             }
 
-            if((e.State & DrawItemState.Selected) == DrawItemState.Selected && (e.State & DrawItemState.ComboBoxEdit) == DrawItemState.ComboBoxEdit
+            if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && (e.State & DrawItemState.ComboBoxEdit) == DrawItemState.ComboBoxEdit
                 )
             {
-                e.Graphics.DrawRectangle(new Pen(Color.White),e.Bounds);
+                e.Graphics.DrawRectangle(new Pen(Color.White), e.Bounds);
             }
             else
             {
                 e.DrawBackground();
             }
 
-
             img = img.ResizeImage(32, 32);
             e.Graphics.DrawImage(img, e.Bounds.X + 4, e.Bounds.Y + (e.Bounds.Height - 32) / 2);
-            Console.WriteLine(text);
-            Console.WriteLine(e.State.ToString());
-            Console.WriteLine(cbbFiles.Font.FontFamily);
-            Console.WriteLine(cbbFiles.Font.Size);
-            Console.WriteLine(cbbFiles.Font.Style);
-            Console.WriteLine(cbbFiles.Font.Bold);
             var textSize = TextRenderer.MeasureText(text, cbbFiles.Font);
 
             SolidBrush brush;
@@ -109,7 +102,7 @@ namespace McTools.Xrm.Connection.WinForms.Forms
                 return;
             }
 
-            DrawingHelper.DrawConnectionDetailItem(e, false);
+            DrawingHelper.DrawConnectionDetailItem(e, false, sizeFactor);
         }
     }
 }

@@ -12,6 +12,8 @@ namespace McTools.Xrm.Connection.WinForms.Forms
         private readonly IConnectionControlSettings settings;
         private readonly ToolTip toolTip = new ToolTip();
 
+        private int sizeFactor = 4;
+
         public CompactConnectionSelector(IConnectionControlSettings settings)
         {
             InitializeComponent();
@@ -43,6 +45,19 @@ namespace McTools.Xrm.Connection.WinForms.Forms
         }
 
         public List<ConnectionDetail> SelectedConnections { get; set; }
+
+        private void btnChangeSize_Click(object sender, EventArgs e)
+        {
+            if (sizeFactor == 2) sizeFactor = 4;
+            else if (sizeFactor == 1) sizeFactor = 2;
+            else if (sizeFactor == 4) sizeFactor = 1;
+
+            SimpleImageList.ImageSize = new Size(SimpleImageList.ImageSize.Width, Convert.ToInt32(40 + 8 * sizeFactor));
+
+            //settings.DisplaySizeFactor = sizeFactor;
+
+            lvConnections.Invalidate();
+        }
 
         private void btnConnectionManager_Click(object sender, EventArgs e)
         {
@@ -129,11 +144,13 @@ namespace McTools.Xrm.Connection.WinForms.Forms
                 if ((bool)btnMru.Tag)
                 {
                     var list = ConnectionManager.Instance.ConnectionsFilesList.Files.SelectMany(f => f.Connections.Connections).OrderByDescending(c => c.LastUsedOn).Take(settings?.NumberOfRecentConnectionsToDisplay ?? 10);
+                    lvConnections.Sorting = SortOrder.None;
                     lvConnections.Items.AddRange(list.Select(c => GetListViewItem(c)).ToArray());
                 }
                 else
                 {
                     var list = ConnectionManager.Instance.ConnectionsFilesList.Files.SelectMany(f => f.Connections.Connections).OrderBy(c => c.ConnectionName);
+                    lvConnections.Sorting = SortOrder.Ascending;
                     lvConnections.Items.AddRange(list.Select(c => GetListViewItem(c)).ToArray());
                 }
             }
@@ -170,6 +187,15 @@ namespace McTools.Xrm.Connection.WinForms.Forms
             lvConnections.Invalidate();
 
             noConnectionControl1.Visible = lvConnections.Items.Count == 0;
+        }
+
+        private void CompactConnectionSelector_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                DialogResult = DialogResult.Cancel;
+                Close();
+            }
         }
 
         private void CompactConnectionSelector_Load(object sender, EventArgs e)
@@ -267,6 +293,10 @@ namespace McTools.Xrm.Connection.WinForms.Forms
             btnMru.Image = ((Image)((bool)btnMru.Tag ? Properties.Resources.NoHistory32 : Properties.Resources.history)).ResizeImage(20, 20);
             btnSearch.Image = ((Image)((bool)btnSearch.Tag ? Properties.Resources.NoSearch32 : Properties.Resources.Search32)).ResizeImage(20, 20);
             btnDetailsView.Image = ((Image)((bool)btnDetailsView.Tag ? Properties.Resources.NoDetails32 : Properties.Resources.Details32)).ResizeImage(20, 20);
+            btnChangeSize.Image = Properties.Resources.Size32.ResizeImage(20, 20);
+            btnChangeSize.Visible = !(bool)btnDetailsView.Tag;
+
+            lvConnections.ShowGroups = !(bool)btnMru.Tag;
 
             toolTip.SetToolTip(btnMru, (bool)btnMru.Tag ? "Display all connections" : "Display Most recently used connections");
             toolTip.SetToolTip(btnSearch, (bool)btnSearch.Tag ? "Hide search bar" : "Show search bar");
@@ -282,6 +312,7 @@ namespace McTools.Xrm.Connection.WinForms.Forms
 
                 lvConnections.SmallImageList = detailImageList;
                 lvConnections.Columns[0].Text = "Name";
+                lvConnections.HeaderStyle = ColumnHeaderStyle.Clickable;
             }
             else
             {
@@ -293,6 +324,7 @@ namespace McTools.Xrm.Connection.WinForms.Forms
                     lvConnections.Columns.RemoveAt(i);
                 }
                 lvConnections.Columns[0].Text = "";
+                lvConnections.HeaderStyle = ColumnHeaderStyle.None;
             }
 
             cbbFiles.Items.RemoveAt(0);

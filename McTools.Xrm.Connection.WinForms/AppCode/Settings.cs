@@ -9,5 +9,6 @@ namespace McTools.Xrm.Connection.WinForms.AppCode
         public bool ShowSearchBarInCompactSelector { get; set; }
         public bool UseDetailsViewForConnectionManager { get; set; }
         public bool UseDetailsViewForConnectionSelector { get; set; }
+        public int DisplaySizeFactor { get;set;} = 4;
     }
 }
