@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Linq;
+using System.Xml.Serialization;
 
 namespace McTools.Xrm.Connection
 {
     /// <summary>
     /// Class that references a file that contains connections to Dataverse environments
     /// </summary>
+    [Serializable]
     public class ConnectionFile
     {
         private CrmConnections _connections;
@@ -26,6 +28,7 @@ namespace McTools.Xrm.Connection
 
         public string Base64Image => Connections.Base64Image;
 
+        [XmlIgnore]
         public CrmConnections Connections
         {
             get
@@ -65,6 +68,17 @@ namespace McTools.Xrm.Connection
 
         public void Save()
         {
+            if (!string.IsNullOrEmpty(Connections.Password))
+            {
+                Connections.Password = CryptoManager.Encrypt(Connections.Password,
+                   ConnectionManager.CryptoPassPhrase,
+                    ConnectionManager.CryptoSaltValue,
+                    ConnectionManager.CryptoHashAlgorythm,
+                    ConnectionManager.CryptoPasswordIterations,
+                    ConnectionManager.CryptoInitVector,
+                    ConnectionManager.CryptoKeySize);
+            }
+
             Connections.SerializeToFile(Path);
         }
 
