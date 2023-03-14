@@ -70,7 +70,7 @@
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.6.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Crm.Sdk.Proxy, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.46\lib\net462\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
+      <HintPath>..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.48\lib\net462\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
     </Reference>
     <Reference Include="microsoft.identitymodel, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.IdentityModel.7.0.0\lib\net35\microsoft.identitymodel.dll</HintPath>
@@ -79,28 +79,28 @@
       <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.5.2.9\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Rest.ClientRuntime, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CrmSdk.XrmTooling.CoreAssembly.9.1.1.1\lib\net462\Microsoft.Rest.ClientRuntime.dll</HintPath>
+      <HintPath>..\packages\Microsoft.CrmSdk.XrmTooling.CoreAssembly.9.1.1.27\lib\net462\Microsoft.Rest.ClientRuntime.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xrm.Sdk, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.46\lib\net462\Microsoft.Xrm.Sdk.dll</HintPath>
+      <HintPath>..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.48\lib\net462\Microsoft.Xrm.Sdk.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xrm.Sdk.Deployment, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CrmSdk.Deployment.9.0.2.34\lib\net462\Microsoft.Xrm.Sdk.Deployment.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xrm.Sdk.Workflow, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CrmSdk.Workflow.9.0.2.46\lib\net462\Microsoft.Xrm.Sdk.Workflow.dll</HintPath>
+      <HintPath>..\packages\Microsoft.CrmSdk.Workflow.9.0.2.48\lib\net462\Microsoft.Xrm.Sdk.Workflow.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xrm.Tooling.Connector, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CrmSdk.XrmTooling.CoreAssembly.9.1.1.1\lib\net462\Microsoft.Xrm.Tooling.Connector.dll</HintPath>
+      <HintPath>..\packages\Microsoft.CrmSdk.XrmTooling.CoreAssembly.9.1.1.27\lib\net462\Microsoft.Xrm.Tooling.Connector.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xrm.Tooling.CrmConnectControl, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CrmSdk.XrmTooling.WpfControls.9.1.1.1\lib\net462\Microsoft.Xrm.Tooling.CrmConnectControl.dll</HintPath>
+      <HintPath>..\packages\Microsoft.CrmSdk.XrmTooling.WpfControls.9.1.1.27\lib\net462\Microsoft.Xrm.Tooling.CrmConnectControl.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xrm.Tooling.Ui.Styles, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CrmSdk.XrmTooling.WpfControls.9.1.1.1\lib\net462\Microsoft.Xrm.Tooling.Ui.Styles.dll</HintPath>
+      <HintPath>..\packages\Microsoft.CrmSdk.XrmTooling.WpfControls.9.1.1.27\lib\net462\Microsoft.Xrm.Tooling.Ui.Styles.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xrm.Tooling.WebResourceUtility, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CrmSdk.XrmTooling.WpfControls.9.1.1.1\lib\net462\Microsoft.Xrm.Tooling.WebResourceUtility.dll</HintPath>
+      <HintPath>..\packages\Microsoft.CrmSdk.XrmTooling.WpfControls.9.1.1.27\lib\net462\Microsoft.Xrm.Tooling.WebResourceUtility.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -201,170 +201,114 @@
     <Compile Include="AppCode\OpenCreateWizardEventArgs.cs" />
     <Compile Include="AppCode\Settings.cs" />
     <Compile Include="BrowserProfile.cs" />
-    <Compile Include="BrowserSelectionDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="BrowserSelectionDialog.cs" />
     <Compile Include="BrowserSelectionDialog.Designer.cs">
       <DependentUpon>BrowserSelectionDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="ConnectionSelector.Drawing.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ConnectionStringDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="ConnectionSelector.Drawing.cs" />
+    <Compile Include="ConnectionStringDialog.cs" />
     <Compile Include="ConnectionStringDialog.Designer.cs">
       <DependentUpon>ConnectionStringDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="ConnectionWizard2.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="ConnectionWizard2.cs" />
     <Compile Include="ConnectionWizard2.designer.cs">
       <DependentUpon>ConnectionWizard2.cs</DependentUpon>
     </Compile>
     <Compile Include="CRMLoginForm1.xaml.cs">
       <DependentUpon>CRMLoginForm1.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\ConnectionCredentialsControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="CustomControls\ConnectionCredentialsControl.cs" />
     <Compile Include="CustomControls\ConnectionCredentialsControl.Designer.cs">
       <DependentUpon>ConnectionCredentialsControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\ConnectionFailedControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="CustomControls\ConnectionFailedControl.cs" />
     <Compile Include="CustomControls\ConnectionFailedControl.Designer.cs">
       <DependentUpon>ConnectionFailedControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\ConnectionClientSecretControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="CustomControls\ConnectionClientSecretControl.cs" />
     <Compile Include="CustomControls\ConnectionClientSecretControl.Designer.cs">
       <DependentUpon>ConnectionClientSecretControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\ConnectionMfaControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="CustomControls\ConnectionMfaControl.cs" />
     <Compile Include="CustomControls\ConnectionMfaControl.Designer.cs">
       <DependentUpon>ConnectionMfaControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\ConnectionUrlControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="CustomControls\ConnectionUrlControl.cs" />
     <Compile Include="CustomControls\ConnectionUrlControl.Designer.cs">
       <DependentUpon>ConnectionUrlControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\ConnectionFirstStepControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="CustomControls\ConnectionFirstStepControl.cs" />
     <Compile Include="CustomControls\ConnectionFirstStepControl.Designer.cs">
       <DependentUpon>ConnectionFirstStepControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\ConnectionAppIdControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="CustomControls\ConnectionAppIdControl.cs" />
     <Compile Include="CustomControls\ConnectionAppIdControl.Designer.cs">
       <DependentUpon>ConnectionAppIdControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\ConnectionIfdControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="CustomControls\ConnectionIfdControl.cs" />
     <Compile Include="CustomControls\ConnectionIfdControl.Designer.cs">
       <DependentUpon>ConnectionIfdControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\ConnectionLoadingControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="CustomControls\ConnectionLoadingControl.cs" />
     <Compile Include="CustomControls\ConnectionLoadingControl.Designer.cs">
       <DependentUpon>ConnectionLoadingControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\ConnectionCertificateControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="CustomControls\ConnectionCertificateControl.cs" />
     <Compile Include="CustomControls\ConnectionCertificateControl.Designer.cs">
       <DependentUpon>ConnectionCertificateControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\StartPageControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="CustomControls\StartPageControl.cs" />
     <Compile Include="CustomControls\StartPageControl.Designer.cs">
       <DependentUpon>StartPageControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\SdkLoginControlControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="CustomControls\SdkLoginControlControl.cs" />
     <Compile Include="CustomControls\SdkLoginControlControl.Designer.cs">
       <DependentUpon>SdkLoginControlControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\ConnectionStringControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="CustomControls\ConnectionStringControl.cs" />
     <Compile Include="CustomControls\ConnectionStringControl.Designer.cs">
       <DependentUpon>ConnectionStringControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\ConnectionSucceededControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="CustomControls\ConnectionSucceededControl.cs" />
     <Compile Include="CustomControls\ConnectionSucceededControl.Designer.cs">
       <DependentUpon>ConnectionSucceededControl.cs</DependentUpon>
     </Compile>
     <Compile Include="CustomControls\IConnectionWizardControl.cs" />
-    <Compile Include="EnvHighlightDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="EnvHighlightDialog.cs" />
     <Compile Include="EnvHighlightDialog.Designer.cs">
       <DependentUpon>EnvHighlightDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="EnvHighlightSettingsDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="EnvHighlightSettingsDialog.cs" />
     <Compile Include="EnvHighlightSettingsDialog.Designer.cs">
       <DependentUpon>EnvHighlightSettingsDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\CompactConnectionSelector.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Forms\CompactConnectionSelector.cs" />
     <Compile Include="Forms\CompactConnectionSelector.Designer.cs">
       <DependentUpon>CompactConnectionSelector.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\CompactConnectionSelector.Drawing.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SecretForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Forms\CompactConnectionSelector.Drawing.cs" />
+    <Compile Include="SecretForm.cs" />
     <Compile Include="SecretForm.designer.cs">
       <DependentUpon>SecretForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ConnectionFile\EditConnectionFileDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Forms\ConnectionFile\EditConnectionFileDialog.cs" />
     <Compile Include="Forms\ConnectionFile\EditConnectionFileDialog.designer.cs">
       <DependentUpon>EditConnectionFileDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="UpdatePasswordForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="UpdatePasswordForm.cs" />
     <Compile Include="UpdatePasswordForm.designer.cs">
       <DependentUpon>UpdatePasswordForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ConnectionSelector.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="ConnectionSelector.cs" />
     <Compile Include="ConnectionSelector.designer.cs">
       <DependentUpon>ConnectionSelector.cs</DependentUpon>
     </Compile>
-    <Compile Include="CrmConnectionStatusBar.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="CrmConnectionStatusBar.cs" />
     <Compile Include="CrmConnectionStatusBar.designer.cs">
       <DependentUpon>CrmConnectionStatusBar.cs</DependentUpon>
     </Compile>
     <Compile Include="ListViewItemComparer.cs" />
-    <Compile Include="PasswordForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="PasswordForm.cs" />
     <Compile Include="PasswordForm.designer.cs">
       <DependentUpon>PasswordForm.cs</DependentUpon>
     </Compile>
@@ -375,16 +319,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="ProxySettingsForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="ProxySettingsForm.cs" />
     <Compile Include="ProxySettingsForm.designer.cs">
       <DependentUpon>ProxySettingsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="RessourceManager.cs" />
-    <Compile Include="UserControls\NoConnectionControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="UserControls\NoConnectionControl.cs" />
     <Compile Include="UserControls\NoConnectionControl.Designer.cs">
       <DependentUpon>NoConnectionControl.cs</DependentUpon>
     </Compile>
