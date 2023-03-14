@@ -38,11 +38,6 @@ namespace McTools.Xrm.Connection.WinForms
                 StartPosition = FormStartPosition.CenterParent
             })
             {
-                //var cs = new ConnectionSelector
-                //{
-                //    StartPosition = FormStartPosition.CenterParent,
-                //};
-
                 if (cs.ShowDialog(innerAppForm) == DialogResult.OK)
                 {
                     if (cs.SelectedConnections.Any(c => c.IsFromSdkLoginCtrl)
