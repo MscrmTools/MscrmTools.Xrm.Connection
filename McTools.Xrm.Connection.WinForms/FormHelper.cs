@@ -30,22 +30,17 @@ namespace McTools.Xrm.Connection.WinForms
             var cs = new CompactConnectionSelector(settings)
             {
                 StartPosition = FormStartPosition.CenterParent
-            };
-
-            //var cs = new ConnectionSelector
-            //{
-            //    StartPosition = FormStartPosition.CenterParent,
-            //};
-
-            if (cs.ShowDialog(innerAppForm) == DialogResult.OK)
+            })
             {
-                if (cs.SelectedConnections.Any(c => c.IsFromSdkLoginCtrl)
-                    && cs.SelectedConnections.Count > 1)
+                if (cs.ShowDialog(innerAppForm) == DialogResult.OK)
                 {
-                    MessageBox.Show(innerAppForm, @"You cannot select multiple connections that used SDK Login control",
-                        @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
+                    if (cs.SelectedConnections.Any(c => c.IsFromSdkLoginCtrl)
+                        && cs.SelectedConnections.Count > 1)
+                    {
+                        MessageBox.Show(innerAppForm, @"You cannot select multiple connections that used SDK Login control",
+                            @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return false;
+                    }
 
                 foreach (var connectionDetail in cs.SelectedConnections)
                 {
