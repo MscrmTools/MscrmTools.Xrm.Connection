@@ -3,6 +3,7 @@ using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.Drawing.Text;
 using System.IO;
 using System.Windows.Forms;
 
@@ -17,6 +18,7 @@ namespace McTools.Xrm.Connection.WinForms
 
         private void lvConnectionFiles_DrawItem(object sender, DrawListViewItemEventArgs e)
         {
+            e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             e.DrawBackground();
 
             var file = (ConnectionFile)e.Item.Tag;

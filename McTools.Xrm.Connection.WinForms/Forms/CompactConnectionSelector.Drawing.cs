@@ -1,6 +1,7 @@
 ﻿using McTools.Xrm.Connection.WinForms.AppCode;
 using System;
 using System.Drawing;
+using System.Drawing.Text;
 using System.IO;
 using System.Windows.Forms;
 
@@ -11,6 +12,7 @@ namespace McTools.Xrm.Connection.WinForms.Forms
         private void comboBox1_DrawItem(object sender, DrawItemEventArgs e)
         {
             if (e.Index < 0) return;
+            e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             var obj = cbbFiles.Items[e.Index];
             string text;
             Image img = Properties.Resources.Folder32;
@@ -40,35 +42,22 @@ namespace McTools.Xrm.Connection.WinForms.Forms
                 }
             }
 
-            if((e.State & DrawItemState.Selected) == DrawItemState.Selected && (e.State & DrawItemState.ComboBoxEdit) == DrawItemState.ComboBoxEdit
-                )
-            {
-                e.Graphics.DrawRectangle(new Pen(Color.White),e.Bounds);
-            }
-            else
-            {
-                e.DrawBackground();
-            }
-
+            e.DrawBackground();
 
             img = img.ResizeImage(32, 32);
             e.Graphics.DrawImage(img, e.Bounds.X + 4, e.Bounds.Y + (e.Bounds.Height - 32) / 2);
-            Console.WriteLine(text);
-            Console.WriteLine(e.State.ToString());
-            Console.WriteLine(cbbFiles.Font.FontFamily);
-            Console.WriteLine(cbbFiles.Font.Size);
-            Console.WriteLine(cbbFiles.Font.Style);
-            Console.WriteLine(cbbFiles.Font.Bold);
             var textSize = TextRenderer.MeasureText(text, cbbFiles.Font);
 
             SolidBrush brush;
             if ((e.State & DrawItemState.Focus) == DrawItemState.Focus
                 && (e.State & DrawItemState.Selected) == DrawItemState.Selected
-                && (e.State & DrawItemState.ComboBoxEdit) == DrawItemState.ComboBoxEdit)
+                && (e.State & DrawItemState.ComboBoxEdit) == DrawItemState.ComboBoxEdit
+                )
             {
-                brush = new SolidBrush(Color.Black);
+                brush = new SolidBrush(Color.White);
             }
-            else if ((e.State & DrawItemState.Focus) == DrawItemState.Focus)
+            else
+            if ((e.State & DrawItemState.Focus) == DrawItemState.Focus || (e.State & DrawItemState.HotLight) == DrawItemState.HotLight || (e.State & DrawItemState.Selected) == DrawItemState.Selected)
             {
                 brush = new SolidBrush(Color.White);
             }
@@ -109,7 +98,7 @@ namespace McTools.Xrm.Connection.WinForms.Forms
                 return;
             }
 
-            DrawingHelper.DrawConnectionDetailItem(e, false);
+            DrawingHelper.DrawConnectionDetailItem(e, false, sizeFactor);
         }
     }
 }
