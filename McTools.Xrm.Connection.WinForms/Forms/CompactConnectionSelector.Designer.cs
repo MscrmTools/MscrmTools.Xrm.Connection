@@ -69,7 +69,7 @@ namespace McTools.Xrm.Connection.WinForms.Forms
             this.cbbFiles.Location = new System.Drawing.Point(10, 10);
             this.cbbFiles.Name = "cbbFiles";
             this.cbbFiles.Size = new System.Drawing.Size(813, 46);
-            this.cbbFiles.TabIndex = 0;
+            this.cbbFiles.TabIndex = 1;
             this.cbbFiles.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboBox1_DrawItem);
             this.cbbFiles.SelectedIndexChanged += new System.EventHandler(this.cbbFiles_SelectedIndexChanged);
             // 
@@ -81,7 +81,7 @@ namespace McTools.Xrm.Connection.WinForms.Forms
             this.pnlTopMru.Name = "pnlTopMru";
             this.pnlTopMru.Padding = new System.Windows.Forms.Padding(10);
             this.pnlTopMru.Size = new System.Drawing.Size(833, 80);
-            this.pnlTopMru.TabIndex = 1;
+            this.pnlTopMru.TabIndex = 0;
             // 
             // pnlBottom
             // 
@@ -97,7 +97,7 @@ namespace McTools.Xrm.Connection.WinForms.Forms
             this.pnlBottom.Name = "pnlBottom";
             this.pnlBottom.Padding = new System.Windows.Forms.Padding(10);
             this.pnlBottom.Size = new System.Drawing.Size(833, 74);
-            this.pnlBottom.TabIndex = 2;
+            this.pnlBottom.TabIndex = 3;
             // 
             // btnChangeSize
             // 
@@ -157,7 +157,7 @@ namespace McTools.Xrm.Connection.WinForms.Forms
             this.btnConnectionManager.Name = "btnConnectionManager";
             this.btnConnectionManager.Padding = new System.Windows.Forms.Padding(10, 0, 10, 0);
             this.btnConnectionManager.Size = new System.Drawing.Size(268, 54);
-            this.btnConnectionManager.TabIndex = 2;
+            this.btnConnectionManager.TabIndex = 1;
             this.btnConnectionManager.Text = "Open Connection Manager";
             this.btnConnectionManager.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnConnectionManager.UseVisualStyleBackColor = true;
@@ -170,7 +170,7 @@ namespace McTools.Xrm.Connection.WinForms.Forms
             this.btnOK.Margin = new System.Windows.Forms.Padding(3, 3, 10, 3);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(110, 54);
-            this.btnOK.TabIndex = 1;
+            this.btnOK.TabIndex = 7;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
@@ -182,7 +182,7 @@ namespace McTools.Xrm.Connection.WinForms.Forms
             this.btnCancel.Location = new System.Drawing.Point(712, 10);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(111, 54);
-            this.btnCancel.TabIndex = 0;
+            this.btnCancel.TabIndex = 8;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
@@ -195,7 +195,7 @@ namespace McTools.Xrm.Connection.WinForms.Forms
             this.pnlMain.Name = "pnlMain";
             this.pnlMain.Padding = new System.Windows.Forms.Padding(10);
             this.pnlMain.Size = new System.Drawing.Size(833, 661);
-            this.pnlMain.TabIndex = 3;
+            this.pnlMain.TabIndex = 2;
             // 
             // noConnectionControl1
             // 
@@ -224,7 +224,7 @@ namespace McTools.Xrm.Connection.WinForms.Forms
             this.lvConnections.OwnerDraw = true;
             this.lvConnections.Size = new System.Drawing.Size(813, 641);
             this.lvConnections.SmallImageList = this.SimpleImageList;
-            this.lvConnections.TabIndex = 0;
+            this.lvConnections.TabIndex = 2;
             this.lvConnections.UseCompatibleStateImageBehavior = false;
             this.lvConnections.View = System.Windows.Forms.View.Details;
             this.lvConnections.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.lvConnections_DrawColumnHeader);
@@ -232,6 +232,7 @@ namespace McTools.Xrm.Connection.WinForms.Forms
             this.lvConnections.DrawSubItem += new System.Windows.Forms.DrawListViewSubItemEventHandler(this.lvConnections_DrawSubItem);
             this.lvConnections.SelectedIndexChanged += new System.EventHandler(this.lvConnections_SelectedIndexChanged);
             this.lvConnections.DoubleClick += new System.EventHandler(this.lvConnections_DoubleClick);
+            this.lvConnections.GotFocus += LvConnections_GotFocus;
             // 
             // chFile
             // 
@@ -271,7 +272,7 @@ namespace McTools.Xrm.Connection.WinForms.Forms
             this.pnlTopSearch.Name = "pnlTopSearch";
             this.pnlTopSearch.Padding = new System.Windows.Forms.Padding(10);
             this.pnlTopSearch.Size = new System.Drawing.Size(833, 62);
-            this.pnlTopSearch.TabIndex = 4;
+            this.pnlTopSearch.TabIndex = 1;
             // 
             // txtSearch
             // 
@@ -310,6 +311,8 @@ namespace McTools.Xrm.Connection.WinForms.Forms
             this.ResumeLayout(false);
 
         }
+
+     
 
 
 

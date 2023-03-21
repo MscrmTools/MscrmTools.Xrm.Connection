@@ -196,11 +196,21 @@ namespace McTools.Xrm.Connection.WinForms.Forms
                 DialogResult = DialogResult.Cancel;
                 Close();
             }
+            else if (e.KeyCode == Keys.Enter && lvConnections.SelectedItems.Count == 1)
+            {
+                btnOK_Click(btnOK, new EventArgs());
+            }
         }
 
         private void CompactConnectionSelector_Load(object sender, EventArgs e)
         {
             cbbFiles_SelectedIndexChanged(cbbFiles, new EventArgs());
+            if (lvConnections.Items.Count > 0)
+            {
+                lvConnections.Items[0].Selected = true;
+                lvConnections.Focus();
+                lvConnections.Select();
+            }
         }
 
         private void FillConnectionFilesList()
@@ -279,6 +289,12 @@ namespace McTools.Xrm.Connection.WinForms.Forms
         private void lvConnections_DoubleClick(object sender, EventArgs e)
         {
             btnOK_Click(lvConnections, new EventArgs());
+        }
+
+        private void LvConnections_GotFocus(object sender, System.EventArgs e)
+        {
+            if (lvConnections.SelectedItems.Count == 0)
+                lvConnections.Items[0].Selected = true;
         }
 
         private void lvConnections_SelectedIndexChanged(object sender, EventArgs e)
