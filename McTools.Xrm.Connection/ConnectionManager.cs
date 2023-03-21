@@ -528,7 +528,7 @@ namespace McTools.Xrm.Connection
                     UpdateMetadataCache(detail);
                 }
                 detail.LastUsedOn = DateTime.Now;
-                detail.ParentConnectionFile.Save();
+                detail.ParentConnectionFile?.Save();
 
                 SaveConnectionsFile();
 
