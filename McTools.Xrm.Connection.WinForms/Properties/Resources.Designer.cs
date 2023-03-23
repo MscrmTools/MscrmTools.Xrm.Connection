@@ -391,6 +391,16 @@ namespace McTools.Xrm.Connection.WinForms.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Dataverse_64x64 {
+            get {
+                object obj = ResourceManager.GetObject("Dataverse_64x64", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap delete {
             get {
                 object obj = ResourceManager.GetObject("delete", resourceCulture);
@@ -404,6 +414,16 @@ namespace McTools.Xrm.Connection.WinForms.Properties {
         internal static System.Drawing.Bitmap Details32 {
             get {
                 object obj = ResourceManager.GetObject("Details32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Dynamics365_64 {
+            get {
+                object obj = ResourceManager.GetObject("Dynamics365_64", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

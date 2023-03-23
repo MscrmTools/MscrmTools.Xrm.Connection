@@ -201,114 +201,170 @@
     <Compile Include="AppCode\OpenCreateWizardEventArgs.cs" />
     <Compile Include="AppCode\Settings.cs" />
     <Compile Include="BrowserProfile.cs" />
-    <Compile Include="BrowserSelectionDialog.cs" />
+    <Compile Include="BrowserSelectionDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="BrowserSelectionDialog.Designer.cs">
       <DependentUpon>BrowserSelectionDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="ConnectionSelector.Drawing.cs" />
-    <Compile Include="ConnectionStringDialog.cs" />
+    <Compile Include="ConnectionSelector.Drawing.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConnectionStringDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="ConnectionStringDialog.Designer.cs">
       <DependentUpon>ConnectionStringDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="ConnectionWizard2.cs" />
+    <Compile Include="ConnectionWizard2.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="ConnectionWizard2.designer.cs">
       <DependentUpon>ConnectionWizard2.cs</DependentUpon>
     </Compile>
     <Compile Include="CRMLoginForm1.xaml.cs">
       <DependentUpon>CRMLoginForm1.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\ConnectionCredentialsControl.cs" />
+    <Compile Include="CustomControls\ConnectionCredentialsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="CustomControls\ConnectionCredentialsControl.Designer.cs">
       <DependentUpon>ConnectionCredentialsControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\ConnectionFailedControl.cs" />
+    <Compile Include="CustomControls\ConnectionFailedControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="CustomControls\ConnectionFailedControl.Designer.cs">
       <DependentUpon>ConnectionFailedControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\ConnectionClientSecretControl.cs" />
+    <Compile Include="CustomControls\ConnectionClientSecretControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="CustomControls\ConnectionClientSecretControl.Designer.cs">
       <DependentUpon>ConnectionClientSecretControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\ConnectionMfaControl.cs" />
+    <Compile Include="CustomControls\ConnectionMfaControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="CustomControls\ConnectionMfaControl.Designer.cs">
       <DependentUpon>ConnectionMfaControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\ConnectionUrlControl.cs" />
+    <Compile Include="CustomControls\ConnectionUrlControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="CustomControls\ConnectionUrlControl.Designer.cs">
       <DependentUpon>ConnectionUrlControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\ConnectionFirstStepControl.cs" />
+    <Compile Include="CustomControls\ConnectionFirstStepControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="CustomControls\ConnectionFirstStepControl.Designer.cs">
       <DependentUpon>ConnectionFirstStepControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\ConnectionAppIdControl.cs" />
+    <Compile Include="CustomControls\ConnectionAppIdControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="CustomControls\ConnectionAppIdControl.Designer.cs">
       <DependentUpon>ConnectionAppIdControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\ConnectionIfdControl.cs" />
+    <Compile Include="CustomControls\ConnectionIfdControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="CustomControls\ConnectionIfdControl.Designer.cs">
       <DependentUpon>ConnectionIfdControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\ConnectionLoadingControl.cs" />
+    <Compile Include="CustomControls\ConnectionLoadingControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="CustomControls\ConnectionLoadingControl.Designer.cs">
       <DependentUpon>ConnectionLoadingControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\ConnectionCertificateControl.cs" />
+    <Compile Include="CustomControls\ConnectionCertificateControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="CustomControls\ConnectionCertificateControl.Designer.cs">
       <DependentUpon>ConnectionCertificateControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\StartPageControl.cs" />
+    <Compile Include="CustomControls\StartPageControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="CustomControls\StartPageControl.Designer.cs">
       <DependentUpon>StartPageControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\SdkLoginControlControl.cs" />
+    <Compile Include="CustomControls\SdkLoginControlControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="CustomControls\SdkLoginControlControl.Designer.cs">
       <DependentUpon>SdkLoginControlControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\ConnectionStringControl.cs" />
+    <Compile Include="CustomControls\ConnectionStringControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="CustomControls\ConnectionStringControl.Designer.cs">
       <DependentUpon>ConnectionStringControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\ConnectionSucceededControl.cs" />
+    <Compile Include="CustomControls\ConnectionSucceededControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="CustomControls\ConnectionSucceededControl.Designer.cs">
       <DependentUpon>ConnectionSucceededControl.cs</DependentUpon>
     </Compile>
     <Compile Include="CustomControls\IConnectionWizardControl.cs" />
-    <Compile Include="EnvHighlightDialog.cs" />
+    <Compile Include="EnvHighlightDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="EnvHighlightDialog.Designer.cs">
       <DependentUpon>EnvHighlightDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="EnvHighlightSettingsDialog.cs" />
+    <Compile Include="EnvHighlightSettingsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="EnvHighlightSettingsDialog.Designer.cs">
       <DependentUpon>EnvHighlightSettingsDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\CompactConnectionSelector.cs" />
+    <Compile Include="Forms\CompactConnectionSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\CompactConnectionSelector.Designer.cs">
       <DependentUpon>CompactConnectionSelector.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\CompactConnectionSelector.Drawing.cs" />
-    <Compile Include="SecretForm.cs" />
+    <Compile Include="Forms\CompactConnectionSelector.Drawing.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SecretForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="SecretForm.designer.cs">
       <DependentUpon>SecretForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ConnectionFile\EditConnectionFileDialog.cs" />
+    <Compile Include="Forms\ConnectionFile\EditConnectionFileDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\ConnectionFile\EditConnectionFileDialog.designer.cs">
       <DependentUpon>EditConnectionFileDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="UpdatePasswordForm.cs" />
+    <Compile Include="UpdatePasswordForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="UpdatePasswordForm.designer.cs">
       <DependentUpon>UpdatePasswordForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ConnectionSelector.cs" />
+    <Compile Include="ConnectionSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="ConnectionSelector.designer.cs">
       <DependentUpon>ConnectionSelector.cs</DependentUpon>
     </Compile>
-    <Compile Include="CrmConnectionStatusBar.cs" />
+    <Compile Include="CrmConnectionStatusBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="CrmConnectionStatusBar.designer.cs">
       <DependentUpon>CrmConnectionStatusBar.cs</DependentUpon>
     </Compile>
     <Compile Include="ListViewItemComparer.cs" />
-    <Compile Include="PasswordForm.cs" />
+    <Compile Include="PasswordForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="PasswordForm.designer.cs">
       <DependentUpon>PasswordForm.cs</DependentUpon>
     </Compile>
@@ -319,12 +375,16 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="ProxySettingsForm.cs" />
+    <Compile Include="ProxySettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="ProxySettingsForm.designer.cs">
       <DependentUpon>ProxySettingsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="RessourceManager.cs" />
-    <Compile Include="UserControls\NoConnectionControl.cs" />
+    <Compile Include="UserControls\NoConnectionControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="UserControls\NoConnectionControl.Designer.cs">
       <DependentUpon>NoConnectionControl.cs</DependentUpon>
     </Compile>
@@ -623,6 +683,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Size32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Dataverse.64x64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Dynamics365_64.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

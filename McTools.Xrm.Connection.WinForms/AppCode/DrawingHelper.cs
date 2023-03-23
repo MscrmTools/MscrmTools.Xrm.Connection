@@ -11,7 +11,7 @@ namespace McTools.Xrm.Connection.WinForms.AppCode
         public static void DrawConnectionDetailItem(DrawListViewSubItemEventArgs e, bool drawAuthType = true, int sizeFactor = 4)
         {
             e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            
+
             var imageSize = Convert.ToInt32(40 + 2 * sizeFactor);
             var fontSize = 10 + sizeFactor;
             var smallFontSize = 6 + sizeFactor;
@@ -23,7 +23,7 @@ namespace McTools.Xrm.Connection.WinForms.AppCode
             using (var pen = new Pen(new SolidBrush(hlColor)))
                 e.Graphics.FillRectangle(new SolidBrush(hlColor), new Rectangle(e.Bounds.X, e.Bounds.Y, 5, e.Bounds.Height));
 
-            Image img = Properties.Resources.Connection64;
+            Image img = (cd.UseOnline ? Properties.Resources.Dataverse_64x64 : Properties.Resources.Dynamics365_64).ResizeImage(imageSize, imageSize); // Properties.Resources.Connection64;
             var base64 = ((ConnectionDetail)e.Item.Tag).ParentConnectionFile?.Base64Image;
             if (!string.IsNullOrEmpty(base64))
             {
@@ -33,12 +33,12 @@ namespace McTools.Xrm.Connection.WinForms.AppCode
                 }
             }
 
-            e.Graphics.DrawImage(img, e.Bounds.X + 20, e.Bounds.Y + 3* sizeFactor, imageSize, imageSize);
+            e.Graphics.DrawImage(img, e.Bounds.X + 10, e.Bounds.Y + 3 * sizeFactor, imageSize, imageSize);
             var yOffset = 0;
 
             using (var font = new Font(e.Item.ListView.Font.FontFamily, fontSize))
             {
-                e.Graphics.DrawString(cd.ConnectionName, font, new SolidBrush(e.Item.Selected ? Color.White : Color.Black), new Point(e.Bounds.X + 100, e.Bounds.Y));
+                e.Graphics.DrawString(cd.ConnectionName, font, new SolidBrush(e.Item.Selected ? Color.White : Color.Black), new Point(e.Bounds.X + 70, e.Bounds.Y));
                 yOffset += TextRenderer.MeasureText(cd.ConnectionName, font).Height;
             }
 
@@ -50,11 +50,11 @@ namespace McTools.Xrm.Connection.WinForms.AppCode
 
                 var textHeight = TextRenderer.MeasureText(userName, font).Height;
 
-                e.Graphics.DrawImage(e.Item.Selected ? Properties.Resources.globe_white.ResizeImage(fontSize, fontSize) : Properties.Resources.globe_blue.ResizeImage(fontSize, fontSize), e.Bounds.X + 100, e.Bounds.Y + yOffset, fontSize, fontSize);
-                e.Graphics.DrawImage(e.Item.Selected ? Properties.Resources.user_white.ResizeImage(fontSize, fontSize) : Properties.Resources.user_blue.ResizeImage(fontSize, fontSize), e.Bounds.X + 100, e.Bounds.Y + yOffset + textHeight, fontSize, fontSize);
+                e.Graphics.DrawImage(e.Item.Selected ? Properties.Resources.globe_white.ResizeImage(fontSize, fontSize) : Properties.Resources.globe_blue.ResizeImage(fontSize, fontSize), e.Bounds.X + 75, e.Bounds.Y + yOffset, fontSize, fontSize);
+                e.Graphics.DrawImage(e.Item.Selected ? Properties.Resources.user_white.ResizeImage(fontSize, fontSize) : Properties.Resources.user_blue.ResizeImage(fontSize, fontSize), e.Bounds.X + 75, e.Bounds.Y + yOffset + textHeight, fontSize, fontSize);
 
-                e.Graphics.DrawString(cd.WebApplicationUrl, font, new SolidBrush(e.Item.Selected ? Color.White : Color.FromArgb(84, 168, 232)), new Point(e.Bounds.X + 120, e.Bounds.Y + yOffset));
-                e.Graphics.DrawString(userName, font, new SolidBrush(e.Item.Selected ? Color.White : Color.FromArgb(84, 168, 232)), new Point(e.Bounds.X + 120, e.Bounds.Y + yOffset + textHeight));
+                e.Graphics.DrawString(cd.WebApplicationUrl, font, new SolidBrush(e.Item.Selected ? Color.White : Color.FromArgb(84, 168, 232)), new Point(e.Bounds.X + 90, e.Bounds.Y + yOffset));
+                e.Graphics.DrawString(userName, font, new SolidBrush(e.Item.Selected ? Color.White : Color.FromArgb(84, 168, 232)), new Point(e.Bounds.X + 90, e.Bounds.Y + yOffset + textHeight));
 
                 if (drawAuthType)
                 {
