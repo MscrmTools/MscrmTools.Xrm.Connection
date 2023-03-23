@@ -299,4 +299,31 @@ Note that this is required to validate this wizard</value>
   <data name="NoConnection512" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NoConnection512.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="NoHistory32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NoHistory32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NoSearch32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NoSearch32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Search32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Search32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Details32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Details32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NoDetails32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NoDetails32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Theme32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Theme32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Size32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Size32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Dataverse_64x64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Dataverse.64x64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Dynamics365_64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Dynamics365_64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>
