@@ -33,7 +33,7 @@ namespace McTools.Xrm.Connection.WinForms.AppCode
                 }
             }
 
-            e.Graphics.DrawImage(img, e.Bounds.X + 10, e.Bounds.Y + 3 * sizeFactor, imageSize, imageSize);
+            e.Graphics.DrawImage(img, e.Bounds.X + (70 - imageSize)/2, e.Bounds.Y + (e.Bounds.Height - imageSize) / 2, imageSize, imageSize);
             var yOffset = 0;
 
             using (var font = new Font(e.Item.ListView.Font.FontFamily, fontSize))

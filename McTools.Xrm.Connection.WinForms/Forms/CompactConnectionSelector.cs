@@ -32,6 +32,7 @@ namespace McTools.Xrm.Connection.WinForms.Forms
 
             chFile.Width = lvConnections.Width - 26;
             btnConnectionManager.Image = btnConnectionManager.Image.ResizeImage(20, 20);
+            btnNewConnection.Image = btnNewConnection.Image.ResizeImage(20, 20);
 
             var ll = new LinkLabel
             {
@@ -54,7 +55,10 @@ namespace McTools.Xrm.Connection.WinForms.Forms
 
             SimpleImageList.ImageSize = new Size(SimpleImageList.ImageSize.Width, Convert.ToInt32(40 + 8 * sizeFactor));
 
-            //settings.DisplaySizeFactor = sizeFactor;
+            if (settings != null)
+            {
+                settings.DisplaySizeFactor = sizeFactor;
+            }
 
             lvConnections.Invalidate();
         }
@@ -84,6 +88,8 @@ namespace McTools.Xrm.Connection.WinForms.Forms
                         }
                     }
                 }
+
+                cbbFiles_SelectedIndexChanged(cbbFiles, new EventArgs());
             }
         }
 
@@ -107,6 +113,45 @@ namespace McTools.Xrm.Connection.WinForms.Forms
             }
 
             SetDisplay();
+        }
+
+        private void btnNewConnection_Click(object sender, EventArgs e)
+        {
+            var parentFile = cbbFiles.SelectedIndex == 0 ? null : (ConnectionFile)cbbFiles.SelectedItem;
+
+            using (var cForm = new ConnectionWizard2(null, parentFile)
+            {
+                StartPosition = FormStartPosition.CenterParent
+            })
+            {
+                if (cForm.ShowDialog(this) == DialogResult.OK)
+                {
+                    var newConnection = cForm.CrmConnectionDetail;
+                    newConnection.LastUsedOn = DateTime.Now;
+
+                    var item = new ListViewItem(newConnection.ConnectionName);
+                    item.SubItems.Add(newConnection.ServerName);
+                    item.SubItems.Add(newConnection.Organization);
+                    item.SubItems.Add(newConnection.UserName);
+                    item.SubItems.Add(newConnection.OrganizationVersion);
+                    item.Tag = newConnection;
+                    item.Group = GetGroup(newConnection);
+                    item.ImageIndex = GetImageIndex(newConnection);
+
+                    lvConnections.Items.Add(item);
+                    lvConnections.SelectedItems.Clear();
+                    item.Selected = true;
+                    item.EnsureVisible();
+
+                    lvConnections.Sort();
+
+                    if (cForm.HasCreatedNewFolder)
+                    {
+                        FillConnectionFilesList();
+                        cbbFiles.SelectedItem = newConnection.ParentConnectionFile;
+                    }
+                }
+            }
         }
 
         private void btnOK_Click(object sender, EventArgs e)
@@ -133,6 +178,11 @@ namespace McTools.Xrm.Connection.WinForms.Forms
             }
             SetDisplay();
             cbbFiles_SelectedIndexChanged(cbbFiles, new EventArgs());
+        }
+
+        private void btnShowHideSettings_Click(object sender, EventArgs e)
+        {
+            pnlSettings.Visible = !pnlSettings.Visible;
         }
 
         private void cbbFiles_SelectedIndexChanged(object sender, EventArgs e)
@@ -215,6 +265,7 @@ namespace McTools.Xrm.Connection.WinForms.Forms
 
         private void FillConnectionFilesList()
         {
+            cbbFiles.Items.Clear();
             cbbFiles.Items.Add("Recently used connections");
 
             foreach (var file in ConnectionManager.Instance.ConnectionsFilesList.Files.OrderBy(cf => cf.Name))
@@ -314,9 +365,14 @@ namespace McTools.Xrm.Connection.WinForms.Forms
 
             lvConnections.ShowGroups = !(bool)btnMru.Tag;
 
+            toolTip.SetToolTip(btnShowHideSettings, "Show display settings");
             toolTip.SetToolTip(btnMru, (bool)btnMru.Tag ? "Display all connections" : "Display Most recently used connections");
             toolTip.SetToolTip(btnSearch, (bool)btnSearch.Tag ? "Hide search bar" : "Show search bar");
             toolTip.SetToolTip(btnDetailsView, (bool)btnDetailsView.Tag ? "Do not use details view" : "Use details view");
+
+            btnMru.Text = (bool)btnMru.Tag ? "Do not use MRU" : "Use MRU";
+            btnSearch.Text = (bool)btnSearch.Tag ? "Hide search bar" : "Show search bar";
+            btnDetailsView.Text = (bool)btnDetailsView.Tag ? "Show compact mode" : "Show details mode";
 
             if ((settings?.UseDetailsViewForConnectionSelector ?? false) || (bool)btnDetailsView.Tag)
             {

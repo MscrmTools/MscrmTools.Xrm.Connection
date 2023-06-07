@@ -17,12 +17,17 @@ namespace McTools.Xrm.Connection.WinForms
         {
             this.innerAppForm = innerAppForm;
             this.settings = settings;
+
+            if (this.settings == null)
+            {
+                this.settings = Settings.Load();
+            }
         }
 
         public FormHelper(Control innerAppForm)
         {
             this.innerAppForm = innerAppForm;
-            this.settings = null;
+            settings = Settings.Load();
         }
 
         /// <summary>
