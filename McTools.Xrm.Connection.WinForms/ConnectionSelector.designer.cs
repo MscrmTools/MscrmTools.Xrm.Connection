@@ -354,7 +354,6 @@
             // tstSearch
             // 
             this.tstSearch.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.tstSearch.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.tstSearch.ForeColor = System.Drawing.SystemColors.GrayText;
             this.tstSearch.Name = "tstSearch";
             this.tstSearch.Size = new System.Drawing.Size(180, 41);
@@ -584,6 +583,7 @@
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "ConnectionSelector";
             this.ShowIcon = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Connection Manager";
             this.Load += new System.EventHandler(this.ConnectionSelector_Load);
             this.ResizeEnd += new System.EventHandler(this.ConnectionSelector_ResizeEnd);

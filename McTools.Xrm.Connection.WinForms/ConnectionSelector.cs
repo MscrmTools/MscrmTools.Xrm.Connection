@@ -335,8 +335,10 @@ namespace McTools.Xrm.Connection.WinForms
             tsbRemoveConnectionList.Enabled = false;
             int index = 0;
             int selectedIndex = 0;
+            int mostRecentIndex = 0;
             string maxLengthName = "";
             ListViewItem selectedItem = null;
+            ListViewItem mostRecentItem = null;
             if (mostRecentFile != null)
             {
                 lvConnectionFiles.SelectedIndexChanged -= lvConnectionFiles_SelectedIndexChanged;
@@ -346,6 +348,7 @@ namespace McTools.Xrm.Connection.WinForms
                     var connections = CrmConnections.LoadFromFile(file.Path);
                     connections.Connections.Sort();
                     file.Connections = connections;
+                    file.ApplyLinkWithConnectionDetails();
 
                     if (maxLengthName.Length < file.Name?.Length)
                     {
@@ -360,9 +363,20 @@ namespace McTools.Xrm.Connection.WinForms
 
                     if (file.Name == mostRecentFile.Name)
                     {
+                        mostRecentItem = item;
+                        mostRecentIndex = index;
+                    }
+
+                    if (sourceFile != null && sourceFile.Equals(file))
+                    {
+                        if (selectedItem != null)
+                        {
+                            selectedItem.Selected = false;
+                        }
                         selectedItem = item;
-                        item.Selected = true;
                         selectedIndex = index;
+
+                        sourceFile = null;
                     }
                     else if (!Uri.IsWellFormedUriString(file.Path, UriKind.Absolute))
                     {
@@ -377,25 +391,19 @@ namespace McTools.Xrm.Connection.WinForms
 
                     lvConnectionFiles.Items.Add(item);
 
-                    if (sourceFile != null && sourceFile.Equals(file))
-                    {
-                        if (selectedItem != null)
-                        {
-                            selectedItem.Selected = false;
-                        }
-                        selectedItem = item;
-
-                        item.Selected = true;
-                        sourceFile = null;
-                    }
-
                     index++;
                 }
 
                 lvConnectionFiles.SelectedIndexChanged += lvConnectionFiles_SelectedIndexChanged;
 
-                lvConnectionFiles.EnsureVisible(selectedIndex);
+                if (selectedItem == null)
+                {
+                    selectedItem = mostRecentItem;
+                    selectedIndex = mostRecentIndex;
+                }
+                selectedItem.Selected = true;
                 selectedItem?.EnsureVisible();
+                lvConnectionFiles.EnsureVisible(selectedIndex);
             }
 
             tsbMoveToExistingFile.Enabled = lvConnectionFiles.Items.Count > 0;
@@ -495,11 +503,14 @@ namespace McTools.Xrm.Connection.WinForms
         {
             if (!(bool)btnDetailsView.Tag)
             {
+                var width = lvConnections.Columns[0].Width - 80;
+                if (width > lvConnections.Width) width = lvConnections.Width - 40;
+
                 e.CancelEdit = true;
                 var item = lvConnections.Items[e.Item];
                 txtSimpleRename.Visible = true;
-                txtSimpleRename.Location = new Point(item.Position.X + 96, item.Position.Y + 6);
-                txtSimpleRename.Width = lvConnections.Columns[0].Width - 110;
+                txtSimpleRename.Location = new Point(item.Position.X + 70, item.Position.Y + 6);
+                txtSimpleRename.Width = width;
                 txtSimpleRename.Text = item.Text;
                 txtSimpleRename.SelectAll();
                 txtSimpleRename.Focus();
@@ -582,7 +593,15 @@ namespace McTools.Xrm.Connection.WinForms
                 var detail = (ConnectionDetail)item.Tag;
                 item.Selected = false;
 
-                var newDetail = ConnectionManager.Instance.ConnectionsList.CloneConnection(detail);
+                var parentFile = detail.ParentConnectionFile ?? (lvConnectionFiles.SelectedItems.Count > 0 ? (ConnectionFile)lvConnectionFiles.SelectedItems[0].Tag : null);
+                if (parentFile == null)
+                {
+                    MessageBox.Show(this, "Unable to find parent folder", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                var newDetail = parentFile.Connections.CloneConnection(detail);
+                parentFile.Save();
 
                 var newItem = new ListViewItem(newDetail.ConnectionName);
                 newItem.SubItems.Add(newDetail.ServerName);
@@ -629,7 +648,7 @@ namespace McTools.Xrm.Connection.WinForms
 
         private void tsbNewConnection_Click(object sender, EventArgs e)
         {
-            using (var cForm = new ConnectionWizard2
+            using (var cForm = new ConnectionWizard2(null, lvConnectionFiles.SelectedItems.Cast<ListViewItem>().FirstOrDefault()?.Tag as ConnectionFile)
             {
                 StartPosition = FormStartPosition.CenterParent
             })
@@ -803,13 +822,7 @@ namespace McTools.Xrm.Connection.WinForms
                         item.Tag = cd;
                         lvConnections.Items.Remove(item);
                         lvConnections.Items.Add(item);
-                        lvConnections.Refresh();//RedrawItems(0, lvConnections.Items.Count - 1, false);
-
-                        var updatedConnectionDetail = ConnectionManager.Instance.ConnectionsList.Connections.FirstOrDefault(
-                            c => c.ConnectionId == cd.ConnectionId);
-
-                        ConnectionManager.Instance.ConnectionsList.Connections.Remove(updatedConnectionDetail);
-                        ConnectionManager.Instance.ConnectionsList.Connections.Add(cd);
+                        lvConnections.Refresh();
 
                         ConnectionManager.Instance.SaveConnectionsFile();
                     }
@@ -839,12 +852,6 @@ namespace McTools.Xrm.Connection.WinForms
                         item.Group = GetGroup(cForm.CrmConnectionDetail);
 
                         lvConnections.Refresh();
-
-                        var updatedConnectionDetail = ConnectionManager.Instance.ConnectionsList.Connections.FirstOrDefault(
-                                c => c.ConnectionId == cForm.CrmConnectionDetail.ConnectionId);
-
-                        ConnectionManager.Instance.ConnectionsList.Connections.Remove(updatedConnectionDetail);
-                        ConnectionManager.Instance.ConnectionsList.Connections.Add(cForm.CrmConnectionDetail);
 
                         ConnectionManager.Instance.SaveConnectionsFile();
                     }
@@ -1096,6 +1103,11 @@ namespace McTools.Xrm.Connection.WinForms
 
             var item = (ConnectionFile)lvConnectionFiles.SelectedItems[0].Tag;
 
+            if (ConnectionManager.ConfigurationFile == item.Path)
+            {
+                ConnectionManager.ConfigurationFile = ConnectionsList.Instance.Files.OrderByDescending(f => f.LastUsed).First().Path;
+            }
+
             ConnectionsList.Instance.Files.Remove(item);
             ConnectionsList.Instance.Save();
             lvConnectionFiles.Items.Remove(lvConnectionFiles.SelectedItems[0]);
@@ -1167,6 +1179,10 @@ namespace McTools.Xrm.Connection.WinForms
         private void btnDetailsView_Click(object sender, EventArgs e)
         {
             btnDetailsView.Tag = !(bool)btnDetailsView.Tag;
+            if (Settings != null)
+            {
+                Settings.UseDetailsViewForConnectionManager = (bool)btnDetailsView.Tag;
+            }
             DisplayListViewByType();
         }
 
@@ -1181,6 +1197,7 @@ namespace McTools.Xrm.Connection.WinForms
 
             if ((bool)btnDetailsView.Tag)
             {
+                lvConnections.HeaderStyle = ColumnHeaderStyle.Clickable;
                 lvConnections.SmallImageList = detailImageList;
 
                 lvConnections.Columns.Clear();
@@ -1207,6 +1224,7 @@ namespace McTools.Xrm.Connection.WinForms
             }
             else
             {
+                lvConnections.HeaderStyle = ColumnHeaderStyle.None;
                 lvConnections.SmallImageList = SimpleImageList;
 
                 for (int i = lvConnections.Columns.Count - 1; i >= 1; i--)
