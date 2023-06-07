@@ -212,9 +212,7 @@ namespace McTools.Xrm.Connection.WinForms
 
                     if (cDetail.UseOnline)
                     {
-                        item.Image =
-                            RessourceManager.GetImage(
-                                "McTools.Xrm.Connection.WinForms.Resources.CRMOnlineLive_16.png");
+                        item.Image = Properties.Resources.Dataverse_32x32;
                     }
                     else if (cDetail.UseIfd)
                     {
