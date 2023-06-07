@@ -17,18 +17,20 @@ namespace McTools.Xrm.Connection.WinForms
     {
         private readonly bool isNew;
         private readonly List<Type> navigationHistory = new List<Type>();
+        private readonly ConnectionFile parentFile;
         private IConnectionWizardControl ctrl;
         private string lastError;
         private ConnectionDetail originalDetail;
         private ConnectionType type;
 
-        public ConnectionWizard2(ConnectionDetail detail = null)
+        public ConnectionWizard2(ConnectionDetail detail = null, ConnectionFile parentFile = null)
         {
             InitializeComponent();
 
             isNew = detail == null;
             originalDetail = (ConnectionDetail)detail?.Clone();
             CrmConnectionDetail = detail ?? new ConnectionDetail(true);
+            this.parentFile = parentFile;
 
             Text = originalDetail == null ? "New connection" : "Update connection";
 
@@ -37,6 +39,8 @@ namespace McTools.Xrm.Connection.WinForms
         }
 
         public ConnectionDetail CrmConnectionDetail { get; private set; }
+
+        public bool HasCreatedNewFolder { get; private set; }
 
         public override sealed string Text
         {
@@ -278,6 +282,15 @@ Note that this is required to validate this wizard",
             else if (ctrl is ConnectionSucceededControl cokc)
             {
                 CrmConnectionDetail.ConnectionName = cokc.ConnectionName;
+                CrmConnectionDetail.ParentConnectionFile = cokc.ParentFolder;
+
+                HasCreatedNewFolder = cokc.HasCreatedNewFolder;
+
+                if (isNew)
+                {
+                    cokc.ParentFolder.Connections.Connections.Add(CrmConnectionDetail);
+                }
+                cokc.ParentFolder.Save();
 
                 DialogResult = DialogResult.OK;
                 Close();
@@ -678,7 +691,7 @@ Note that this is required to validate this wizard",
                 pnlFooter.Visible = true;
                 lblHeader.Text = @"Connection validated!";
 
-                ctrl = new ConnectionSucceededControl
+                ctrl = new ConnectionSucceededControl(parentFile)
                 {
                     ConnectionName = CrmConnectionDetail.ConnectionName,
                     ConnectionDetail = CrmConnectionDetail
