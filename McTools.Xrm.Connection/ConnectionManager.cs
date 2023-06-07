@@ -150,6 +150,7 @@ namespace McTools.Xrm.Connection
             if (e.ChangeType == WatcherChangeTypes.Changed)
             {
                 ConnectionsList = LoadConnectionsList();
+                Instance.ConnectionListUpdated?.BeginInvoke(null, new EventArgs(), null, null);
             }
         }
 
@@ -217,7 +218,6 @@ namespace McTools.Xrm.Connection
                     existingFile.ApplyLinkWithConnectionDetails();
 
                     Instance.SetupFileSystemWatcher();
-                    Instance.ConnectionListUpdated?.Invoke(null, new EventArgs());
                 }
             }
         }
@@ -333,6 +333,8 @@ namespace McTools.Xrm.Connection
                 if (FileExists(confFile))
                 {
                     file = ConnectionsFilesList.Files.FirstOrDefault(f => f.Path == confFile);
+                    if (file == null) return null;
+
                     if (file.Connections == null)
                     {
                         file.Connections = CrmConnections.LoadFromFile(ConfigurationFile);
