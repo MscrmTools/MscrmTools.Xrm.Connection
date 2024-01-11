@@ -545,7 +545,7 @@ namespace McTools.Xrm.Connection
             clientSecret = null;
         }
 
-        public CrmServiceClient GetCrmServiceClient(bool forceNewService = false)
+        public virtual CrmServiceClient GetCrmServiceClient(bool forceNewService = false)
         {
             if (forceNewService == false && crmSvc != null)
             {
@@ -665,7 +665,7 @@ namespace McTools.Xrm.Connection
             return crmSvc;
         }
 
-        public void SetClientSecret(string secret, bool isEncrypted = false)
+        public virtual void SetClientSecret(string secret, bool isEncrypted = false)
         {
             if (!string.IsNullOrEmpty(secret))
             {
@@ -685,7 +685,7 @@ namespace McTools.Xrm.Connection
             }
         }
 
-        public void SetConnectionString(string connectionString)
+        public virtual void SetConnectionString(string connectionString)
         {
             var csb = new DbConnectionStringBuilder { ConnectionString = connectionString };
 
@@ -716,7 +716,7 @@ namespace McTools.Xrm.Connection
             ConnectionString = csb.ToString();
         }
 
-        public void SetPassword(string password, bool isEncrypted = false)
+        public virtual void SetPassword(string password, bool isEncrypted = false)
         {
             if (!string.IsNullOrEmpty(password))
             {
@@ -755,7 +755,7 @@ namespace McTools.Xrm.Connection
             return ConnectionName;
         }
 
-        public bool TryRequestClientSecret(Control parent, string secretUsageDescription, out string secret, out SensitiveDataNotFoundReason notFoundReason)
+        public virtual bool TryRequestClientSecret(Control parent, string secretUsageDescription, out string secret, out SensitiveDataNotFoundReason notFoundReason)
         {
             using (var prd = new PasswordRequestDialog(secretUsageDescription, this, "client secret"))
             {
@@ -785,7 +785,7 @@ namespace McTools.Xrm.Connection
             }
         }
 
-        public bool TryRequestPassword(Control parent, string passwordUsageDescription, out string password, out SensitiveDataNotFoundReason notFoundReason)
+        public virtual bool TryRequestPassword(Control parent, string passwordUsageDescription, out string password, out SensitiveDataNotFoundReason notFoundReason)
         {
             using (var prd = new PasswordRequestDialog(passwordUsageDescription, this, "password"))
             {
@@ -815,7 +815,7 @@ namespace McTools.Xrm.Connection
             }
         }
 
-        public void UpdateAfterEdit(ConnectionDetail editedConnection)
+        public virtual void UpdateAfterEdit(ConnectionDetail editedConnection)
         {
             ConnectionName = editedConnection.ConnectionName;
             ConnectionString = editedConnection.ConnectionString;
@@ -1086,7 +1086,7 @@ namespace McTools.Xrm.Connection
 
         #endregion Méthodes
 
-        public object Clone()
+        public virtual object Clone()
         {
             var cd = new ConnectionDetail
             {
