@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Threading;
 
 namespace McTools.Xrm.Connection
@@ -68,6 +69,27 @@ namespace McTools.Xrm.Connection
                 return crmConnections;
             }
 
+            try
+            {
+                if (Path.GetExtension(filePath).Equals(".dll", StringComparison.OrdinalIgnoreCase) ||
+                    Path.GetExtension(filePath).Equals(".exe", StringComparison.OrdinalIgnoreCase))
+                {
+                    // File is an assembly to expose a dynamic connection list. Load the assembly and find the CrmConnectionProvider class
+                    var assembly = Assembly.LoadFrom(filePath);
+                    var type = assembly.GetTypes().FirstOrDefault(t => t.IsClass && !t.IsAbstract && typeof(ICrmConnectionsProvider).IsAssignableFrom(t) && t.GetConstructor(Array.Empty<Type>()) != null);
+
+                    if (type == null)
+                        throw new ApplicationException($"Assembly {filePath} does not contain an ICrmConnectionsProvider implementation");
+
+                    // Create and invoke the provider
+                    var provider = (ICrmConnectionsProvider) Activator.CreateInstance(type);
+                    return provider.LoadCrmConnections();
+                }
+            }
+            catch (ArgumentException)
+            {
+            }
+
             using (var fStream = OpenStream(filePath))
             {
                 if (!fStream.CanSeek || fStream.Length > 0)
@@ -104,9 +126,9 @@ namespace McTools.Xrm.Connection
             return newDetail;
         }
 
-        public void SerializeToFile(string filePath)
+        public virtual void SerializeToFile(string filePath)
         {
-            if (Uri.IsWellFormedUriString(filePath, UriKind.Absolute))
+            if (IsReadOnly)
                 return;
 
             var passwords = new Dictionary<Guid, string>();
