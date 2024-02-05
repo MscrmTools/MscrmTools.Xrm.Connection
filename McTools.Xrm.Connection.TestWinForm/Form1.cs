@@ -2,6 +2,7 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -152,6 +153,29 @@ namespace McTools.Xrm.Connection.TestWinForm
         {
             int i = 0;
 
+            lblEnvName.ForeColor = currentDetail.EnvironmentHighlightingInfo?.TextColor ?? DefaultForeColor;
+            lblEnvName.Text = ($"{currentDetail.EnvironmentHighlightingInfo?.Text ?? ""} - {currentDetail.ConnectionName}");
+
+            if (currentDetail.ParentConnectionFile != null)
+            {
+                try
+                {
+                    byte[] bytes = Convert.FromBase64String(currentDetail.ParentConnectionFile.Base64Image);
+
+                    using (System.IO.MemoryStream ms = new System.IO.MemoryStream(bytes))
+                    {
+                        pbEnvLogo.Image = Image.FromStream(ms);
+                    }
+                }
+                catch { }
+            }
+            else
+            {
+                pbEnvLogo.Visible = false;
+            }
+            pnlHighlight.BackColor = currentDetail.EnvironmentHighlightingInfo?.Color ?? DefaultBackColor;
+            pnlHighlight.Visible = true;
+
             do
             {
                 //WhoAmIRequest request = new WhoAmIRequest();
@@ -227,7 +251,7 @@ namespace McTools.Xrm.Connection.TestWinForm
 
         private void tsbManageConnections_Click(object sender, EventArgs e)
         {
-            formHelper.DisplayConnectionsList(this);
+            formHelper.DisplayConnectionsList(this, currentDetail);
         }
 
         private void tsbMergeConnectionsFiles_Click(object sender, EventArgs e)

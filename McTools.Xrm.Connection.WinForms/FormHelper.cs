@@ -220,6 +220,18 @@ namespace McTools.Xrm.Connection.WinForms
             }
         }
 
+        public void DisplayConnectionsList(Form form, ConnectionDetail currentConnection = null)
+        {
+            using (var cs = new ConnectionSelector(false, currentConnection?.ParentConnectionFile)
+            {
+                StartPosition = FormStartPosition.CenterParent,
+                Settings = settings
+            })
+            {
+                cs.ShowDialog(form);
+            }
+        }
+
         public void DisplayConnectionsList(Form form)
         {
             using (var cs = new ConnectionSelector(false)
