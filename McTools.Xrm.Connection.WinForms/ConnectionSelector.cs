@@ -331,7 +331,7 @@ namespace McTools.Xrm.Connection.WinForms
 
         private void ConnectionSelector_Load(object sender, EventArgs e)
         {
-            var mostRecentFile = ConnectionsList.Instance.Files.OrderByDescending(f => f.LastUsed).FirstOrDefault();
+            var mostRecentFile = sourceFile ?? ConnectionsList.Instance.Files.OrderByDescending(f => f.LastUsed).FirstOrDefault();
             tsbRemoveConnectionList.Enabled = false;
             int index = 0;
             int selectedIndex = 0;
@@ -830,7 +830,7 @@ namespace McTools.Xrm.Connection.WinForms
                     return;
                 }
 
-                using (var cForm = new ConnectionWizard2(cd)
+                using (var cForm = new ConnectionWizard2(cd, lvConnectionFiles.SelectedItems.Cast<ListViewItem>().FirstOrDefault()?.Tag as ConnectionFile)
                 {
                     StartPosition = FormStartPosition.CenterParent
                 })
