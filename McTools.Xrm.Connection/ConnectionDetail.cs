@@ -587,7 +587,7 @@ namespace McTools.Xrm.Connection
             }
             else if (NewAuthType == AuthenticationType.OAuth && UseMfa)
             {
-                var path = Path.Combine(Path.GetTempPath(), ConnectionId.Value.ToString("B"));
+                var path = Path.Combine(Path.GetTempPath(), ConnectionId.Value.ToString("B"), "oauth-cache.txt");
 
                 var cs = HandleConnectionString($"AuthType=OAuth;Username={UserName};Url={OriginalUrl};AppId={AzureAdAppId};RedirectUri={ReplyUrl};TokenCacheStorePath={path};LoginPrompt=Auto");
                 crmSvc = new CrmServiceClient(cs);
