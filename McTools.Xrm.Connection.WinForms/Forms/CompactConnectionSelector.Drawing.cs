@@ -56,14 +56,13 @@ namespace McTools.Xrm.Connection.WinForms.Forms
             {
                 brush = new SolidBrush(Color.White);
             }
-            else
-            if ((e.State & DrawItemState.Focus) == DrawItemState.Focus || (e.State & DrawItemState.HotLight) == DrawItemState.HotLight || (e.State & DrawItemState.Selected) == DrawItemState.Selected)
+            else if ((e.State & DrawItemState.Focus) == DrawItemState.Focus || (e.State & DrawItemState.HotLight) == DrawItemState.HotLight || (e.State & DrawItemState.Selected) == DrawItemState.Selected)
             {
                 brush = new SolidBrush(Color.White);
             }
             else
             {
-                brush = new SolidBrush(Color.Black);
+                brush = new SolidBrush(CustomTheme.Instance.IsActive ? Color.White : Color.Black);
             }
 
             e.Graphics.DrawString(text, cbbFiles.Font, brush, e.Bounds.X + 40, e.Bounds.Y + (e.Bounds.Height - textSize.Height) / 2);

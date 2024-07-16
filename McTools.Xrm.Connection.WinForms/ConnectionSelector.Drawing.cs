@@ -52,7 +52,7 @@ namespace McTools.Xrm.Connection.WinForms
             e.Graphics.DrawImage(img, e.Bounds.X + 10, e.Bounds.Y + 10, 48, 48);
             using (var font = new Font(e.Item.ListView.Font.FontFamily, 16))
             {
-                using (var titleBrush = new SolidBrush(e.Item.Selected ? Color.White : Color.Black))
+                using (var titleBrush = new SolidBrush(e.Item.Selected ? Color.White : (CustomTheme.Instance.IsActive ? Color.White : Color.Black)))
                 {
                     e.Graphics.DrawString(file.Name, font, titleBrush, e.Bounds.X + 60, e.Bounds.Y + 10);
                 }

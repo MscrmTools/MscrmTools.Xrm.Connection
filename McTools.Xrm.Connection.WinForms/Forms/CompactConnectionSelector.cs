@@ -43,6 +43,8 @@ namespace McTools.Xrm.Connection.WinForms.Forms
             noConnectionControl1.ActionLabel = ll;
 
             SetDisplay();
+
+            CustomTheme.Instance.ApplyTheme(this);
         }
 
         public List<ConnectionDetail> SelectedConnections { get; set; }

@@ -1,4 +1,6 @@
-﻿using System.Drawing;
+﻿using McTools.Xrm.Connection.WinForms.AppCode;
+using System;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
 
@@ -30,13 +32,18 @@ namespace McTools.Xrm.Connection.WinForms
                 {
                     Dialog_OnTemplateSettingsChanged(null, new TemplateChangeEventArgs
                     {
-                        BackColor = detail.EnvironmentColor ?? backColor,
-                        TextColor = detail.EnvironmentTextColor ?? textColor,
-                        Text = detail.EnvironmentText
+                        BackColor = detail.EnvironmentHighlightingInfo.Color ?? backColor,
+                        TextColor = detail.EnvironmentHighlightingInfo.TextColor ?? textColor,
+                        Text = detail.EnvironmentHighlightingInfo.Text
                     });
                 }
             }
+            btnClear.Visible = detail.IsEnvironmentHighlightSet;
+
+            CustomTheme.Instance.ApplyTheme(this);
         }
+
+        public event EventHandler OnHighlightRemoved;
 
         public Color BackColorSelected
         {
@@ -97,6 +104,20 @@ namespace McTools.Xrm.Connection.WinForms
             Close();
         }
 
+        private void btnClear_Click(object sender, System.EventArgs e)
+        {
+            detail.EnvironmentHighlightingInfo = null;
+            Dialog_OnTemplateSettingsChanged(null, new TemplateChangeEventArgs
+            {
+                BackColor = detail.EnvironmentHighlightingInfo?.Color ?? backColor,
+                TextColor = detail.EnvironmentHighlightingInfo?.TextColor ?? textColor,
+                Text = detail.EnvironmentHighlightingInfo?.Text
+            });
+
+            OnHighlightRemoved?.Invoke(this, e);
+            Close();
+        }
+
         private void btnOK_Click(object sender, System.EventArgs e)
         {
             if (!rdbUAT.Checked && !rdbProd.Checked && !rdbCustom.Checked)
@@ -150,9 +171,11 @@ namespace McTools.Xrm.Connection.WinForms
 
         private void rdbCustom_MouseClick(object sender, MouseEventArgs e)
         {
-            var dialog = new EnvHighlightSettingsDialog(null, null, "", detail);
-            dialog.OnTemplateSettingsChanged += Dialog_OnTemplateSettingsChanged;
-            dialog.ShowDialog(this);
+            using (var dialog = new EnvHighlightSettingsDialog(detail.EnvironmentHighlightingInfo?.Color, detail.EnvironmentHighlightingInfo?.TextColor, detail.EnvironmentHighlightingInfo?.Text, detail))
+            {
+                dialog.OnTemplateSettingsChanged += Dialog_OnTemplateSettingsChanged;
+                dialog.ShowDialog(this);
+            }
         }
     }
 }

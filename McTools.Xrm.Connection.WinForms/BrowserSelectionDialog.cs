@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using McTools.Xrm.Connection.WinForms.AppCode;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -14,6 +15,8 @@ namespace McTools.Xrm.Connection.WinForms
 
             LoadBrowsers();
             SetControls(browser, profile);
+
+            CustomTheme.Instance.ApplyTheme(this);
         }
 
         public BrowserEnum Browser { get; private set; }

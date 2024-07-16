@@ -62,6 +62,8 @@ namespace McTools.Xrm.Connection.WinForms
 
             actionLabel.LinkClicked += llCreateNewConnection_LinkClicked;
             noConnectionControl1.ActionLabel = actionLabel;
+
+            CustomTheme.Instance.ApplyTheme(this);
         }
 
         #endregion Constructeur

@@ -38,7 +38,7 @@ namespace McTools.Xrm.Connection.WinForms.AppCode
 
             using (var font = new Font(e.Item.ListView.Font.FontFamily, fontSize))
             {
-                e.Graphics.DrawString(cd.ConnectionName, font, new SolidBrush(e.Item.Selected ? Color.White : Color.Black), new Point(e.Bounds.X + 70, e.Bounds.Y));
+                e.Graphics.DrawString(cd.ConnectionName, font, new SolidBrush(e.Item.Selected ? Color.White : CustomTheme.Instance.IsActive ? Color.White : Color.Black), new Point(e.Bounds.X + 70, e.Bounds.Y));
                 yOffset += TextRenderer.MeasureText(cd.ConnectionName, font).Height;
             }
 

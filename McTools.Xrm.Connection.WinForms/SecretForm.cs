@@ -1,4 +1,5 @@
-﻿using System;
+﻿using McTools.Xrm.Connection.WinForms.AppCode;
+using System;
 using System.Windows.Forms;
 
 namespace McTools.Xrm.Connection.WinForms
@@ -33,6 +34,8 @@ namespace McTools.Xrm.Connection.WinForms
             InitializeComponent();
 
             lblConnectionName.Text = detail.ConnectionName;
+
+            CustomTheme.Instance.ApplyTheme(this);
         }
 
         #endregion Constructeur

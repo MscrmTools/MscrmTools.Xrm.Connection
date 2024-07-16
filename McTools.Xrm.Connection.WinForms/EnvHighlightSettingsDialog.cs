@@ -1,4 +1,5 @@
-﻿using Microsoft.Xrm.Sdk;
+﻿using McTools.Xrm.Connection.WinForms.AppCode;
+using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.ComponentModel;
@@ -28,6 +29,8 @@ namespace McTools.Xrm.Connection.WinForms
 
             btnUseOrgTheme.Visible = detail.OrganizationMajorVersion > 7 ||
                                       detail.OrganizationMajorVersion == 7 && detail.OrganizationMinorVersion >= 1;
+
+            CustomTheme.Instance.ApplyTheme(this);
         }
 
         public event EventHandler<TemplateChangeEventArgs> OnTemplateSettingsChanged;

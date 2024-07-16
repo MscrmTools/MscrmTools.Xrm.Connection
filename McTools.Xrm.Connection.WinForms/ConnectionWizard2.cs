@@ -1,4 +1,5 @@
-﻿using McTools.Xrm.Connection.WinForms.CustomControls;
+﻿using McTools.Xrm.Connection.WinForms.AppCode;
+using McTools.Xrm.Connection.WinForms.CustomControls;
 using Microsoft.Xrm.Sdk.Client;
 using Microsoft.Xrm.Sdk.Discovery;
 using Microsoft.Xrm.Tooling.Connector;
@@ -869,6 +870,8 @@ Note that this is required to validate this wizard",
             ((UserControl)ctrl).Dock = DockStyle.Fill;
             pnlMain.Controls.Clear();
             pnlMain.Controls.Add((UserControl)ctrl);
+
+            CustomTheme.Instance.ApplyTheme(this);
         }
 
         private void llIconLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
