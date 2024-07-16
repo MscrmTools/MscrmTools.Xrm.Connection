@@ -209,6 +209,7 @@
     <Compile Include="Forms\PasswordRequestDialog.Designer.cs">
       <DependentUpon>PasswordRequestDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="ICrmConnectionsProvider.cs" />
     <Compile Include="MetadataCache.cs" />
     <Compile Include="MetadataCacheContractResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

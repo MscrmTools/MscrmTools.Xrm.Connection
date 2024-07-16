@@ -731,6 +731,7 @@ namespace McTools.Xrm.Connection.WinForms
                         Text = dialog.TextSelected
                     };
 
+                    connection.UpdateAfterEdit(connection);
                     ConnectionManager.ConfigurationFile = ((ConnectionFile)lvConnectionFiles.SelectedItems[0].Tag).Path;
                     ConnectionManager.Instance.SaveConnectionsFile();
                     lvConnections.Invalidate();
