@@ -975,8 +975,9 @@ namespace McTools.Xrm.Connection.WinForms
                     ncf.Save();
 
                     ConnectionsList.Instance.Files.Add(ncf);
-
-                    lvConnectionFiles.Items.Add(new ListViewItem(ncf.Name) { Tag = ncf });
+                    var item = new ListViewItem(ncf.Name) { Tag = ncf };
+                    lvConnectionFiles.Items.Add(item);
+                    item.Selected = true;
                     tsbRemoveConnectionList.Enabled = true;
                 }
                 else
