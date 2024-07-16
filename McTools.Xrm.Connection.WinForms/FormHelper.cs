@@ -30,6 +30,17 @@ namespace McTools.Xrm.Connection.WinForms
             settings = Settings.Load();
         }
 
+        public bool UseDarkTheme
+        {
+            set
+            {
+                if (value)
+                {
+                    CustomTheme.Instance.SetTheme(new DarkTheme());
+                }
+            }
+        }
+
         /// <summary>
         /// Asks this manager to select a Crm connection to use
         /// </summary>

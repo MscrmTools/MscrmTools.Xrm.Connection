@@ -1,4 +1,5 @@
-﻿using System;
+﻿using McTools.Xrm.Connection.WinForms.AppCode;
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
@@ -38,6 +39,8 @@ namespace McTools.Xrm.Connection.WinForms
                 }
             }
             btnClear.Visible = detail.IsEnvironmentHighlightSet;
+
+            CustomTheme.Instance.ApplyTheme(this);
         }
 
         public event EventHandler OnHighlightRemoved;

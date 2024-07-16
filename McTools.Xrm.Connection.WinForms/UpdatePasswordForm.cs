@@ -1,4 +1,5 @@
-﻿using System;
+﻿using McTools.Xrm.Connection.WinForms.AppCode;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -20,6 +21,8 @@ namespace McTools.Xrm.Connection.WinForms
                 connections.Count() > 1 ? "s" : "");
 
             txtNewPassword.Focus();
+
+            CustomTheme.Instance.ApplyTheme(this);
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
