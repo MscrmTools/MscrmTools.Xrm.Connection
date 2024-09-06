@@ -458,6 +458,7 @@ namespace McTools.Xrm.Connection
                 if (service.IsReady)
                 {
                     detail.LastUsedOn = DateTime.Now;
+                    detail.ParentConnectionFile.LastUsed = DateTime.Now;
                     SaveConnectionsFile();
                     return service;
                 }
@@ -530,6 +531,7 @@ namespace McTools.Xrm.Connection
                     UpdateMetadataCache(detail);
                 }
                 detail.LastUsedOn = DateTime.Now;
+                detail.ParentConnectionFile.LastUsed = DateTime.Now;
                 detail.ParentConnectionFile?.Save();
 
                 SaveConnectionsFile();
