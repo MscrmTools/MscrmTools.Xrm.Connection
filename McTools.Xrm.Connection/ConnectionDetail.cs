@@ -589,7 +589,7 @@ namespace McTools.Xrm.Connection
             {
                 var path = Path.Combine(Path.GetTempPath(), ConnectionId.Value.ToString("B"), "oauth-cache.txt");
 
-                var cs = HandleConnectionString($"AuthType=OAuth;Username={UserName};Url={OriginalUrl};AppId={AzureAdAppId};RedirectUri={ReplyUrl};TokenCacheStorePath={path};LoginPrompt=Auto");
+                var cs = HandleConnectionString($"AuthType=OAuth;Username={UserName};Url={OriginalUrl};AppId={AzureAdAppId};RedirectUri={ReplyUrl};TokenCacheStorePath={""};LoginPrompt=Auto");
                 crmSvc = new CrmServiceClient(cs);
             }
             else if (!string.IsNullOrEmpty(clientSecret))
@@ -900,7 +900,7 @@ namespace McTools.Xrm.Connection
                      ConnectionManager.CryptoKeySize);
 
                 var path = Path.Combine(Path.GetTempPath(), ConnectionId.Value.ToString("B"), "oauth-cache.txt");
-                crmSvc = new CrmServiceClient(new Uri($"https://{ServerName}:{ServerPort}"), AzureAdAppId.ToString(), CrmServiceClient.MakeSecureString(secret), true, path);
+                crmSvc = new CrmServiceClient(new Uri($"https://{ServerName}:{ServerPort}"), AzureAdAppId.ToString(), CrmServiceClient.MakeSecureString(secret), true, "");
             }
         }
 
@@ -932,7 +932,7 @@ namespace McTools.Xrm.Connection
                 null,
                 AzureAdAppId != Guid.Empty ? AzureAdAppId.ToString() : "51f81489-12ee-4a9e-aaae-a2591f45987d",
                 new Uri(string.IsNullOrEmpty(ReplyUrl) ? "app://58145B91-0C36-4500-8554-080854F2AC97" : ReplyUrl),
-                path,
+                "",
                 null);
         }
 
@@ -1205,7 +1205,7 @@ namespace McTools.Xrm.Connection
                 csb["ClientId"] = AzureAdAppId.ToString("B");
                 csb["LoginPrompt"] = "Auto";
                 csb["RedirectUri"] = ReplyUrl;
-                csb["TokenCacheStorePath"] = Path.Combine(Path.GetTempPath(), ConnectionId.Value.ToString("B"), "oauth-cache.txt");
+                csb["TokenCacheStorePath"] = "";// Path.Combine(Path.GetTempPath(), ConnectionId.Value.ToString("B"), "oauth-cache.txt");
 
                 return csb.ToString();
             }
