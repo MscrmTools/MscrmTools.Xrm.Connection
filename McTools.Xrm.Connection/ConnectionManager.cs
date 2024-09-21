@@ -193,7 +193,7 @@ namespace McTools.Xrm.Connection
                     if (lastUsedFile != null)
                     {
                         lastUsedFile.ApplyLinkWithConnectionDetails();
-
+                        configfile = lastUsedFile.Path;
                         return lastUsedFile.Path;
                     }
                 }
@@ -458,7 +458,10 @@ namespace McTools.Xrm.Connection
                 if (service.IsReady)
                 {
                     detail.LastUsedOn = DateTime.Now;
-                    detail.ParentConnectionFile.LastUsed = DateTime.Now;
+                    if (detail.ParentConnectionFile != null)
+                    {
+                        detail.ParentConnectionFile.LastUsed = DateTime.Now;
+                    }
                     SaveConnectionsFile();
                     return service;
                 }
@@ -531,8 +534,11 @@ namespace McTools.Xrm.Connection
                     UpdateMetadataCache(detail);
                 }
                 detail.LastUsedOn = DateTime.Now;
-                detail.ParentConnectionFile.LastUsed = DateTime.Now;
-                detail.ParentConnectionFile?.Save();
+                if (detail.ParentConnectionFile != null)
+                {
+                    detail.ParentConnectionFile.LastUsed = DateTime.Now;
+                    detail.ParentConnectionFile.Save();
+                }
 
                 SaveConnectionsFile();
 
