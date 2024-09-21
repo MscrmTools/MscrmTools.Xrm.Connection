@@ -615,11 +615,6 @@ namespace McTools.Xrm.Connection
             else if (UseOnline)
             {
                 ConnectOnline();
-
-                //var path = Path.Combine(Path.GetTempPath(), ConnectionId.Value.ToString("B"));
-
-                //var cs = HandleConnectionString($"AuthType=OAuth;Username={UserName};Password={userPassword};Url={OriginalUrl};AppId={(AzureAdAppId != Guid.Empty ? AzureAdAppId : new Guid("51f81489-12ee-4a9e-aaae-a2591f45987d"))};RedirectUri={(string.IsNullOrEmpty(ReplyUrl) ? "app://58145B91-0C36-4500-8554-080854F2AC97" : ReplyUrl)};TokenCacheStorePath={path};LoginPrompt=Auto");
-                //crmSvc = new CrmServiceClient(cs);
             }
             else if (UseIfd)
             {
@@ -912,7 +907,7 @@ namespace McTools.Xrm.Connection
                      ConnectionManager.CryptoInitVector,
                      ConnectionManager.CryptoKeySize);
 
-                var path = Path.Combine(Path.GetTempPath(), ConnectionId.Value.ToString("B"), "oauth-cache.txt");
+                var path = Path.Combine(Path.GetTempPath(), ConnectionId.Value.ToString("B"));
                 crmSvc = new CrmServiceClient(new Uri($"https://{ServerName}:{ServerPort}"), AzureAdAppId.ToString(), CrmServiceClient.MakeSecureString(secret), true, path);
             }
         }
@@ -947,7 +942,7 @@ namespace McTools.Xrm.Connection
 
             Utilities.GetOrgnameAndOnlineRegionFromServiceUri(new Uri(OriginalUrl), out var region, out var orgName, out _);
 
-            var path = Path.Combine(Path.GetTempPath(), ConnectionId.Value.ToString("B"), "oauth-cache.txt");
+            var path = Path.Combine(Path.GetTempPath(), ConnectionId.Value.ToString("B"));
 
             crmSvc = new CrmServiceClient(UserName, CrmServiceClient.MakeSecureString(password),
                 region,
