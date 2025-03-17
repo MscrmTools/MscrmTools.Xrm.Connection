@@ -10,7 +10,8 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
         ConnectionString,
         Certificate,
         ClientSecret,
-        Mfa
+        Mfa,
+        AzureKeyVault
     }
 
     public partial class StartPageControl : UserControl, IConnectionWizardControl
@@ -52,6 +53,10 @@ Connections created with this wizard cannot be transported across multiple compu
             else if (sender == btnMfa)
             {
                 Type = ConnectionType.Mfa;
+            }
+            else if (sender == btnAzureKeyVault)
+            {
+                Type = ConnectionType.AzureKeyVault;
             }
             else
             {

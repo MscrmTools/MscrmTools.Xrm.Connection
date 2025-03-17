@@ -1,6 +1,9 @@
-﻿using McTools.Xrm.Connection.AppCode;
+﻿using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
+using McTools.Xrm.Connection.AppCode;
 using McTools.Xrm.Connection.Forms;
 using McTools.Xrm.Connection.Utils;
+using Microsoft.Rest;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
 using Microsoft.Xrm.Sdk.Discovery;
@@ -21,6 +24,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Security.Policy;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -144,6 +148,11 @@ namespace McTools.Xrm.Connection
 
         public AuthenticationProviderType AuthType { get; set; }
         public Guid AzureAdAppId { get; set; }
+        
+        /// <summary>
+        /// The name of the Azure Key Vault that stores the Secret
+        /// </summary>
+        public string AzureKeyVaultName { get; set; }
         public BrowserEnum BrowserName { get; set; } = BrowserEnum.None;
 
         public string BrowserProfile { get; set; }
@@ -440,6 +449,10 @@ namespace McTools.Xrm.Connection
                 var cs = HandleConnectionString(ConnectionString);
                 crmSvc = new CrmServiceClient(cs);
             }
+            else if (!String.IsNullOrEmpty(AzureKeyVaultName))
+            {
+                ConnectAzureKeyVault();
+            }
             else if (NewAuthType == AuthenticationType.ClientSecret)
             {
                 var cs = HandleConnectionString($"AuthType=ClientSecret;url={OriginalUrl};ClientId={AzureAdAppId};ClientSecret={clientSecret}");
@@ -672,6 +685,7 @@ namespace McTools.Xrm.Connection
 
         public void UpdateAfterEdit(ConnectionDetail editedConnection)
         {
+            AzureKeyVaultName = editedConnection.AzureKeyVaultName;
             ConnectionName = editedConnection.ConnectionName;
             ConnectionString = editedConnection.ConnectionString;
             OrganizationServiceUrl = editedConnection.OrganizationServiceUrl;
@@ -758,6 +772,20 @@ namespace McTools.Xrm.Connection
                 crmSvc = new CrmServiceClient(new Uri($"https://{ServerName}:{ServerPort}"), AzureAdAppId.ToString(), CrmServiceClient.MakeSecureString(secret), true, path);
             }
         }
+
+        private void ConnectAzureKeyVault()
+        {
+            var kvUri = $"https://{AzureKeyVaultName}.vault.azure.net";
+
+            var client = new SecretClient(new Uri(kvUri), new DefaultAzureCredential());
+            var secret = client.GetSecret(this.AzureAdAppId.ToString());
+
+            var _connectionString = $"AuthType=ClientSecret; url={OriginalUrl}; ClientId={AzureAdAppId}; ClientSecret={secret.Value.Value}; RequireNewInstace=true";
+
+            crmSvc = new CrmServiceClient(_connectionString);
+        }
+
+
 
         private void ConnectOnline()
         {
@@ -946,6 +974,7 @@ namespace McTools.Xrm.Connection
             var cd = new ConnectionDetail
             {
                 AuthType = AuthType,
+                AzureKeyVaultName = AzureKeyVaultName,
                 ConnectionId = Guid.NewGuid(),
                 ConnectionName = ConnectionName,
                 ConnectionString = ConnectionString,

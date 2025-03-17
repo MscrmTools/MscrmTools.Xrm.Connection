@@ -60,7 +60,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>McTools.Xrm.Connection.WinForms.pfx</AssemblyOriginatorKeyFile>
@@ -128,6 +128,12 @@
     </Compile>
     <Compile Include="CRMLoginForm1.xaml.cs">
       <DependentUpon>CRMLoginForm1.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\ConnectionAzureKeyVaultControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControls\ConnectionAzureKeyVaultControl.Designer.cs">
+      <DependentUpon>ConnectionAzureKeyVaultControl.cs</DependentUpon>
     </Compile>
     <Compile Include="CustomControls\ConnectionCredentialsControl.cs">
       <SubType>UserControl</SubType>
@@ -299,6 +305,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ConnectionWizard2.resx">
       <DependentUpon>ConnectionWizard2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControls\ConnectionAzureKeyVaultControl.resx">
+      <DependentUpon>ConnectionAzureKeyVaultControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CustomControls\ConnectionCredentialsControl.resx">
       <DependentUpon>ConnectionCredentialsControl.cs</DependentUpon>
