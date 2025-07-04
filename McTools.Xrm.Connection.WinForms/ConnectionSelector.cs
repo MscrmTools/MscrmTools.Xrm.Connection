@@ -1,5 +1,4 @@
 ﻿using McTools.Xrm.Connection.WinForms.AppCode;
-using Microsoft.Xrm.Sdk.Discovery;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -803,34 +802,34 @@ namespace McTools.Xrm.Connection.WinForms
 
                 var cd = (ConnectionDetail)item.Tag;
 
-                if (cd.IsFromSdkLoginCtrl)
-                {
-                    var ctrl = new CRMLoginForm1(cd.ConnectionId.Value, true);
-                    ctrl.ShowDialog();
+                //if (cd.IsFromSdkLoginCtrl)
+                //{
+                //    var ctrl = new CRMLoginForm1(cd.ConnectionId.Value, true);
+                //    ctrl.ShowDialog();s
 
-                    if (ctrl.CrmConnectionMgr.CrmSvc?.IsReady ?? false)
-                    {
-                        cd.Organization = ctrl.CrmConnectionMgr.ConnectedOrgUniqueName;
-                        cd.OrganizationFriendlyName = ctrl.CrmConnectionMgr.ConnectedOrgFriendlyName;
-                        cd.OrganizationDataServiceUrl =
-                            ctrl.CrmConnectionMgr.ConnectedOrgPublishedEndpoints[EndpointType.OrganizationDataService];
-                        cd.OrganizationServiceUrl =
-                            ctrl.CrmConnectionMgr.ConnectedOrgPublishedEndpoints[EndpointType.OrganizationService];
-                        cd.WebApplicationUrl =
-                            ctrl.CrmConnectionMgr.ConnectedOrgPublishedEndpoints[EndpointType.WebApplication];
-                        cd.ServerName = new Uri(cd.WebApplicationUrl).Host;
-                        cd.OrganizationVersion = ctrl.CrmConnectionMgr.CrmSvc.ConnectedOrgVersion.ToString();
+                //    if (ctrl.CrmConnectionMgr.CrmSvc?.IsReady ?? false)
+                //    {
+                //        cd.Organization = ctrl.CrmConnectionMgr.ConnectedOrgUniqueName;
+                //        cd.OrganizationFriendlyName = ctrl.CrmConnectionMgr.ConnectedOrgFriendlyName;
+                //        cd.OrganizationDataServiceUrl =
+                //            ctrl.CrmConnectionMgr.ConnectedOrgPublishedEndpoints[EndpointType.OrganizationDataService];
+                //        cd.OrganizationServiceUrl =
+                //            ctrl.CrmConnectionMgr.ConnectedOrgPublishedEndpoints[EndpointType.OrganizationService];
+                //        cd.WebApplicationUrl =
+                //            ctrl.CrmConnectionMgr.ConnectedOrgPublishedEndpoints[EndpointType.WebApplication];
+                //        cd.ServerName = new Uri(cd.WebApplicationUrl).Host;
+                //        cd.OrganizationVersion = ctrl.CrmConnectionMgr.CrmSvc.ConnectedOrgVersion.ToString();
 
-                        item.Tag = cd;
-                        lvConnections.Items.Remove(item);
-                        lvConnections.Items.Add(item);
-                        lvConnections.Refresh();
+                //        item.Tag = cd;
+                //        lvConnections.Items.Remove(item);
+                //        lvConnections.Items.Add(item);
+                //        lvConnections.Refresh();
 
-                        ConnectionManager.Instance.SaveConnectionsFile();
-                    }
+                //        ConnectionManager.Instance.SaveConnectionsFile();
+                //    }
 
-                    return;
-                }
+                //    return;
+                //}
 
                 using (var cForm = new ConnectionWizard2(cd, lvConnectionFiles.SelectedItems.Cast<ListViewItem>().FirstOrDefault()?.Tag as ConnectionFile)
                 {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Windows.Forms;
 
 namespace McTools.Xrm.Connection.WinForms.CustomControls
@@ -10,6 +11,7 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
             InitializeComponent();
 
             txtOrganizationUrl.Text = string.IsNullOrEmpty(detail.OriginalUrl) ? "https://organization.crm.dynamics.com" : detail.OriginalUrl;
+            txtTimeout.Text = $@"{detail.Timeout:hh\:mm\:ss}";
         }
 
         public TimeSpan Timeout

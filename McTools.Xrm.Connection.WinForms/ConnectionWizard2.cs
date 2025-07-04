@@ -320,6 +320,7 @@ Note that this is required to validate this wizard",
                 }
 
                 CrmConnectionDetail.UserName = CrmConnectionDetail.ServiceClient.OAuthUserId;
+                CrmConnectionDetail.Timeout = slcc.Timeout;
 
                 DisplayControl<ConnectionSucceededControl>();
             }
@@ -742,7 +743,7 @@ Note that this is required to validate this wizard",
                     CrmConnectionDetail.ConnectionId = Guid.NewGuid();
                 }
 
-                ctrl = new SdkLoginControlControl(CrmConnectionDetail.ConnectionId.Value, isNew);
+                ctrl = new SdkLoginControlControl(CrmConnectionDetail.ConnectionId.Value, isNew, CrmConnectionDetail.Timeout);
                 ((SdkLoginControlControl)ctrl).ConnectionSucceeded += (sender, evt) => { btnNext_Click(btnNext, null); };
 
                 btnReset.Visible = true;
