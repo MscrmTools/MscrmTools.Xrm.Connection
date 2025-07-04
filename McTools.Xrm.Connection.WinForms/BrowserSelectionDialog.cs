@@ -106,7 +106,7 @@ namespace McTools.Xrm.Connection.WinForms
 
                         jo["profile"]["info_cache"].Children().ToList().ForEach(x =>
                         {
-                            if (((JProperty)x).Name.StartsWith("Profile"))
+                            if (((JProperty)x).Name.StartsWith("Profile") || ((JProperty)x).Name == "Default")
                             {
                                 comboBox1.Items.Add(new BrowserProfile { Name = x.Values<JObject>().First()["name"].ToString(), Path = ((JProperty)x).Name.ToString() });
                             }
