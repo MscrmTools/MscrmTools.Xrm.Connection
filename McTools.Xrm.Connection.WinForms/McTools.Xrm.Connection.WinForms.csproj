@@ -60,7 +60,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>McTools.Xrm.Connection.WinForms.pfx</AssemblyOriginatorKeyFile>
@@ -497,9 +497,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="McTools.Xrm.Connection.WinForms.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="McTools.Xrm.Connection.WinForms.pfx" />
     <None Include="packages.config" />
     <None Include="Resources\database_link.png" />
   </ItemGroup>
