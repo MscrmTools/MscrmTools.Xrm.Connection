@@ -58,7 +58,7 @@ namespace McTools.Xrm.Connection
 
             if (detail == null)
             {
-                Process.Start(uri.ToString());
+                Process.Start($"\"{uri}\"");
                 return;
             }
 
@@ -66,24 +66,24 @@ namespace McTools.Xrm.Connection
             {
                 case BrowserEnum.Chrome:
                     process.StartInfo = new ProcessStartInfo("chrome.exe");
-                    process.StartInfo.Arguments = uri.ToString();
+                    process.StartInfo.Arguments = $"\"{uri}\"";
                     process.StartInfo.Arguments += $" --profile-directory=\"{detail.BrowserProfile}\"";
                     break;
 
                 case BrowserEnum.Edge:
                     process.StartInfo = new ProcessStartInfo("msedge.exe");
-                    process.StartInfo.Arguments = uri.ToString();
+                    process.StartInfo.Arguments = $"\"{uri}\"";
                     process.StartInfo.Arguments += $" --profile-directory=\"{detail.BrowserProfile}\"";
                     break;
 
                 case BrowserEnum.Firefox:
                     process.StartInfo = new ProcessStartInfo("firefox.exe");
-                    process.StartInfo.Arguments = uri.ToString();
+                    process.StartInfo.Arguments = $"\"{uri}\"";
                     process.StartInfo.Arguments += $" -P \"{detail.BrowserProfile}\"";
                     break;
 
                 default:
-                    Process.Start(uri.ToString());
+                    Process.Start($"\"{uri}\"");
                     return;
             }
 
