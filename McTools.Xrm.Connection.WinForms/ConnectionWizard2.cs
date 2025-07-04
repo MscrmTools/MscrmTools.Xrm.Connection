@@ -82,6 +82,8 @@ namespace McTools.Xrm.Connection.WinForms
                 DisplayControl<ConnectionAppIdControl>();
             else if (type == typeof(ConnectionMfaControl))
                 DisplayControl<ConnectionMfaControl>();
+            else if (type == typeof(ConnectionAzureKeyVaultControl))
+                DisplayControl<ConnectionAzureKeyVaultControl>();
         }
 
         private void btnNext_Click(object sender, EventArgs e)
@@ -365,6 +367,10 @@ Note that this is required to validate this wizard",
                 {
                     DisplayControl<ConnectionMfaControl>();
                 }
+                else if (type == ConnectionType.AzureKeyVault)
+                {
+                    DisplayControl<ConnectionAzureKeyVaultControl>();
+                }
             }
             else if (ctrl is ConnectionClientSecretControl ccsc)
             {
@@ -394,6 +400,27 @@ Note that this is required to validate this wizard",
                     DisplayControl<ConnectionLoadingControl>();
                     Connect();
                 }
+            }
+            else if (ctrl is ConnectionAzureKeyVaultControl cakvc)
+            {
+                CrmConnectionDetail.AzureAdAppId = cakvc.AzureAdAppId;
+                CrmConnectionDetail.AzureKeyVaultName = cakvc.AzureKeyVaultName;
+                CrmConnectionDetail.NewAuthType = AuthenticationType.ClientSecret;
+
+                if (CrmConnectionDetail.AzureAdAppId == Guid.Empty
+                    || String.IsNullOrEmpty(CrmConnectionDetail.AzureKeyVaultName))
+                {
+                    MessageBox.Show(this,
+                        @"Please provide all information for AzureKeyVault authentication",
+                        @"Warning",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+
+                    return;
+                }
+
+                DisplayControl<ConnectionLoadingControl>();
+                Connect();
             }
             else if (ctrl is ConnectionMfaControl cmfac)
             {
@@ -530,6 +557,11 @@ Note that this is required to validate this wizard",
                     type = ConnectionType.Certificate;
                     DisplayControl<ConnectionUrlControl>();
                 }
+                else if (!String.IsNullOrEmpty(CrmConnectionDetail.AzureKeyVaultName))
+                {
+                    type = ConnectionType.AzureKeyVault;
+                    DisplayControl<ConnectionUrlControl>();
+                }
                 else if (CrmConnectionDetail.NewAuthType == AuthenticationType.ClientSecret)
                 {
                     type = ConnectionType.ClientSecret;
@@ -590,6 +622,10 @@ Note that this is required to validate this wizard",
                             break;
 
                         case ConnectionType.ClientSecret:
+                            DisplayControl<ConnectionUrlControl>();
+                            break;
+
+                        case ConnectionType.AzureKeyVault:
                             DisplayControl<ConnectionUrlControl>();
                             break;
 
@@ -817,6 +853,28 @@ Note that this is required to validate this wizard",
                     ((ConnectionClientSecretControl)ctrl).AzureAdAppId = CrmConnectionDetail.AzureAdAppId;
                 }
                 ((ConnectionClientSecretControl)ctrl).SaveClientSecret = CrmConnectionDetail.SavePassword;
+
+                btnReset.Visible = true;
+                btnNext.Visible = true;
+                btnNext.Text = @"Connect";
+            }
+            else if (typeof(T) == typeof(ConnectionAzureKeyVaultControl))
+            {
+                pnlFooter.Visible = true;
+                lblHeader.Text = @"Azure Key Vault - Client Id / Secret";
+
+                if (!CrmConnectionDetail.ConnectionId.HasValue)
+                {
+                    CrmConnectionDetail.ConnectionId = Guid.NewGuid();
+                }
+
+                ctrl = new ConnectionAzureKeyVaultControl();
+                if (CrmConnectionDetail.AzureAdAppId != Guid.Empty)
+                {
+                    ((ConnectionAzureKeyVaultControl)ctrl).AzureAdAppId = CrmConnectionDetail.AzureAdAppId;
+                }
+
+                ((ConnectionAzureKeyVaultControl)ctrl).AzureKeyVaultName = CrmConnectionDetail.AzureKeyVaultName;
 
                 btnReset.Visible = true;
                 btnNext.Visible = true;
