@@ -46,7 +46,7 @@ namespace McTools.Xrm.Connection.TestWinForm
             this.cManager.StepChanged += new ConnectionManager.StepChangedEventHandler(cManager_StepChanged);
             this.cManager.RequestPassword += new ConnectionManager.RequestPasswordEventHandler(cManager_RequestPassword);
             formHelper = new FormHelper(this);
-            formHelper.UseDarkTheme = true;
+            //formHelper.UseDarkTheme = true;
 
             // Instantiate and add the connection control to the form
             ccsb = new CrmConnectionStatusBar(formHelper, tsbMergeConnectionsFiles.Checked);
