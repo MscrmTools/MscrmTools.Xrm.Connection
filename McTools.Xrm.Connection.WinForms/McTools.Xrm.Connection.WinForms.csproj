@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>McTools.Xrm.Connection.WinForms</RootNamespace>
     <AssemblyName>McTools.Xrm.Connection.WinForms</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
@@ -63,7 +63,8 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>McTools.Xrm.Connection.WinForms.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
@@ -107,12 +108,28 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddConnectionFileDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddConnectionFileDialog.designer.cs">
+      <DependentUpon>AddConnectionFileDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AppCode\CustomTheme.cs" />
+    <Compile Include="AppCode\DarkTheme.cs" />
+    <Compile Include="AppCode\DrawingHelper.cs" />
+    <Compile Include="AppCode\Extensions.cs" />
+    <Compile Include="AppCode\IConnectionControlSettings.cs" />
+    <Compile Include="AppCode\OpenCreateWizardEventArgs.cs" />
+    <Compile Include="AppCode\Settings.cs" />
     <Compile Include="BrowserProfile.cs" />
     <Compile Include="BrowserSelectionDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="BrowserSelectionDialog.Designer.cs">
       <DependentUpon>BrowserSelectionDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ConnectionSelector.Drawing.cs">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="ConnectionStringDialog.cs">
       <SubType>Form</SubType>
@@ -158,6 +175,12 @@
     </Compile>
     <Compile Include="CustomControls\ConnectionMfaControl.Designer.cs">
       <DependentUpon>ConnectionMfaControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\ConnectionOauthControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControls\ConnectionOauthControl.Designer.cs">
+      <DependentUpon>ConnectionOauthControl.cs</DependentUpon>
     </Compile>
     <Compile Include="CustomControls\ConnectionUrlControl.cs">
       <SubType>UserControl</SubType>
@@ -232,17 +255,38 @@
     <Compile Include="EnvHighlightSettingsDialog.Designer.cs">
       <DependentUpon>EnvHighlightSettingsDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="SecretForm.cs">
+    <Compile Include="Forms\CompactConnectionSelector.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SecretForm.designer.cs">
-      <DependentUpon>SecretForm.cs</DependentUpon>
+    <Compile Include="Forms\CompactConnectionSelector.Designer.cs">
+      <DependentUpon>CompactConnectionSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\CompactConnectionSelector.Drawing.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NewConnectionFileDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NewConnectionFileDialog.designer.cs">
+      <DependentUpon>NewConnectionFileDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="RenameConnectionFileDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="RenameConnectionFileDialog.designer.cs">
       <DependentUpon>RenameConnectionFileDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SecretForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SecretForm.designer.cs">
+      <DependentUpon>SecretForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ConnectionFile\EditConnectionFileDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ConnectionFile\EditConnectionFileDialog.designer.cs">
+      <DependentUpon>EditConnectionFileDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="UpdatePasswordForm.cs">
       <SubType>Form</SubType>
@@ -263,12 +307,6 @@
       <DependentUpon>CrmConnectionStatusBar.cs</DependentUpon>
     </Compile>
     <Compile Include="ListViewItemComparer.cs" />
-    <Compile Include="AddConnectionFileDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="AddConnectionFileDialog.designer.cs">
-      <DependentUpon>AddConnectionFileDialog.cs</DependentUpon>
-    </Compile>
     <Compile Include="PasswordForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -282,12 +320,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="NewConnectionFileDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="NewConnectionFileDialog.designer.cs">
-      <DependentUpon>NewConnectionFileDialog.cs</DependentUpon>
-    </Compile>
     <Compile Include="ProxySettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -295,8 +327,17 @@
       <DependentUpon>ProxySettingsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="RessourceManager.cs" />
+    <Compile Include="UserControls\NoConnectionControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\NoConnectionControl.Designer.cs">
+      <DependentUpon>NoConnectionControl.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="AddConnectionFileDialog.resx">
+      <DependentUpon>AddConnectionFileDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="BrowserSelectionDialog.resx">
       <DependentUpon>BrowserSelectionDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -320,6 +361,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CustomControls\ConnectionMfaControl.resx">
       <DependentUpon>ConnectionMfaControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControls\ConnectionOauthControl.resx">
+      <DependentUpon>ConnectionOauthControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CustomControls\ConnectionUrlControl.resx">
       <DependentUpon>ConnectionUrlControl.cs</DependentUpon>
@@ -357,11 +401,20 @@
     <EmbeddedResource Include="EnvHighlightSettingsDialog.resx">
       <DependentUpon>EnvHighlightSettingsDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SecretForm.resx">
-      <DependentUpon>SecretForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\CompactConnectionSelector.resx">
+      <DependentUpon>CompactConnectionSelector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NewConnectionFileDialog.resx">
+      <DependentUpon>NewConnectionFileDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RenameConnectionFileDialog.resx">
       <DependentUpon>RenameConnectionFileDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SecretForm.resx">
+      <DependentUpon>SecretForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ConnectionFile\EditConnectionFileDialog.resx">
+      <DependentUpon>EditConnectionFileDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UpdatePasswordForm.resx">
       <DependentUpon>UpdatePasswordForm.cs</DependentUpon>
@@ -373,9 +426,6 @@
       <DependentUpon>CrmConnectionStatusBar.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="AddConnectionFileDialog.resx">
-      <DependentUpon>AddConnectionFileDialog.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="PasswordForm.resx">
       <DependentUpon>PasswordForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -384,11 +434,11 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="NewConnectionFileDialog.resx">
-      <DependentUpon>NewConnectionFileDialog.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="ProxySettingsForm.resx">
       <DependentUpon>ProxySettingsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\NoConnectionControl.resx">
+      <DependentUpon>NoConnectionControl.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -417,9 +467,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="McTools.Xrm.Connection.WinForms.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Resources\database_link.png" />
   </ItemGroup>
   <ItemGroup>
@@ -489,35 +539,29 @@
     <None Include="Resources\world.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\McTools.Xrm.Connection\McTools.Xrm.Connection.csproj">
-      <Project>{c3824c2c-6e2e-4fde-a2aa-229bbc7c3b1f}</Project>
-      <Name>McTools.Xrm.Connection</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies">
-      <Version>9.0.2.46</Version>
+      <Version>9.0.2.59</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CrmSdk.Deployment">
       <Version>9.0.2.34</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CrmSdk.Workflow">
-      <Version>9.0.2.46</Version>
+      <Version>9.0.2.59</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CrmSdk.XrmTooling.CoreAssembly">
-      <Version>9.1.1.1</Version>
+      <Version>9.1.1.65</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CrmSdk.XrmTooling.WpfControls">
-      <Version>9.1.1.1</Version>
+      <Version>9.1.1.65</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.IdentityModel">
       <Version>7.0.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory">
-      <Version>5.2.9</Version>
+      <Version>5.3.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.Platforms">
-      <Version>6.0.6</Version>
+      <Version>7.0.4</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.Targets">
       <Version>5.0.0</Version>
@@ -529,7 +573,7 @@
       <Version>4.3.0</Version>
     </PackageReference>
     <PackageReference Include="System.Memory">
-      <Version>4.5.5</Version>
+      <Version>4.6.3</Version>
     </PackageReference>
     <PackageReference Include="System.Runtime">
       <Version>4.3.1</Version>
@@ -541,8 +585,103 @@
       <Version>4.3.2</Version>
     </PackageReference>
     <PackageReference Include="System.Text.Json">
-      <Version>6.0.6</Version>
+      <Version>9.0.7</Version>
     </PackageReference>
+    <None Include="Resources\user.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\globe.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Connection32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Connection64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Folder32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Folder64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\user-white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\user-blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\globe-blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\globe-white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\copy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\edit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\plus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\open-folder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\add-folder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\history.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\earth.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\string.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\key.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\auth-blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\auth-white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Create.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Properties32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Info_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\NoConnection512.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\16_L_help.gif" />
+    <Content Include="Resources\Dataverse.64x64.png" />
+    <Content Include="Resources\Details32.png" />
+    <Content Include="Resources\Dynamics365_64.png" />
+    <Content Include="Resources\NoDetails32.png" />
+    <Content Include="Resources\NoHistory32.png" />
+    <Content Include="Resources\NoSearch32.png" />
+    <Content Include="Resources\Search32.png" />
+    <Content Include="Resources\Settings24.png" />
+    <Content Include="Resources\Size32.png" />
+    <Content Include="Resources\Theme32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\McTools.Xrm.Connection\McTools.Xrm.Connection.csproj">
+      <Project>{c3824c2c-6e2e-4fde-a2aa-229bbc7c3b1f}</Project>
+      <Name>McTools.Xrm.Connection</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

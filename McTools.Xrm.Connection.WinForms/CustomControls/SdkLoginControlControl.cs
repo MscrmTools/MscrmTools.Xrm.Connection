@@ -11,18 +11,20 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
         private readonly Guid connectionDetailId;
         private readonly bool isNew;
 
-        public SdkLoginControlControl(Guid connectionDetailId, bool isNew)
+        public SdkLoginControlControl(Guid connectionDetailId, bool isNew, TimeSpan timeout)
         {
             InitializeComponent();
 
             this.connectionDetailId = connectionDetailId;
             this.isNew = isNew;
+            txtTimeout.Text = $@"{timeout:hh\:mm\:ss}";
         }
 
         public event EventHandler ConnectionSucceeded;
 
         public AuthenticationProviderType AuthType { get; private set; }
         public CrmConnectionManager ConnectionManager { get; private set; }
+        public TimeSpan Timeout => TimeSpan.Parse(txtTimeout.Text);
 
         private void btnOpenSdkLoginCtrl_Click(object sender, EventArgs e)
         {
@@ -49,7 +51,8 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
 
         private void rdbUseCustom_CheckedChanged(object sender, EventArgs e)
         {
-            tableLayoutPanel1.Enabled = rdbUseCustom.Checked;
+            txtAzureAdAppId.ReadOnly = !rdbUseCustom.Checked;
+            txtReplyUrl.ReadOnly = !rdbUseCustom.Checked;
         }
 
         private void SdkLoginControlControl_Load(object sender, System.EventArgs e)

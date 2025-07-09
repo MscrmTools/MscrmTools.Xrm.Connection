@@ -54,10 +54,10 @@ Connections created with this wizard cannot be transported across multiple compu
             {
                 Type = ConnectionType.Mfa;
             }
-            else if (sender == btnAzureKeyVault)
-            {
-                Type = ConnectionType.AzureKeyVault;
-            }
+            //else if (sender == btnAzureKeyVault)
+            //{
+            //    Type = ConnectionType.AzureKeyVault;
+            //}
             else
             {
                 Type = ConnectionType.ConnectionString;

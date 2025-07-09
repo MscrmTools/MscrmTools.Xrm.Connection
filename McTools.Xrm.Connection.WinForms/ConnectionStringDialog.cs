@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using McTools.Xrm.Connection.WinForms.AppCode;
+using System.Windows.Forms;
 
 namespace McTools.Xrm.Connection.WinForms
 {
@@ -10,6 +11,8 @@ namespace McTools.Xrm.Connection.WinForms
 
             txtConnectionString.Text = detail.GetConnectionString();
             lblTitle.Text = string.Format(lblTitle.Text, detail.ConnectionName);
+
+            CustomTheme.Instance.ApplyTheme(this);
         }
     }
 }

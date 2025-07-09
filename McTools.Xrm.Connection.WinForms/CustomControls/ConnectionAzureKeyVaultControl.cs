@@ -10,6 +10,11 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
         public ConnectionAzureKeyVaultControl()
         {
             InitializeComponent();
+
+            ToolTip tip = new ToolTip();
+            tip.SetToolTip(pbHelp, @"Please provide the name of the Azure KeyVault. This is expected that:
+- the name of the secret is the Client Id used in the control above
+- you have access to this Azure Keyvault with your current account");
         }
 
         public Guid AzureAdAppId
@@ -29,7 +34,6 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
             set => txtAzureAdAppId.Text = value.ToString();
         }
 
-
         public string AzureKeyVaultName
         {
             get
@@ -42,7 +46,6 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
         private void ConnectionOauthControl_Load(object sender, EventArgs e)
         {
             txtAzureAdAppId.Focus();
-
         }
 
         private void llMoreInfo_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

@@ -1,47 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 
 namespace McTools.Xrm.Connection
 {
-    public class ConnectionFile
-    {
-        public ConnectionFile()
-        {
-        }
-
-        public ConnectionFile(string name)
-        {
-            Name = name;
-        }
-
-        public ConnectionFile(CrmConnections connections)
-        {
-            Name = connections.Name;
-        }
-
-        public DateTime LastUsed { get; set; }
-        public string Name { get; set; }
-        public string Path { get; set; }
-
-        public override string ToString()
-        {
-            var fileName = System.IO.Path.GetFileName(Path);
-            var fileNameParts = fileName.Split('.');
-            if (fileNameParts.Length > 1)
-            {
-                fileName = string.Join(".", fileNameParts.Take(fileNameParts.Length - 1));
-            }
-
-            return Name?.Length > 0 ? Name : fileName;
-        }
-    }
-
+    /// <summary>
+    /// Class that stores all <see cref="ConnectionFile"/> items
+    /// </summary>
     public class ConnectionsList
     {
-        private static string _connectionsListFilePath = "MscrmTools.ConnectionsList.xml";
         private static ConnectionsList _instance;
 
         private ConnectionsList()
@@ -49,11 +17,7 @@ namespace McTools.Xrm.Connection
             Files = new List<ConnectionFile>();
         }
 
-        public static string ConnectionsListFilePath
-        {
-            get => _connectionsListFilePath;
-            set => _connectionsListFilePath = value;
-        }
+        public static string ConnectionsListFilePath { get; set; } = "MscrmTools.ConnectionsList.xml";
 
         public static ConnectionsList Instance
         {
@@ -61,8 +25,8 @@ namespace McTools.Xrm.Connection
             {
                 if (_instance == null)
                 {
-                    var filename = Path.IsPathRooted(_connectionsListFilePath) ? _connectionsListFilePath : Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName,
-                        _connectionsListFilePath);
+                    var filename = Path.IsPathRooted(ConnectionsListFilePath) ? ConnectionsListFilePath : Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName,
+                        ConnectionsListFilePath);
 
                     if (File.Exists(filename))
                     {
@@ -82,7 +46,7 @@ namespace McTools.Xrm.Connection
 
                         var defaultFilePath = Path.Combine(directory, "ConnectionsList.Default.xml");
 
-                        var cc = new CrmConnections("Default") {UseInternetExplorerProxy = true};
+                        var cc = new CrmConnections("Default") { UseInternetExplorerProxy = true };
                         cc.SerializeToFile(defaultFilePath);
 
                         _instance = new ConnectionsList();
@@ -99,8 +63,8 @@ namespace McTools.Xrm.Connection
 
         public void Save()
         {
-            var filename = Path.IsPathRooted(_connectionsListFilePath) ? _connectionsListFilePath : Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName,
-                       _connectionsListFilePath);
+            var filename = Path.IsPathRooted(ConnectionsListFilePath) ? ConnectionsListFilePath : Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName,
+                       ConnectionsListFilePath);
 
             XmlSerializerHelper.SerializeToFile(_instance, filename);
         }

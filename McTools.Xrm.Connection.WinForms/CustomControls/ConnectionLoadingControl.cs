@@ -10,7 +10,7 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
 
             if (detail.UseOnline)
             {
-                label3.Text = string.Format(label3.Text, "Common Data Service environment");
+                label3.Text = string.Format(label3.Text, "Dataverse environment");
             }
             else
             {

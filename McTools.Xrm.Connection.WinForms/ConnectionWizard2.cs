@@ -1,4 +1,5 @@
-﻿using McTools.Xrm.Connection.WinForms.CustomControls;
+﻿using McTools.Xrm.Connection.WinForms.AppCode;
+using McTools.Xrm.Connection.WinForms.CustomControls;
 using Microsoft.Xrm.Sdk.Client;
 using Microsoft.Xrm.Sdk.Discovery;
 using Microsoft.Xrm.Tooling.Connector;
@@ -17,18 +18,20 @@ namespace McTools.Xrm.Connection.WinForms
     {
         private readonly bool isNew;
         private readonly List<Type> navigationHistory = new List<Type>();
+        private readonly ConnectionFile parentFile;
         private IConnectionWizardControl ctrl;
         private string lastError;
         private ConnectionDetail originalDetail;
         private ConnectionType type;
 
-        public ConnectionWizard2(ConnectionDetail detail = null)
+        public ConnectionWizard2(ConnectionDetail detail = null, ConnectionFile parentFile = null)
         {
             InitializeComponent();
 
             isNew = detail == null;
             originalDetail = (ConnectionDetail)detail?.Clone();
             CrmConnectionDetail = detail ?? new ConnectionDetail(true);
+            this.parentFile = parentFile;
 
             Text = originalDetail == null ? "New connection" : "Update connection";
 
@@ -37,6 +40,8 @@ namespace McTools.Xrm.Connection.WinForms
         }
 
         public ConnectionDetail CrmConnectionDetail { get; private set; }
+
+        public bool HasCreatedNewFolder { get; private set; }
 
         public override sealed string Text
         {
@@ -62,8 +67,6 @@ namespace McTools.Xrm.Connection.WinForms
                 DisplayControl<ConnectionIfdControl>();
             else if (type == typeof(ConnectionLoadingControl))
                 DisplayControl<ConnectionLoadingControl>();
-            //else if (type == typeof(ConnectionOauthControl))
-            //    DisplayControl<ConnectionOauthControl>();
             else if (type == typeof(ConnectionStringControl))
                 DisplayControl<ConnectionStringControl>();
             else if (type == typeof(ConnectionSucceededControl))
@@ -270,38 +273,6 @@ Note that this is required to validate this wizard",
                     }
                 }
             }
-            //else if (ctrl is ConnectionOauthControl coc)
-            //{
-            //    CrmConnectionDetail.AzureAdAppId = coc.AzureAdAppId;
-            //    CrmConnectionDetail.ReplyUrl = coc.ReplyUrl;
-
-            //    if (coc.ClientSecretChanged)
-            //    {
-            //        CrmConnectionDetail.SetClientSecret(coc.ClientSecret);
-            //    }
-
-            //    if (CrmConnectionDetail.AzureAdAppId == Guid.Empty
-            //        || string.IsNullOrEmpty(CrmConnectionDetail.ReplyUrl))
-            //    {
-            //        MessageBox.Show(this,
-            //            @"Please provide all information for OAuth authentication",
-            //            @"Warning",
-            //            MessageBoxButtons.OK,
-            //            MessageBoxIcon.Warning);
-
-            //        return;
-            //    }
-
-            //    if (!CrmConnectionDetail.ClientSecretIsEmpty)
-            //    {
-            //        DisplayControl<ConnectionLoadingControl>();
-            //        Connect();
-            //    }
-            //    else
-            //    {
-            //        DisplayControl<ConnectionCredentialsControl>();
-            //    }
-            //}
             else if (ctrl is ConnectionStringControl csc)
             {
                 CrmConnectionDetail.SetConnectionString(csc.ConnectionString);
@@ -312,6 +283,15 @@ Note that this is required to validate this wizard",
             else if (ctrl is ConnectionSucceededControl cokc)
             {
                 CrmConnectionDetail.ConnectionName = cokc.ConnectionName;
+                CrmConnectionDetail.ParentConnectionFile = cokc.ParentFolder;
+
+                HasCreatedNewFolder = cokc.HasCreatedNewFolder;
+
+                if (isNew)
+                {
+                    cokc.ParentFolder.Connections.Connections.Add(CrmConnectionDetail);
+                }
+                cokc.ParentFolder.Save();
 
                 DialogResult = DialogResult.OK;
                 Close();
@@ -621,11 +601,11 @@ Note that this is required to validate this wizard",
                             DisplayControl<ConnectionUrlControl>();
                             break;
 
-                        case ConnectionType.ClientSecret:
+                        case ConnectionType.AzureKeyVault:
                             DisplayControl<ConnectionUrlControl>();
                             break;
 
-                        case ConnectionType.AzureKeyVault:
+                        case ConnectionType.ClientSecret:
                             DisplayControl<ConnectionUrlControl>();
                             break;
 
@@ -712,7 +692,7 @@ Note that this is required to validate this wizard",
                 pnlFooter.Visible = true;
                 lblHeader.Text = @"Connection validated!";
 
-                ctrl = new ConnectionSucceededControl
+                ctrl = new ConnectionSucceededControl(parentFile)
                 {
                     ConnectionName = CrmConnectionDetail.ConnectionName,
                     ConnectionDetail = CrmConnectionDetail
@@ -752,22 +732,6 @@ Note that this is required to validate this wizard",
                 btnNext.Visible = true;
                 btnNext.Text = @"Next";
             }
-            //else if (typeof(T) == typeof(ConnectionOauthControl))
-            //{
-            //    pnlFooter.Visible = true;
-            //    lblHeader.Text = @"OAuth protocol settings";
-
-            //    ctrl = new ConnectionOauthControl
-            //    {
-            //        AzureAdAppId = CrmConnectionDetail.AzureAdAppId,
-            //        ReplyUrl = CrmConnectionDetail.ReplyUrl,
-            //        HasClientSecret = !CrmConnectionDetail.ClientSecretIsEmpty
-            //    };
-
-            //    btnReset.Visible = true;
-            //    btnNext.Visible = true;
-            //    btnNext.Text = @"Next";
-            //}
             else if (typeof(T) == typeof(SdkLoginControlControl))
             {
                 pnlFooter.Visible = true;
@@ -778,7 +742,7 @@ Note that this is required to validate this wizard",
                     CrmConnectionDetail.ConnectionId = Guid.NewGuid();
                 }
 
-                ctrl = new SdkLoginControlControl(CrmConnectionDetail.ConnectionId.Value, isNew);
+                ctrl = new SdkLoginControlControl(CrmConnectionDetail.ConnectionId.Value, isNew, CrmConnectionDetail.Timeout.TotalSeconds == 0 ? new TimeSpan(0, 2, 0) : CrmConnectionDetail.Timeout);
                 ((SdkLoginControlControl)ctrl).ConnectionSucceeded += (sender, evt) => { btnNext_Click(btnNext, null); };
 
                 btnReset.Visible = true;
@@ -874,7 +838,7 @@ Note that this is required to validate this wizard",
                     ((ConnectionAzureKeyVaultControl)ctrl).AzureAdAppId = CrmConnectionDetail.AzureAdAppId;
                 }
 
-                ((ConnectionAzureKeyVaultControl)ctrl).AzureKeyVaultName = CrmConnectionDetail.AzureKeyVaultName;
+               ((ConnectionAzureKeyVaultControl)ctrl).AzureKeyVaultName = CrmConnectionDetail.AzureKeyVaultName;
 
                 btnReset.Visible = true;
                 btnNext.Visible = true;
@@ -906,6 +870,8 @@ Note that this is required to validate this wizard",
             ((UserControl)ctrl).Dock = DockStyle.Fill;
             pnlMain.Controls.Clear();
             pnlMain.Controls.Add((UserControl)ctrl);
+
+            CustomTheme.Instance.ApplyTheme(this);
         }
 
         private void llIconLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

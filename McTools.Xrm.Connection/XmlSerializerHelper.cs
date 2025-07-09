@@ -20,9 +20,11 @@ namespace McTools.Xrm.Connection
         /// <returns>Objet déserialisé</returns>
         public static object Deserialize(string xmlContent, Type objectType)
         {
-            StringReader reader = new StringReader(xmlContent);
-            XmlSerializer s = new XmlSerializer(objectType);
-            return s.Deserialize(reader);
+            using (StringReader reader = new StringReader(xmlContent))
+            {
+                XmlSerializer s = new XmlSerializer(objectType);
+                return s.Deserialize(reader);
+            }
         }
 
         /// <summary>

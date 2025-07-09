@@ -10,6 +10,7 @@ namespace McTools.Xrm.Connection.WinForms.CustomControls
             InitializeComponent();
 
             txtOrganizationUrl.Text = string.IsNullOrEmpty(detail.OriginalUrl) ? "https://organization.crm.dynamics.com" : detail.OriginalUrl;
+            txtTimeout.Text = $@"{detail.Timeout:hh\:mm\:ss}";
         }
 
         public TimeSpan Timeout

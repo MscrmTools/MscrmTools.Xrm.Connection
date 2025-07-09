@@ -1,4 +1,6 @@
-﻿using Microsoft.Xrm.Tooling.Connector;
+﻿using McTools.Xrm.Connection.WinForms.AppCode;
+using McTools.Xrm.Connection.WinForms.Forms;
+using Microsoft.Xrm.Tooling.Connector;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +11,34 @@ namespace McTools.Xrm.Connection.WinForms
     public class FormHelper
     {
         private readonly Control innerAppForm;
+        private readonly IConnectionControlSettings settings;
+
+        public FormHelper(Control innerAppForm, IConnectionControlSettings settings = null)
+        {
+            this.innerAppForm = innerAppForm;
+            this.settings = settings;
+
+            if (this.settings == null)
+            {
+                this.settings = Settings.Load();
+            }
+        }
 
         public FormHelper(Control innerAppForm)
         {
             this.innerAppForm = innerAppForm;
+            settings = Settings.Load();
+        }
+
+        public bool UseDarkTheme
+        {
+            set
+            {
+                if (value)
+                {
+                    CustomTheme.Instance.SetTheme(new DarkTheme());
+                }
+            }
         }
 
         /// <summary>
@@ -23,92 +49,97 @@ namespace McTools.Xrm.Connection.WinForms
         /// <returns></returns>
         public bool AskForConnection(object connectionParameter, Action<List<ConnectionDetail>> preConnectionRequestAction)
         {
-            var cs = new ConnectionSelector
+            using (var cs = new CompactConnectionSelector(settings)
             {
-                StartPosition = FormStartPosition.CenterParent,
-            };
-
-            if (cs.ShowDialog(innerAppForm) == DialogResult.OK)
+                StartPosition = FormStartPosition.CenterParent
+            })
             {
-                if (cs.SelectedConnections.Any(c => c.IsFromSdkLoginCtrl)
-                    && cs.SelectedConnections.Count > 1)
+                if (cs.ShowDialog(innerAppForm) == DialogResult.OK)
                 {
-                    MessageBox.Show(innerAppForm, @"You cannot select multiple connections that used SDK Login control",
-                        @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
-
-                foreach (var connectionDetail in cs.SelectedConnections)
-                {
-                    if (!connectionDetail.UseConnectionString)
+                    if (cs.SelectedConnections.Any(c => c.IsFromSdkLoginCtrl)
+                        && cs.SelectedConnections.Count > 1)
                     {
-                        if (connectionDetail.NewAuthType == AuthenticationType.ClientSecret
-                            && connectionDetail.ClientSecretIsEmpty)
+                        MessageBox.Show(innerAppForm, @"You cannot select multiple connections that used SDK Login control",
+                            @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return false;
+                    }
+
+                    foreach (var connectionDetail in cs.SelectedConnections)
+                    {
+                        if (!connectionDetail.UseConnectionString)
                         {
-                            var pForm = new SecretForm(connectionDetail)
+                            if (connectionDetail.NewAuthType == AuthenticationType.ClientSecret
+                                && connectionDetail.ClientSecretIsEmpty)
                             {
-                                ClientId = connectionDetail.AzureAdAppId.ToString("B")
-                            };
-                            if (pForm.ShowDialog(innerAppForm) == DialogResult.OK)
-                            {
-                                connectionDetail.SetClientSecret(pForm.ClientSecret);
-                                connectionDetail.SavePassword = pForm.SaveSecret;
-                            }
-                            else
-                            {
-                                return false;
-                            }
-                        }
-                        else if (connectionDetail.IsCustomAuth)
-                        {
-                            if (connectionDetail.PasswordIsEmpty && connectionDetail.Certificate == null)
-                            {
-                                var pForm = new PasswordForm(connectionDetail)
+                                using (var pForm = new SecretForm(connectionDetail)
                                 {
-                                    UserDomain = connectionDetail.UserDomain,
-                                    UserLogin = connectionDetail.UserName
-                                };
-                                if (pForm.ShowDialog(innerAppForm) == DialogResult.OK)
+                                    ClientId = connectionDetail.AzureAdAppId.ToString("B")
+                                })
                                 {
-                                    connectionDetail.SetPassword(pForm.UserPassword);
-                                    connectionDetail.SavePassword = pForm.SavePassword;
+                                    if (pForm.ShowDialog(innerAppForm) == DialogResult.OK)
+                                    {
+                                        connectionDetail.SetClientSecret(pForm.ClientSecret);
+                                        connectionDetail.SavePassword = pForm.SaveSecret;
+                                    }
+                                    else
+                                    {
+                                        return false;
+                                    }
                                 }
-                                else
+                            }
+                            else if (connectionDetail.IsCustomAuth)
+                            {
+                                if (connectionDetail.PasswordIsEmpty && connectionDetail.Certificate == null)
                                 {
-                                    return false;
+                                    using (var pForm = new PasswordForm(connectionDetail)
+                                    {
+                                        UserDomain = connectionDetail.UserDomain,
+                                        UserLogin = connectionDetail.UserName
+                                    })
+                                    {
+                                        if (pForm.ShowDialog(innerAppForm) == DialogResult.OK)
+                                        {
+                                            connectionDetail.SetPassword(pForm.UserPassword);
+                                            connectionDetail.SavePassword = pForm.SavePassword;
+                                        }
+                                        else
+                                        {
+                                            return false;
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
-                }
 
-                preConnectionRequestAction?.Invoke(cs.SelectedConnections);
+                    preConnectionRequestAction?.Invoke(cs.SelectedConnections);
 
-                if (cs.SelectedConnections.First().IsFromSdkLoginCtrl)
-                {
-                    var cd = cs.SelectedConnections.First();
-
-                    var ctrl = new CRMLoginForm1(cd.ConnectionId.Value);
-                    if (cd.AzureAdAppId != Guid.Empty)
+                    if (cs.SelectedConnections.First().IsFromSdkLoginCtrl)
                     {
-                        ctrl.AppId = cd.AzureAdAppId.ToString();
-                        ctrl.RedirectUri = new Uri(cd.ReplyUrl);
+                        var cd = cs.SelectedConnections.First();
+
+                        var ctrl = new CRMLoginForm1(cd.ConnectionId.Value);
+                        if (cd.AzureAdAppId != Guid.Empty)
+                        {
+                            ctrl.AppId = cd.AzureAdAppId.ToString();
+                            ctrl.RedirectUri = new Uri(cd.ReplyUrl);
+                        }
+
+                        ctrl.ShowDialog();
+
+                        ConnectionManager.Instance.ConnectToServerWithSdkLoginCtrl(cd, ctrl.CrmConnectionMgr.CrmSvc,
+                            connectionParameter);
+                    }
+                    else
+                    {
+                        ConnectionManager.Instance.ConnectToServer(cs.SelectedConnections, connectionParameter);
                     }
 
-                    ctrl.ShowDialog();
-
-                    ConnectionManager.Instance.ConnectToServerWithSdkLoginCtrl(cd, ctrl.CrmConnectionMgr.CrmSvc,
-                        connectionParameter);
-                }
-                else
-                {
-                    ConnectionManager.Instance.ConnectToServer(cs.SelectedConnections, connectionParameter);
+                    return true;
                 }
 
-                return true;
+                return false;
             }
-
-            return false;
         }
 
         /// <summary>
@@ -124,19 +155,21 @@ namespace McTools.Xrm.Connection.WinForms
             {
                 if (connectionDetail.PasswordIsEmpty && connectionDetail.Certificate == null)
                 {
-                    var pForm = new PasswordForm(connectionDetail)
+                    using (var pForm = new PasswordForm(connectionDetail)
                     {
                         UserDomain = connectionDetail.UserDomain,
                         UserLogin = connectionDetail.UserName
-                    };
-                    if (pForm.ShowDialog(innerAppForm) == DialogResult.OK)
+                    })
                     {
-                        connectionDetail.SetPassword(pForm.UserPassword);
-                        connectionDetail.SavePassword = pForm.SavePassword;
-                    }
-                    else
-                    {
-                        return false;
+                        if (pForm.ShowDialog(innerAppForm) == DialogResult.OK)
+                        {
+                            connectionDetail.SetPassword(pForm.UserPassword);
+                            connectionDetail.SavePassword = pForm.SavePassword;
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
                 }
             }
@@ -187,14 +220,39 @@ namespace McTools.Xrm.Connection.WinForms
             }
         }
 
-        public void DisplayConnectionsList(Form form)
+        public void DisplayCompactConnectionsSelection(Form form)
         {
-            var cs = new ConnectionSelector(false)
+            using (var cs = new CompactConnectionSelector(settings)
             {
                 StartPosition = FormStartPosition.CenterParent,
-            };
+            })
+            {
+                cs.ShowDialog(form);
+            }
+        }
 
-            cs.ShowDialog(form);
+        public void DisplayConnectionsList(Form form, ConnectionDetail currentConnection = null)
+        {
+            using (var cs = new ConnectionSelector(false, currentConnection?.ParentConnectionFile)
+            {
+                StartPosition = FormStartPosition.CenterParent,
+                Settings = settings
+            })
+            {
+                cs.ShowDialog(form);
+            }
+        }
+
+        public void DisplayConnectionsList(Form form)
+        {
+            using (var cs = new ConnectionSelector(false)
+            {
+                StartPosition = FormStartPosition.CenterParent,
+                Settings = settings
+            })
+            {
+                cs.ShowDialog(form);
+            }
         }
 
         /// <summary>
@@ -206,66 +264,67 @@ namespace McTools.Xrm.Connection.WinForms
         /// <returns>Created or updated connection</returns>
         public ConnectionDetail EditConnection(bool isCreation, ConnectionDetail connectionToUpdate, ConnectionFile connectionFile = null)
         {
-            var cForm = new ConnectionWizard2(connectionToUpdate) { StartPosition = FormStartPosition.CenterParent };
-
-            if (cForm.ShowDialog(innerAppForm) == DialogResult.OK)
+            using (var cForm = new ConnectionWizard2(connectionToUpdate) { StartPosition = FormStartPosition.CenterParent })
             {
-                if (isCreation)
+                if (cForm.ShowDialog(innerAppForm) == DialogResult.OK)
                 {
-                    if (connectionFile == null)
+                    if (isCreation)
                     {
-                        if (ConnectionManager.Instance.ConnectionsList.Connections.FirstOrDefault(
-                            d => d.ConnectionId == cForm.CrmConnectionDetail.ConnectionId) == null
-                            && !string.IsNullOrEmpty(cForm.CrmConnectionDetail.ConnectionName))
+                        if (connectionFile == null)
                         {
-                            ConnectionManager.Instance.ConnectionsList.Connections.Add(cForm.CrmConnectionDetail);
-                        }
-
-                        ConnectionManager.Instance.SaveConnectionsFile();
-                    }
-                    else
-                    {
-                        var connections = CrmConnections.LoadFromFile(connectionFile.Path);
-                        if (connections.Connections.FirstOrDefault(
-                            d => d.ConnectionId == cForm.CrmConnectionDetail.ConnectionId) == null
-                            && !string.IsNullOrEmpty(cForm.CrmConnectionDetail.ConnectionName))
-                        {
-                            connections.Connections.Add(cForm.CrmConnectionDetail);
-                        }
-
-                        connections.SerializeToFile(connectionFile.Path);
-                    }
-                }
-                else
-                {
-                    if (connectionFile == null)
-                    {
-                        ConnectionManager.Instance.ConnectionsList.Connections
-                            .Where(x => x.ConnectionId == cForm.CrmConnectionDetail.ConnectionId)
-                            .ToList()
-                            .ForEach(x => x.UpdateAfterEdit(cForm.CrmConnectionDetail));
-
-                        ConnectionManager.Instance.SaveConnectionsFile();
-                    }
-                    else
-                    {
-                        var connections = CrmConnections.LoadFromFile(connectionFile.Path);
-                        foreach (ConnectionDetail detail in connections.Connections)
-                        {
-                            if (detail.ConnectionId == cForm.CrmConnectionDetail.ConnectionId)
+                            if (ConnectionManager.Instance.ConnectionsList.Connections.FirstOrDefault(
+                                d => d.ConnectionId == cForm.CrmConnectionDetail.ConnectionId) == null
+                                && !string.IsNullOrEmpty(cForm.CrmConnectionDetail.ConnectionName))
                             {
-                                detail.UpdateAfterEdit(cForm.CrmConnectionDetail);
+                                ConnectionManager.Instance.ConnectionsList.Connections.Add(cForm.CrmConnectionDetail);
                             }
-                        }
 
-                        connections.SerializeToFile(connectionFile.Path);
+                            ConnectionManager.Instance.SaveConnectionsFile();
+                        }
+                        else
+                        {
+                            var connections = CrmConnections.LoadFromFile(connectionFile.Path);
+                            if (connections.Connections.FirstOrDefault(
+                                d => d.ConnectionId == cForm.CrmConnectionDetail.ConnectionId) == null
+                                && !string.IsNullOrEmpty(cForm.CrmConnectionDetail.ConnectionName))
+                            {
+                                connections.Connections.Add(cForm.CrmConnectionDetail);
+                            }
+
+                            connections.SerializeToFile(connectionFile.Path);
+                        }
                     }
+                    else
+                    {
+                        if (connectionFile == null)
+                        {
+                            ConnectionManager.Instance.ConnectionsList.Connections
+                                .Where(x => x.ConnectionId == cForm.CrmConnectionDetail.ConnectionId)
+                                .ToList()
+                                .ForEach(x => x.UpdateAfterEdit(cForm.CrmConnectionDetail));
+
+                            ConnectionManager.Instance.SaveConnectionsFile();
+                        }
+                        else
+                        {
+                            var connections = CrmConnections.LoadFromFile(connectionFile.Path);
+                            foreach (ConnectionDetail detail in connections.Connections)
+                            {
+                                if (detail.ConnectionId == cForm.CrmConnectionDetail.ConnectionId)
+                                {
+                                    detail.UpdateAfterEdit(cForm.CrmConnectionDetail);
+                                }
+                            }
+
+                            connections.SerializeToFile(connectionFile.Path);
+                        }
+                    }
+
+                    return cForm.CrmConnectionDetail;
                 }
 
-                return cForm.CrmConnectionDetail;
+                return null;
             }
-
-            return null;
         }
 
         /// <summary>
@@ -283,44 +342,45 @@ namespace McTools.Xrm.Connection.WinForms
 
             bool returnValue = false;
 
-            var pForm = new PasswordForm(detail)
+            using (var pForm = new PasswordForm(detail)
             {
                 UserLogin = detail.UserName,
                 UserDomain = detail.UserDomain,
-            };
-
-            MethodInvoker mi = delegate
+            })
             {
-                if (pForm.ShowDialog(innerAppForm) == DialogResult.OK)
+                MethodInvoker mi = delegate
                 {
-                    detail.SetPassword(pForm.UserPassword);
-                    detail.SavePassword = pForm.SavePassword;
-                    returnValue = true;
+                    if (pForm.ShowDialog(innerAppForm) == DialogResult.OK)
+                    {
+                        detail.SetPassword(pForm.UserPassword);
+                        detail.SavePassword = pForm.SavePassword;
+                        returnValue = true;
+                    }
+                };
+
+                if (innerAppForm.InvokeRequired)
+                {
+                    innerAppForm.Invoke(mi);
                 }
-            };
-
-            if (innerAppForm.InvokeRequired)
-            {
-                innerAppForm.Invoke(mi);
+                else
+                {
+                    mi();
+                }
             }
-            else
-            {
-                mi();
-            }
-
             return returnValue;
         }
 
         public List<ConnectionDetail> SelectMultipleConnectionDetails()
         {
-            var cs = new ConnectionSelector
+            using (var cs = new CompactConnectionSelector(settings)
             {
                 StartPosition = FormStartPosition.CenterParent,
-            };
-
-            if (cs.ShowDialog(innerAppForm) == DialogResult.OK)
+            })
             {
-                return cs.SelectedConnections;
+                if (cs.ShowDialog(innerAppForm) == DialogResult.OK)
+                {
+                    return cs.SelectedConnections;
+                }
             }
 
             return new List<ConnectionDetail>();
