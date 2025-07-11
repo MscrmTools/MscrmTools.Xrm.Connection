@@ -60,11 +60,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>McTools.Xrm.Connection.WinForms.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
@@ -469,6 +468,7 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="McTools.Xrm.Connection.WinForms.pfx" />
     <None Include="packages.config" />
     <None Include="Resources\database_link.png" />
   </ItemGroup>
@@ -672,6 +672,8 @@
     <Content Include="Resources\NoDetails32.png" />
     <Content Include="Resources\NoHistory32.png" />
     <Content Include="Resources\NoSearch32.png" />
+    <EmbeddedResource Include="Resources\Notification_Error_16.png" />
+    <EmbeddedResource Include="Resources\Notification_Confirmation_16.png" />
     <Content Include="Resources\Search32.png" />
     <Content Include="Resources\Settings24.png" />
     <Content Include="Resources\Size32.png" />
