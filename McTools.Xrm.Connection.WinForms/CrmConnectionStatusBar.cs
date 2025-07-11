@@ -33,6 +33,8 @@ namespace McTools.Xrm.Connection.WinForms
         /// </summary>
         public CrmConnectionStatusBar(FormHelper formHelper, bool mergeConnectionFiles = false)
         {
+            this.ShowItemToolTips = true;
+
             this.mergeConnectionFiles = mergeConnectionFiles;
             resources = new System.ComponentModel.ComponentResourceManager(typeof(CrmConnectionStatusBar));
 
@@ -58,6 +60,28 @@ namespace McTools.Xrm.Connection.WinForms
                 Visible = false
             };
             Items.Add(progress);
+
+            ToolStripContainer container = new ToolStripContainer
+            {
+                ContentPanel = { Controls = { this } },
+                Dock = DockStyle.Right
+            };
+
+            ToolStripSeparator sep = new ToolStripSeparator();
+            sep.Visible = false;
+            Items.Add(sep);
+
+            ToolStripStatusLabel connectionStatus = new ToolStripStatusLabel
+            {
+                TextAlign = ContentAlignment.MiddleCenter,
+                Visible = false
+            };
+            connectionStatus.Click += (s, e) =>
+            {
+                Clipboard.SetText(((ToolStripStatusLabel)s).ToolTipText);
+            };
+
+            Items.Add(connectionStatus);
 
             RenderMode = ToolStripRenderMode.Professional;
         }
@@ -101,17 +125,27 @@ namespace McTools.Xrm.Connection.WinForms
         public void SetConnectionStatus(bool isConnected, ConnectionDetail detail)
         {
             ToolStripDropDownButton btn = (ToolStripDropDownButton)Items[0];
+            ToolStripLabel st = (ToolStripLabel)Items[Items.Count - 1];
+            ToolStripSeparator sp = (ToolStripSeparator)Items[Items.Count - 2];
 
             if (isConnected)
             {
                 SetMessage("Connected!");
                 btn.Text = $"Connected to '{detail.ServerName} ({detail.OrganizationFriendlyName})'";
                 btn.Image = (Image)resources.GetObject("server_lightning");
+
+                sp.Visible = true;
+                st.Image = (Image)resources.GetObject("Notification_Confirmation_16");
+                st.Text = "";
+                st.ToolTipText = btn.Text;
             }
             else
             {
                 btn.Text = "Not connected";
                 btn.Image = (Image)resources.GetObject("server");
+
+                sp.Visible = false;
+                st.Visible = false;
             }
         }
 
@@ -119,7 +153,7 @@ namespace McTools.Xrm.Connection.WinForms
         /// Displays a message about the connection
         /// </summary>
         /// <param name="message">Message to display</param>
-        public void SetMessage(string message)
+        public void SetMessage(string message, bool isFromConnectionError = false)
         {
             if (Items.Count < 2)
             {
@@ -127,10 +161,20 @@ namespace McTools.Xrm.Connection.WinForms
             }
 
             ToolStripStatusLabel label = (ToolStripStatusLabel)Items[1];
+            ToolStripLabel st = (ToolStripLabel)Items[Items.Count - 1];
+            ToolStripSeparator sp = (ToolStripSeparator)Items[Items.Count - 2];
 
             MethodInvoker mi = delegate
             {
-                label.Text = message;
+                label.Text = isFromConnectionError ? "Connection error" : message;
+
+                if (isFromConnectionError)
+                {
+                    sp.Visible = true;
+                    st.Visible = true;
+                    st.Image = (Image)resources.GetObject("Notification_Error_16");
+                    st.ToolTipText = message;
+                }
             };
 
             if (InvokeRequired)
