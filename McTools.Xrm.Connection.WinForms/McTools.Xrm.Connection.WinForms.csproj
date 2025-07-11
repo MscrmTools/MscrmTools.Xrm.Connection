@@ -672,6 +672,8 @@
     <Content Include="Resources\NoDetails32.png" />
     <Content Include="Resources\NoHistory32.png" />
     <Content Include="Resources\NoSearch32.png" />
+    <EmbeddedResource Include="Resources\Notification_Error_16.png" />
+    <EmbeddedResource Include="Resources\Notification_Confirmation_16.png" />
     <Content Include="Resources\Search32.png" />
     <Content Include="Resources\Settings24.png" />
     <Content Include="Resources\Size32.png" />
