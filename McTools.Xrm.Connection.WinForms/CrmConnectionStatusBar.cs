@@ -74,7 +74,7 @@ namespace McTools.Xrm.Connection.WinForms
             ToolStripStatusLabel connectionStatus = new ToolStripStatusLabel
             {
                 TextAlign = ContentAlignment.MiddleCenter,
-                Visible = false
+                Visible = false,
             };
             connectionStatus.Click += (s, e) =>
             {
@@ -135,6 +135,7 @@ namespace McTools.Xrm.Connection.WinForms
                 btn.Image = (Image)resources.GetObject("server_lightning");
 
                 sp.Visible = true;
+                st.Visible = true;
                 st.Image = (Image)resources.GetObject("Notification_Confirmation_16");
                 st.Text = "";
                 st.ToolTipText = btn.Text;
@@ -149,11 +150,16 @@ namespace McTools.Xrm.Connection.WinForms
             }
         }
 
+        public void SetMessage(string message)
+        {
+            SetMessage(message, false);
+        }
+
         /// <summary>
         /// Displays a message about the connection
         /// </summary>
         /// <param name="message">Message to display</param>
-        public void SetMessage(string message, bool isFromConnectionError = false)
+        public void SetMessage(string message, bool isFromConnectionError)
         {
             if (Items.Count < 2)
             {
