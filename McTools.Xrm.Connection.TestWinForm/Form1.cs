@@ -72,7 +72,7 @@ namespace McTools.Xrm.Connection.TestWinForm
         private void cManager_ConnectionFailed(object sender, ConnectionFailedEventArgs e)
         {
             // Set error message
-            this.ccsb.SetMessage("Error: " + e.FailureReason);
+            this.ccsb.SetMessage("Error: " + e.FailureReason, true);
 
             // Clear the current organization service
             this.service = null;

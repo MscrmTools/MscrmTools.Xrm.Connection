@@ -332,4 +332,10 @@ Expected format : HH:mm:ss</value>
   <data name="16_L_help" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\16_L_help.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Notification_Confirmation_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Notification_Confirmation_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Notification_Error_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Notification_Error_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

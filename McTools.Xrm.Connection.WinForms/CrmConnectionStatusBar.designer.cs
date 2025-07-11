@@ -114,5 +114,23 @@ namespace McTools.Xrm.Connection.WinForms
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+
+        internal static System.Drawing.Bitmap Notification_Error_16
+        {
+            get
+            {
+                object obj = ResourceManager.GetObject("Notification_Error_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+
+        internal static System.Drawing.Bitmap Notification_Confirmation_16
+        {
+            get
+            {
+                object obj = ResourceManager.GetObject("Notification_Confirmation_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }
