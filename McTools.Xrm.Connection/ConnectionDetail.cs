@@ -1,6 +1,7 @@
 ﻿using McTools.Xrm.Connection.AppCode;
 using McTools.Xrm.Connection.Forms;
 using McTools.Xrm.Connection.Utils;
+using Microsoft.Win32.SafeHandles;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
 using Microsoft.Xrm.Sdk.Discovery;
@@ -22,6 +23,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -1337,6 +1339,8 @@ namespace McTools.Xrm.Connection
                 // Load & update metadata cache
                 var metadataCachePath = Path.Combine(Path.GetDirectoryName(ConnectionsList.ConnectionsListFilePath), "..", "Metadata", ConnectionId + ".json.gz");
                 metadataCachePath = Path.IsPathRooted(metadataCachePath) ? metadataCachePath : Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName, metadataCachePath);
+                metadataCachePath = Path.GetFullPath(metadataCachePath);
+                var alternateStreamPath = metadataCachePath + ":" + nameof(Connection.MetadataCache.ClientVersionStamp);
 
                 // Set up the serializer to use. We need to add a custom converter to handle the KeyAttributeCollection on
                 // the Entity class (used for the AsyncJob property on EntityKeyMetadata) as the standard JsonSerializer
@@ -1346,54 +1350,63 @@ namespace McTools.Xrm.Connection
                 metadataSerializer.ContractResolver = MetadataCacheContractResolver.Instance;
                 metadataSerializer.TypeNameHandling = TypeNameHandling.Auto;
                 var metadataCache = _metadataCache;
+                var metadataCacheVersion = metadataCache?.ClientVersionStamp;
 
-                // Load the existing file if it exists and we're not trying to just update an already-loaded cache.
-                if (metadataCache == null && File.Exists(metadataCachePath) && !flush)
-                {
-                    try
-                    {
-                        using (var stream = File.OpenRead(metadataCachePath))
-                        using (var gz = new GZipStream(stream, CompressionMode.Decompress))
-                        using (var reader = new StreamReader(gz))
-                        using (var jsonReader = new JsonTextReader(reader))
-                        {
-                            metadataCache = metadataSerializer.Deserialize<MetadataCache>(jsonReader);
-                        }
-                    }
-                    catch
-                    {
-                        // If the cache file isn't readable for any reason, throw it away and download a new copy
-                    }
-                }
-
-                // Check if the metadata has changed since the last connection
-                // If this query changes, increment the version number to ensure any previously cached versions are flushed
+                // Version number representing the query we run to get the metadata. If the query changes, increment this number
+                // so any caches are invalidated.
                 const int queryVersion = 2;
 
-                if (metadataCache != null && metadataCache.MetadataQueryVersion != queryVersion)
+                var fromDisk = new Lazy<MetadataCache>(() =>
                 {
-                    metadataCache = null;
-                    flush = true;
-                }
-
-                var metadataQuery = new RetrieveMetadataChangesRequest
-                {
-                    ClientVersionStamp = !flush ? metadataCache?.ClientVersionStamp : null,
-                    Query = new EntityQueryExpression
+                    // Load the existing file if it exists and we're not trying to just update an already-loaded cache.
+                    if (File.Exists(metadataCachePath))
                     {
-                        Properties = new MetadataPropertiesExpression { AllProperties = true },
-                        AttributeQuery = new AttributeQueryExpression
+                        try
                         {
-                            Properties = new MetadataPropertiesExpression { AllProperties = true }
-                        },
-                        RelationshipQuery = new RelationshipQueryExpression
+                            using (var stream = File.OpenRead(metadataCachePath))
+                            using (var gz = new GZipStream(stream, CompressionMode.Decompress))
+                            using (var reader = new StreamReader(gz))
+                            using (var jsonReader = new JsonTextReader(reader))
+                            {
+                                var deserialized = metadataSerializer.Deserialize<MetadataCache>(jsonReader);
+
+                                if (deserialized.MetadataQueryVersion != queryVersion)
+                                {
+                                    // The metadata query version has changed, so we can't use the cached metadata
+                                    return null;
+                                }
+                            }
+                        }
+                        catch
                         {
-                            Properties = new MetadataPropertiesExpression { AllProperties = true }
+                            // If the cache file isn't readable for any reason, throw it away and download a new copy
                         }
                     }
-                };
 
-                RetrieveMetadataChangesResponse metadataUpdate;
+                    return null;
+                });
+
+                var fromDiskVersion = new Lazy<string>(() =>
+                {
+                    var result = TryReadAlternateStream(alternateStreamPath);
+
+                    if (result != null)
+                    {
+                        return result;
+                    }
+
+                    // Can't load the version stamp from NTFS alternate stream, take it from the actual deserialized object
+                    result = fromDisk.Value?.ClientVersionStamp;
+
+                    if (result != null)
+                    {
+                        // Store the version stamp in the alternate stream for next time
+                        TryWriteAlternateStream(alternateStreamPath, result);
+                    }
+
+                    return result;
+                });
+
                 var svc = ServiceClient;
 
                 // Use a cloned connection instance where possible so we can load the metadata in the background without
@@ -1401,34 +1414,82 @@ namespace McTools.Xrm.Connection
                 if (svc.ActiveAuthenticationType == AuthenticationType.OAuth)
                     svc = svc.Clone();
 
-                try
+                if (!flush)
                 {
-                    metadataUpdate = (RetrieveMetadataChangesResponse)svc.Execute(metadataQuery);
-                }
-                catch (FaultException<OrganizationServiceFault> ex)
-                {
-                    // If the last connection was too long ago, we need to request all the metadata, not just the changes
-                    if (ex.Detail.ErrorCode == unchecked((int)0x80044352))
+                    // Check if the current cache is still valid. We don't use the results of this except for the server version stamp,
+                    // so don't request a lot of properties.
+                    var versionToCheck = metadataCache?.ClientVersionStamp ?? fromDiskVersion.Value;
+
+                    if (versionToCheck != null)
                     {
-                        metadataQuery.ClientVersionStamp = null;
-                        metadataUpdate = (RetrieveMetadataChangesResponse)svc.Execute(metadataQuery);
-                    }
-                    else
-                    {
-                        throw;
+                        var versionCheckQry = new RetrieveMetadataChangesRequest
+                        {
+                            ClientVersionStamp = versionToCheck,
+                            Query = new EntityQueryExpression
+                            {
+                                Properties = new MetadataPropertiesExpression { PropertyNames = { nameof(EntityMetadata.MetadataId) } },
+                                Criteria = new MetadataFilterExpression
+                                {
+                                    Conditions =
+                                    {
+                                        new MetadataConditionExpression(nameof(EntityMetadata.LogicalName), MetadataConditionOperator.Equals, "account")
+                                    }
+                                }
+                            }
+                        };
+
+                        try
+                        {
+                            var versionCheckResp = (RetrieveMetadataChangesResponse)svc.Execute(versionCheckQry);
+
+                            if (versionCheckResp.ServerVersionStamp != versionToCheck)
+                            {
+                                // Something has changed in the metadata. We can't reliably apply changes as some of the IDs
+                                // appear to change during backup/restore operations, so get a whole fresh copy
+                                flush = true;
+                            }
+                            else if (metadataCache == null)
+                            {
+                                // Nothing has changed, so we're safe to use the cached metadata
+                                metadataCache = fromDisk.Value;
+                            }
+                        }
+                        catch (FaultException<OrganizationServiceFault> ex)
+                        {
+                            // If the last connection was too long ago, we need to request all the metadata, not just the changes
+                            if (ex.Detail.ErrorCode == unchecked((int)0x80044352))
+                            {
+                                flush = true;
+                            }
+                            else
+                            {
+                                throw;
+                            }
+                        }
                     }
                 }
 
-                if (metadataQuery.ClientVersionStamp != null && metadataQuery.ClientVersionStamp != metadataUpdate.ServerVersionStamp)
+                if (flush || metadataCache == null)
                 {
-                    // Something has changed in the metadata. We can't reliably apply changes as some of the IDs
-                    // appear to change during backup/restore operations, so get a whole fresh copy
-                    metadataQuery.ClientVersionStamp = null;
-                    metadataUpdate = (RetrieveMetadataChangesResponse)svc.Execute(metadataQuery);
-                }
+                    // Something has changed, so get the full new metadata
+                    var metadataQuery = new RetrieveMetadataChangesRequest
+                    {
+                        Query = new EntityQueryExpression
+                        {
+                            Properties = new MetadataPropertiesExpression { AllProperties = true },
+                            AttributeQuery = new AttributeQueryExpression
+                            {
+                                Properties = new MetadataPropertiesExpression { AllProperties = true }
+                            },
+                            RelationshipQuery = new RelationshipQueryExpression
+                            {
+                                Properties = new MetadataPropertiesExpression { AllProperties = true }
+                            }
+                        }
+                    };
 
-                if (metadataQuery.ClientVersionStamp == null)
-                {
+                    var metadataUpdate = (RetrieveMetadataChangesResponse)svc.Execute(metadataQuery);
+
                     // Save the latest metadata cache
                     metadataCache = new MetadataCache();
                     metadataCache.EntityMetadata = metadataUpdate.EntityMetadata.ToArray();
@@ -1459,6 +1520,9 @@ namespace McTools.Xrm.Connection
                             File.Replace(tempFilePath, metadataCachePath, null);
                         else
                             File.Move(tempFilePath, metadataCachePath);
+
+                        // Store the version stamp in the alternate stream for next time
+                        TryWriteAlternateStream(alternateStreamPath, metadataCache.ClientVersionStamp);
                     });
                 }
 
@@ -1471,6 +1535,52 @@ namespace McTools.Xrm.Connection
             task.Start();
             return task;
         }
+
+        private string TryReadAlternateStream(string alternateStreamPath)
+        {
+            using (var altStreamHandleRead = CreateFile(alternateStreamPath, FileAccess.Read, FileShare.None, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero))
+            {
+                if (altStreamHandleRead.IsInvalid)
+                {
+                    return null;
+                }
+
+                // Load the version stamp from the alternate stream
+                using (var stream = new FileStream(altStreamHandleRead, FileAccess.Read))
+                using (var reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
+        }
+
+        private void TryWriteAlternateStream(string alternateStreamPath, string result)
+        {
+            using (var altStreamHandleWrite = CreateFile(alternateStreamPath, FileAccess.Write, FileShare.None, IntPtr.Zero, FileMode.Create, 0, IntPtr.Zero))
+            {
+                if (altStreamHandleWrite.IsInvalid)
+                {
+                    return;
+                }
+
+                using (var stream = new FileStream(altStreamHandleWrite, FileAccess.Write))
+                using (var writer = new StreamWriter(stream))
+                {
+                    writer.Write(result);
+                }
+            }
+        }
+
+        [DllImport("kernel32.dll")]
+        public static extern SafeFileHandle CreateFile(
+            string lpFileName,
+            [MarshalAs(UnmanagedType.U4)] FileAccess dwDesiredAccess,
+            [MarshalAs(UnmanagedType.U4)] FileShare dwShareMode,
+            System.IntPtr lpSecurityAttributes,
+            [MarshalAs(UnmanagedType.U4)] FileMode dwCreationDisposition,
+            uint dwFlagsAndAttributes,
+            System.IntPtr hTemplateFile
+        );
 
         #endregion Metadata Cache methods
     }
