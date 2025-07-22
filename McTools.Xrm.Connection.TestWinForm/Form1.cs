@@ -1,4 +1,5 @@
-﻿using McTools.Xrm.Connection.WinForms;
+﻿using McTools.Xrm.Connection.AppCode;
+using McTools.Xrm.Connection.WinForms;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System;
@@ -45,6 +46,9 @@ namespace McTools.Xrm.Connection.TestWinForm
             this.cManager.ConnectionFailed += new ConnectionManager.ConnectionFailedEventHandler(cManager_ConnectionFailed);
             this.cManager.StepChanged += new ConnectionManager.StepChangedEventHandler(cManager_StepChanged);
             this.cManager.RequestPassword += new ConnectionManager.RequestPasswordEventHandler(cManager_RequestPassword);
+
+            LogManager.LogLevel = LogManager.Level.Info;
+
             formHelper = new FormHelper(this);
             // formHelper.UseDarkTheme = true;
 
