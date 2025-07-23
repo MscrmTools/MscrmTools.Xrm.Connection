@@ -5,6 +5,6 @@ namespace McTools.Xrm.Connection.AppCode
 {
     public static class Paths
     {
-        public static string LogsPath { get; set; } = Path.Combine(Assembly.GetExecutingAssembly().Location, "Logs");
+        public static string LogsPath { get; set; } = Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).Directory.FullName, "Logs");
     }
 }

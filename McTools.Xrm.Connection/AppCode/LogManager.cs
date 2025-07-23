@@ -112,15 +112,6 @@ namespace McTools.Xrm.Connection.AppCode
         }
 
         /// <summary>
-        /// Set the new connection details
-        /// </summary>
-        /// <param name="connectionDetail">Details of the connection</param>
-        public void SetConnection(ConnectionDetail connectionDetail)
-        {
-            _connection = connectionDetail;
-        }
-
-        /// <summary>
         /// Writes a message in a text file
         /// </summary>
         /// <param name="level">Level of the message</param>
@@ -139,7 +130,7 @@ namespace McTools.Xrm.Connection.AppCode
             {
                 using (StreamWriter writer = new StreamWriter(_filePath, true))
                 {
-                    writer.WriteLine("{0:yyyy-MM-dd hh:mm:ss.fff tt}\t{1}\t{2}\t{3}", DateTime.Now, level, message);
+                    writer.WriteLine("{0:yyyy-MM-dd hh:mm:ss.fff tt}\t{1}\t{2}", DateTime.Now, level, message);
                 }
             }
             catch (Exception error)
