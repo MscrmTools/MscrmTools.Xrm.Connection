@@ -127,6 +127,11 @@ namespace McTools.Xrm.Connection.WinForms
 
                         ctrl.ShowDialog();
 
+                        if (ctrl.CrmConnectionMgr.CrmSvc == null)
+                        {
+                            return false;
+                        }
+
                         ConnectionManager.Instance.ConnectToServerWithSdkLoginCtrl(cd, ctrl.CrmConnectionMgr.CrmSvc,
                             connectionParameter);
                     }
@@ -188,6 +193,11 @@ namespace McTools.Xrm.Connection.WinForms
                 }
 
                 ctrl.ShowDialog();
+
+                if (ctrl.CrmConnectionMgr.CrmSvc == null)
+                {
+                    return false;
+                }
 
                 ConnectionManager.Instance.ConnectToServerWithSdkLoginCtrl(cd, ctrl.CrmConnectionMgr.CrmSvc,
                     connectionParameter);

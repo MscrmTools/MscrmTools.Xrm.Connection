@@ -418,6 +418,11 @@ namespace McTools.Xrm.Connection.WinForms
 
                             ctrl.ShowDialog();
 
+                            if(ctrl.CrmConnectionMgr.CrmSvc == null)
+                            {
+                                return;
+                            }
+
                             ConnectionManager.Instance.ConnectToServerWithSdkLoginCtrl(currentConnection, ctrl.CrmConnectionMgr.CrmSvc,
                                 null);
                         }
