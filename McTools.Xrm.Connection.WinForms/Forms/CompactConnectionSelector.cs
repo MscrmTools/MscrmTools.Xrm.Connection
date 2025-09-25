@@ -14,7 +14,7 @@ namespace McTools.Xrm.Connection.WinForms.Forms
 
         private int sizeFactor = 4;
 
-        public CompactConnectionSelector(IConnectionControlSettings settings)
+        public CompactConnectionSelector(IConnectionControlSettings settings, ConnectionDetail existingConnectionDetail = null)
         {
             InitializeComponent();
 
@@ -22,13 +22,15 @@ namespace McTools.Xrm.Connection.WinForms.Forms
             btnMru.Tag = settings?.ShowMostRecentConnections ?? true;
             btnSearch.Tag = settings?.ShowSearchBarInCompactSelector ?? false;
             btnDetailsView.Tag = settings?.UseDetailsViewForConnectionSelector ?? false;
+            btnDetailsView.Tag = settings?.UseDetailsViewForConnectionSelector ?? false;
+            btnFilterForAdditionnal.Tag = settings?.UseFilterForAdditionalConnection ?? false;
 
             foreach (var file in ConnectionsList.Instance.Files)
             {
                 file.ApplyLinkWithConnectionDetails();
             }
 
-            FillConnectionFilesList();
+            FillConnectionFilesList(existingConnectionDetail?.ParentConnectionFile);
 
             chFile.Width = lvConnections.Width - 26;
             btnConnectionManager.Image = btnConnectionManager.Image.ResizeImage(20, 20);
@@ -42,7 +44,7 @@ namespace McTools.Xrm.Connection.WinForms.Forms
 
             noConnectionControl1.ActionLabel = ll;
 
-            SetDisplay();
+            SetDisplay(existingConnectionDetail?.ParentConnectionFile);
 
             CustomTheme.Instance.ApplyTheme(this);
         }
@@ -101,6 +103,17 @@ namespace McTools.Xrm.Connection.WinForms.Forms
             if (settings != null)
             {
                 settings.UseDetailsViewForConnectionSelector = (bool)btnDetailsView.Tag;
+            }
+
+            SetDisplay();
+        }
+
+        private void btnFilterForAdditionnal_Click(object sender, EventArgs e)
+        {
+            btnFilterForAdditionnal.Tag = !(bool)btnFilterForAdditionnal.Tag;
+            if (settings != null)
+            {
+                settings.UseFilterForAdditionalConnection = (bool)btnFilterForAdditionnal.Tag;
             }
 
             SetDisplay();
@@ -209,7 +222,12 @@ namespace McTools.Xrm.Connection.WinForms.Forms
             else
             {
                 var file = (ConnectionFile)cbbFiles.SelectedItem;
-                lvConnections.Items.AddRange(file.Connections.Connections.Select(c => GetListViewItem(c)).ToArray());
+                var items = file.Connections.Connections.Select(c => GetListViewItem(c));
+                if ((bool)btnMru.Tag)
+                {
+                    items = items.OrderByDescending(c => ((ConnectionDetail)c.Tag).LastUsedOn);
+                }
+                lvConnections.Items.AddRange(items.ToArray());
             }
 
             if ((settings?.UseDetailsViewForConnectionSelector ?? false) || (bool)btnDetailsView.Tag)
@@ -265,17 +283,26 @@ namespace McTools.Xrm.Connection.WinForms.Forms
             }
         }
 
-        private void FillConnectionFilesList()
+        private void FillConnectionFilesList(ConnectionFile parentFile = null)
         {
             cbbFiles.Items.Clear();
             cbbFiles.Items.Add("Recently used connections");
 
+            int index = 0;
+            int selectedIndex = 0;
             foreach (var file in ConnectionManager.Instance.ConnectionsFilesList.Files.OrderBy(cf => cf.Name))
             {
                 cbbFiles.Items.Add(file);
+
+                if (parentFile != null)
+                {
+                    selectedIndex = index;
+                }
+
+                index++;
             }
 
-            cbbFiles.SelectedIndex = 0;
+            cbbFiles.SelectedIndex = selectedIndex;
         }
 
         private ListViewGroup GetGroup(ConnectionDetail detail)
@@ -334,6 +361,12 @@ namespace McTools.Xrm.Connection.WinForms.Forms
             };
         }
 
+        private void llClearAdditionalConnectionFilter_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            pnlAdditionnalConnectionInfoParent.Visible = false;
+            SetDisplay();
+        }
+
         private void llOpenConnectionManager_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             btnConnectionManager_Click(btnConnectionManager, new OpenCreateWizardEventArgs());
@@ -355,13 +388,14 @@ namespace McTools.Xrm.Connection.WinForms.Forms
             ((Control)sender).Invalidate();
         }
 
-        private void SetDisplay()
+        private void SetDisplay(ConnectionFile parentFile = null)
         {
             pnlTopSearch.Visible = (bool)btnSearch.Tag;
 
             btnMru.Image = ((Image)((bool)btnMru.Tag ? Properties.Resources.NoHistory32 : Properties.Resources.history)).ResizeImage(20, 20);
             btnSearch.Image = ((Image)((bool)btnSearch.Tag ? Properties.Resources.NoSearch32 : Properties.Resources.Search32)).ResizeImage(20, 20);
             btnDetailsView.Image = ((Image)((bool)btnDetailsView.Tag ? Properties.Resources.NoDetails32 : Properties.Resources.Details32)).ResizeImage(20, 20);
+            btnFilterForAdditionnal.Image = ((Image)((bool)btnFilterForAdditionnal.Tag ? Properties.Resources.filter : Properties.Resources.filter_disabled)).ResizeImage(20, 20);
             btnChangeSize.Image = Properties.Resources.Size32.ResizeImage(20, 20);
             btnChangeSize.Visible = !(bool)btnDetailsView.Tag;
 
@@ -371,10 +405,12 @@ namespace McTools.Xrm.Connection.WinForms.Forms
             toolTip.SetToolTip(btnMru, (bool)btnMru.Tag ? "Display all connections" : "Display Most recently used connections");
             toolTip.SetToolTip(btnSearch, (bool)btnSearch.Tag ? "Hide search bar" : "Show search bar");
             toolTip.SetToolTip(btnDetailsView, (bool)btnDetailsView.Tag ? "Do not use details view" : "Use details view");
+            toolTip.SetToolTip(btnFilterForAdditionnal, (bool)btnFilterForAdditionnal.Tag ? "Use a filter for connections in the same file when requesting an additional connection" : "Do not use a filter for connections in the same file when requesting an additional");
 
             btnMru.Text = (bool)btnMru.Tag ? "Do not use MRU" : "Use MRU";
             btnSearch.Text = (bool)btnSearch.Tag ? "Hide search bar" : "Show search bar";
             btnDetailsView.Text = (bool)btnDetailsView.Tag ? "Show compact mode" : "Show details mode";
+            btnFilterForAdditionnal.Text = (bool)btnFilterForAdditionnal.Tag ? "Use Additional connection Filter" : "Do not use Additional connection Filter";
 
             if ((settings?.UseDetailsViewForConnectionSelector ?? false) || (bool)btnDetailsView.Tag)
             {
@@ -412,8 +448,15 @@ namespace McTools.Xrm.Connection.WinForms.Forms
                 cbbFiles.Items.Insert(0, "All connections");
             }
             cbbFiles.Invalidate();
-            cbbFiles.SelectedIndex = 0;
-
+            if (parentFile != null && (bool)btnFilterForAdditionnal.Tag)
+            {
+                cbbFiles.SelectedItem = parentFile;
+                pnlAdditionnalConnectionInfoParent.Visible = true;
+            }
+            else
+            {
+                cbbFiles.SelectedIndex = 0;
+            }
             cbbFiles_SelectedIndexChanged(cbbFiles, new EventArgs());
         }
 
