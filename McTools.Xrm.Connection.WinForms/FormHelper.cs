@@ -4,6 +4,7 @@ using Microsoft.Xrm.Tooling.Connector;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace McTools.Xrm.Connection.WinForms
@@ -49,7 +50,40 @@ namespace McTools.Xrm.Connection.WinForms
         /// <returns></returns>
         public bool AskForConnection(object connectionParameter, Action<List<ConnectionDetail>> preConnectionRequestAction)
         {
-            using (var cs = new CompactConnectionSelector(settings)
+            ConnectionDetail existingConnectionDetail = null;
+
+            try
+            {
+                PropertyInfo pi = connectionParameter.GetType().GetProperty("ConnectionParmater");
+                if (pi != null)
+                {
+                    object o1 = pi.GetValue(connectionParameter, null);
+
+                    MemberInfo pi2 = o1.GetType().GetMember("Control").Cast<MemberInfo>().FirstOrDefault();
+                    if (pi2 != null)
+                    {
+                        object o2 = ((FieldInfo)pi2).GetValue(o1);
+
+                        MemberInfo pi21 = o1.GetType().GetMember("ActionName").Cast<MemberInfo>().FirstOrDefault();
+                        if (pi21 != null)
+                        {
+                            string action = (string)((FieldInfo)pi21).GetValue(o1);
+
+                            if (action == "AdditionalOrganization")
+                            {
+                                PropertyInfo pi3 = o2.GetType().GetProperty("ConnectionDetail");
+                                existingConnectionDetail = (ConnectionDetail)pi3.GetValue(o2, null);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception error)
+            {
+                // Do nothing
+            }
+
+            using (var cs = new CompactConnectionSelector(settings, existingConnectionDetail)
             {
                 StartPosition = FormStartPosition.CenterParent
             })

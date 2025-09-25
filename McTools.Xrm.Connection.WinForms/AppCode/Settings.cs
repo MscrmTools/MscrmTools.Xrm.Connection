@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
 namespace McTools.Xrm.Connection.WinForms.AppCode
 {
@@ -13,6 +12,7 @@ namespace McTools.Xrm.Connection.WinForms.AppCode
         private bool showSearchBarInCompactSelector;
         private bool useDetailsViewForConnectionManager;
         private bool useDetailsViewForConnectionSelector;
+        private bool useFilterForAdditionalConnection = true;
 
         public int DisplaySizeFactor
         {
@@ -88,6 +88,19 @@ namespace McTools.Xrm.Connection.WinForms.AppCode
             set
             {
                 useDetailsViewForConnectionSelector = value;
+                Save();
+            }
+        }
+
+        public bool UseFilterForAdditionalConnection
+        {
+            get
+            {
+                return useFilterForAdditionalConnection;
+            }
+            set
+            {
+                useFilterForAdditionalConnection = value;
                 Save();
             }
         }
