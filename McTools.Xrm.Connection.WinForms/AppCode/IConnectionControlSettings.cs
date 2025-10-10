@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace McTools.Xrm.Connection.WinForms.AppCode
+﻿namespace McTools.Xrm.Connection.WinForms.AppCode
 {
     public interface IConnectionControlSettings
     {
@@ -11,5 +9,11 @@ namespace McTools.Xrm.Connection.WinForms.AppCode
         bool ShowSearchBarInCompactSelector { get; set; }
         bool UseDetailsViewForConnectionManager { get; set; }
         bool UseDetailsViewForConnectionSelector { get; set; }
+        bool UseFilterForAdditionalConnection { get; set; }
+    }
+
+    public interface IConnectionControlSettings2 : IConnectionControlSettings
+    {
+        bool UseFilterForAdditionalConnection { get; set; }
     }
 }

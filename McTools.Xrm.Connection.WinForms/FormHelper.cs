@@ -4,6 +4,7 @@ using Microsoft.Xrm.Tooling.Connector;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace McTools.Xrm.Connection.WinForms
@@ -11,12 +12,33 @@ namespace McTools.Xrm.Connection.WinForms
     public class FormHelper
     {
         private readonly Control innerAppForm;
-        private readonly IConnectionControlSettings settings;
+        private readonly IConnectionControlSettings2 settings;
+
+        public FormHelper(Control innerAppForm, IConnectionControlSettings2 settings = null)
+        {
+            this.innerAppForm = innerAppForm;
+            this.settings = settings;
+
+            if (this.settings == null)
+            {
+                this.settings = Settings.Load();
+            }
+        }
 
         public FormHelper(Control innerAppForm, IConnectionControlSettings settings = null)
         {
             this.innerAppForm = innerAppForm;
-            this.settings = settings;
+            this.settings = settings is IConnectionControlSettings2 ? (IConnectionControlSettings2)settings :
+                settings != null ? new Settings
+                {
+                    DisplaySizeFactor = settings.DisplaySizeFactor,
+                    NumberOfRecentConnectionsToDisplay = settings.NumberOfRecentConnectionsToDisplay,
+                    ShowMostRecentConnections = settings.ShowMostRecentConnections,
+                    UseDetailsViewForConnectionManager = settings.UseDetailsViewForConnectionManager,
+                    ShowSearchBarInCompactSelector = settings.ShowSearchBarInCompactSelector,
+                    UseDetailsViewForConnectionSelector = settings.UseDetailsViewForConnectionSelector,
+                    UseFilterForAdditionalConnection = true
+                } : null;
 
             if (this.settings == null)
             {
@@ -49,7 +71,40 @@ namespace McTools.Xrm.Connection.WinForms
         /// <returns></returns>
         public bool AskForConnection(object connectionParameter, Action<List<ConnectionDetail>> preConnectionRequestAction)
         {
-            using (var cs = new CompactConnectionSelector(settings)
+            ConnectionDetail existingConnectionDetail = null;
+
+            try
+            {
+                PropertyInfo pi = connectionParameter.GetType().GetProperty("ConnectionParmater");
+                if (pi != null)
+                {
+                    object o1 = pi.GetValue(connectionParameter, null);
+
+                    MemberInfo pi2 = o1.GetType().GetMember("Control").Cast<MemberInfo>().FirstOrDefault();
+                    if (pi2 != null)
+                    {
+                        object o2 = ((FieldInfo)pi2).GetValue(o1);
+
+                        MemberInfo pi21 = o1.GetType().GetMember("ActionName").Cast<MemberInfo>().FirstOrDefault();
+                        if (pi21 != null)
+                        {
+                            string action = (string)((FieldInfo)pi21).GetValue(o1);
+
+                            if (action == "AdditionalOrganization")
+                            {
+                                PropertyInfo pi3 = o2.GetType().GetProperty("ConnectionDetail");
+                                existingConnectionDetail = (ConnectionDetail)pi3.GetValue(o2, null);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception error)
+            {
+                // Do nothing
+            }
+
+            using (var cs = new CompactConnectionSelector(settings, existingConnectionDetail)
             {
                 StartPosition = FormStartPosition.CenterParent
             })
@@ -127,6 +182,11 @@ namespace McTools.Xrm.Connection.WinForms
 
                         ctrl.ShowDialog();
 
+                        if (ctrl.CrmConnectionMgr.CrmSvc == null)
+                        {
+                            return false;
+                        }
+
                         ConnectionManager.Instance.ConnectToServerWithSdkLoginCtrl(cd, ctrl.CrmConnectionMgr.CrmSvc,
                             connectionParameter);
                     }
@@ -188,6 +248,11 @@ namespace McTools.Xrm.Connection.WinForms
                 }
 
                 ctrl.ShowDialog();
+
+                if (ctrl.CrmConnectionMgr.CrmSvc == null)
+                {
+                    return false;
+                }
 
                 ConnectionManager.Instance.ConnectToServerWithSdkLoginCtrl(cd, ctrl.CrmConnectionMgr.CrmSvc,
                     connectionParameter);

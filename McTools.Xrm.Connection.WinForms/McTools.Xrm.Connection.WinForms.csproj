@@ -669,6 +669,8 @@
     <Content Include="Resources\Dataverse.64x64.png" />
     <Content Include="Resources\Details32.png" />
     <Content Include="Resources\Dynamics365_64.png" />
+    <None Include="Resources\filter_disabled.png" />
+    <None Include="Resources\filter.png" />
     <Content Include="Resources\NoDetails32.png" />
     <Content Include="Resources\NoHistory32.png" />
     <Content Include="Resources\NoSearch32.png" />

@@ -1,4 +1,5 @@
-﻿using McTools.Xrm.Connection.WinForms;
+﻿using McTools.Xrm.Connection.AppCode;
+using McTools.Xrm.Connection.WinForms;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System;
@@ -45,6 +46,9 @@ namespace McTools.Xrm.Connection.TestWinForm
             this.cManager.ConnectionFailed += new ConnectionManager.ConnectionFailedEventHandler(cManager_ConnectionFailed);
             this.cManager.StepChanged += new ConnectionManager.StepChangedEventHandler(cManager_StepChanged);
             this.cManager.RequestPassword += new ConnectionManager.RequestPasswordEventHandler(cManager_RequestPassword);
+
+            LogManager.LogLevel = LogManager.Level.Info;
+
             formHelper = new FormHelper(this);
             // formHelper.UseDarkTheme = true;
 
@@ -230,6 +234,21 @@ namespace McTools.Xrm.Connection.TestWinForm
                 });
         }
 
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            formHelper.AskForConnection(new Test1
+            {
+                ConnectionParmater = new Test2
+                {
+                    Control = new Test3
+                    {
+                        ConnectionDetail = currentDetail
+                    },
+                    ActionName = "AdditionalOrganization"
+                }
+            });
+        }
+
         private void tsbClearImpersonate_Click(object sender, EventArgs e)
         {
             currentDetail.RemoveImpersonation();
@@ -328,5 +347,21 @@ namespace McTools.Xrm.Connection.TestWinForm
                         ccsb.SetMessage("Metadata cache update failed: " + task.Exception.Message);
                 });
         }
+    }
+
+    public class Test1
+    {
+        public Test2 ConnectionParmater { get; set; }
+    }
+
+    public class Test2
+    {
+        public string ActionName;
+        public Test3 Control;
+    }
+
+    public class Test3
+    {
+        public ConnectionDetail ConnectionDetail { get; set; }
     }
 }
