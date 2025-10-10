@@ -12,12 +12,33 @@ namespace McTools.Xrm.Connection.WinForms
     public class FormHelper
     {
         private readonly Control innerAppForm;
-        private readonly IConnectionControlSettings settings;
+        private readonly IConnectionControlSettings2 settings;
+
+        public FormHelper(Control innerAppForm, IConnectionControlSettings2 settings = null)
+        {
+            this.innerAppForm = innerAppForm;
+            this.settings = settings;
+
+            if (this.settings == null)
+            {
+                this.settings = Settings.Load();
+            }
+        }
 
         public FormHelper(Control innerAppForm, IConnectionControlSettings settings = null)
         {
             this.innerAppForm = innerAppForm;
-            this.settings = settings;
+            this.settings = settings is IConnectionControlSettings2 ? (IConnectionControlSettings2)settings :
+                settings != null ? new Settings
+                {
+                    DisplaySizeFactor = settings.DisplaySizeFactor,
+                    NumberOfRecentConnectionsToDisplay = settings.NumberOfRecentConnectionsToDisplay,
+                    ShowMostRecentConnections = settings.ShowMostRecentConnections,
+                    UseDetailsViewForConnectionManager = settings.UseDetailsViewForConnectionManager,
+                    ShowSearchBarInCompactSelector = settings.ShowSearchBarInCompactSelector,
+                    UseDetailsViewForConnectionSelector = settings.UseDetailsViewForConnectionSelector,
+                    UseFilterForAdditionalConnection = true
+                } : null;
 
             if (this.settings == null)
             {
@@ -161,6 +182,11 @@ namespace McTools.Xrm.Connection.WinForms
 
                         ctrl.ShowDialog();
 
+                        if (ctrl.CrmConnectionMgr.CrmSvc == null)
+                        {
+                            return false;
+                        }
+
                         ConnectionManager.Instance.ConnectToServerWithSdkLoginCtrl(cd, ctrl.CrmConnectionMgr.CrmSvc,
                             connectionParameter);
                     }
@@ -222,6 +248,11 @@ namespace McTools.Xrm.Connection.WinForms
                 }
 
                 ctrl.ShowDialog();
+
+                if (ctrl.CrmConnectionMgr.CrmSvc == null)
+                {
+                    return false;
+                }
 
                 ConnectionManager.Instance.ConnectToServerWithSdkLoginCtrl(cd, ctrl.CrmConnectionMgr.CrmSvc,
                     connectionParameter);
