@@ -2,7 +2,7 @@
 
 namespace McTools.Xrm.Connection.WinForms.AppCode
 {
-    public class Settings : IConnectionControlSettings
+    public class Settings : IConnectionControlSettings2
     {
         private const string settingsFilePath = "McTools.Xrm.Connection.Settings.xml";
 

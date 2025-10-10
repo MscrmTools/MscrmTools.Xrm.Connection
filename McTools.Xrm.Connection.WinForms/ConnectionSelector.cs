@@ -78,7 +78,7 @@ namespace McTools.Xrm.Connection.WinForms
         /// </summary>
         public List<ConnectionDetail> SelectedConnections { get; private set; }
 
-        public IConnectionControlSettings Settings { get; set; }
+        public IConnectionControlSettings2 Settings { get; set; }
 
         #endregion Properties
 

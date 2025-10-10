@@ -9,12 +9,12 @@ namespace McTools.Xrm.Connection.WinForms.Forms
 {
     public partial class CompactConnectionSelector : Form
     {
-        private readonly IConnectionControlSettings settings;
+        private readonly IConnectionControlSettings2 settings;
         private readonly ToolTip toolTip = new ToolTip();
 
         private int sizeFactor = 4;
 
-        public CompactConnectionSelector(IConnectionControlSettings settings, ConnectionDetail existingConnectionDetail = null)
+        public CompactConnectionSelector(IConnectionControlSettings2 settings, ConnectionDetail existingConnectionDetail = null)
         {
             InitializeComponent();
 
