@@ -15,6 +15,8 @@ namespace McTools.Xrm.Connection.WinForms.Forms
         private int sizeFactor = 4;
 
         public CompactConnectionSelector(IConnectionControlSettings2 settings, ConnectionDetail existingConnectionDetail = null)
+
+
         {
             InitializeComponent();
 

@@ -9,6 +9,7 @@
         bool ShowSearchBarInCompactSelector { get; set; }
         bool UseDetailsViewForConnectionManager { get; set; }
         bool UseDetailsViewForConnectionSelector { get; set; }
+        bool UseFilterForAdditionalConnection { get; set; }
     }
 
     public interface IConnectionControlSettings2 : IConnectionControlSettings
